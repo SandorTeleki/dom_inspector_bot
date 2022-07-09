@@ -22,3 +22,6 @@ Plans:
 - show item/unit/spell/site stats as text instead of screenshot?
 - mod support? maybe something like `/spell DE fuel the fire`, `/unit WH malikastis`
 - `/nation`??? to show e.g. list of commanders + path access
+
+Minor improvements:
+- `/item`: if multiple returns items share the exact same name, then output all.
