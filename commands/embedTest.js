@@ -5,19 +5,19 @@ const { MessageEmbed } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('embed')
+		.setName('embedtest')
 		.setDescription('Replies with an embed!'),
 	async execute(interaction) {
-		const exampleEmbed = new MessageEmbed()
+		const testEmbed = new MessageEmbed()
             .setColor('#0099ff')
             .setTitle('Frost Brand')
             .setURL('https://discord.js.org/')
-            .setAuthor({ name: ' Timotej & Timotej' })
+            .setAuthor({ name: ' Timotej & Toldi' })
             .setDescription('Lot of hassle, but hey, it is working!')
             .setImage('https://dom5api.illwiki.com/items/14/screenshot')
             .setTimestamp()
             .setFooter({ text: 'A small step for Toldi, a giant leap for Discord Dom community' });
-        await interaction.reply({ embeds: [exampleEmbed] });
+        await interaction.reply({ embeds: [testEmbed] });
 	},
 };
 
