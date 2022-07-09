@@ -1,10 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { Client, Intents, MessageEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { request } = require('undici');
 const { ITEM_URL, BASE_URL } = require('../utils/utils');
-
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
-
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -13,20 +10,20 @@ module.exports = {
         .addStringOption(option => option.setName('item_name').setDescription('Enter the name of the item')),
 
 	async execute(interaction) {
-        //console.log(ITEM_URL + encodeURIComponent(itemname)); //### passes input into URL and shows it in console.log
+        
         
         async function getJSONResponse(body) {
             let fullBody = '';
-        
             for await (const data of body) {
                 fullBody += data.toString();
+                console.log(fullBody);
             }
-        
             return JSON.parse(fullBody);
         }
         
         const itemName = interaction.options.getString('item_name');
 		//const query = new URLSearchParams({ itemName });
+        console.log(ITEM_URL + encodeURIComponent(itemName)); //### passes input into URL and shows it in console.log
 
 		const itemSearchResult = await request(ITEM_URL + encodeURIComponent(itemName));
 		const { list } = await getJSONResponse(itemSearchResult.body);
