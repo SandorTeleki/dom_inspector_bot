@@ -68,7 +68,7 @@ for (const file of eventFiles) {
 
 //Set Bot activity
 client.on("ready", () => {
-	client.user.setActivity(' /items', { type: 'LISTENING' });
+	client.user.setActivity(' slash commands', { type: 'LISTENING' });
 });
 
 client.login(token);

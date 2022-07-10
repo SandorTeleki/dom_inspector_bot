@@ -10,25 +10,18 @@ module.exports = {
         .addStringOption(option => option.setName('spell_name').setDescription('Enter the name of the spell')),
 
 	async execute(interaction) {
-        async function getJSONResponse(body) {
-            let fullBody = '';
-            for await (const data of body) {
-                fullBody += data.toString();
-            }
-            return JSON.parse(fullBody);
-        }
         const spellName = interaction.options.getString('spell_name');
-		
-		const spellSearchResult = await request(SPELL_URL + encodeURIComponent(spellName));
-		const response = await getJSONResponse(spellSearchResult.body);
-
-		const spells = response.spells;
-		const firstSpell = response.spells[0];
+        const { body } = await request(SPELL_URL + encodeURIComponent(spellName));
+        const { spells } = await body.json();
         
+        if (!spells.length)
+            await interaction.reply(`No results found for **${spellName}**.`);
+
+        const [answerSpell] = spells;
 		const spellEmbed = new MessageEmbed()
-            .setTitle(firstSpell.name)
+            .setTitle(answerSpell.name)
             .setDescription('Mentor notes will go here.')
-            .setImage(BASE_URL + firstSpell.screenshot)
+            .setImage(BASE_URL + answerSpell.screenshot)
         await interaction.reply({ embeds: [spellEmbed] });
 	},
 };

@@ -10,25 +10,18 @@ module.exports = {
         .addStringOption(option => option.setName('item_name').setDescription('Enter the name of the item')),
 
 	async execute(interaction) {
-        async function getJSONResponse(body) {
-            let fullBody = '';
-            for await (const data of body) {
-                fullBody += data.toString();
-            }
-            return JSON.parse(fullBody);
-        }
         const itemName = interaction.options.getString('item_name');
-		
-		const itemSearchResult = await request(ITEM_URL + encodeURIComponent(itemName));
-		const response = await getJSONResponse(itemSearchResult.body);
-
-		const items = response.items;
-		const firstItem = response.items[0];
+        const { body } = await request(ITEM_URL + encodeURIComponent(itemName));
+        const { items } = await body.json();
         
+        if (!items.length)
+            await interaction.reply(`No results found for **${itemName}**.`);
+
+        const [itemAnswer] = items;
 		const itemEmbed = new MessageEmbed()
-            .setTitle(firstItem.name)
+            .setTitle(itemAnswer.name)
             .setDescription('Mentor notes will go here.')
-            .setImage(BASE_URL + firstItem.screenshot)
+            .setImage(BASE_URL + itemAnswer.screenshot)
         await interaction.reply({ embeds: [itemEmbed] });
 	},
 };
