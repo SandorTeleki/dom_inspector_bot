@@ -11,10 +11,10 @@ module.exports = {
             .setTitle('Help for Dom_Inspector_Bot use')
             .setDescription('List of commands for the bot:')
             .addFields(
-                { name : '/item {item_name}', value: 'Use this command to search for items. Replace {item_name} with the name of the item. Minor typos in item name are fine.'},
-                { name : '/spell {spell_name}', value: 'Use this command to search for spells. Replace {spell_name} with the name of the spell. Minor typos in spell name are fine.'},
-                { name : '/commander {commander_name}', value: 'Use this command to search for commanders (mages, heroes, pretenders etc.). Replace {commander_name} with the name of the commander. Minor typos in commander name are fine.'},
-                { name : '/event {event_name}', value: 'work in progress'},
+                { name :  "```/item {item_name} ```", value: 'Use this command to search for items. Replace {item_name} with the name of the item. Minor typos in item name are fine.'},
+                { name : '```/spell {spell_name}```', value: 'Use this command to search for spells. Replace {spell_name} with the name of the spell. Minor typos in spell name are fine.'},
+                { name : '```/commander {commander_name}```', value: 'Use this command to search for commanders (mages, heroes, pretenders etc.). Replace {commander_name} with the name of the commander. Minor typos in commander name are fine.'},
+                { name : '```/event {event_name}```', value: 'work in progress'},
                 { name : 'Source/background', value: "Based on Larzm42's Dominions 5 Inspector: [Dom5Inspector](https://larzm42.github.io/dom5inspector/)"},
             )
             .setFooter({ text: "A bot by Timotej and Toldi.\nOriginally created for the Immersion server!" });
