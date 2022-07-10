@@ -16,7 +16,7 @@ module.exports = {
                 { name : '/mage {mage_name}', value: 'work in progress'},
                 { name : '/event {event_name}', value: 'work in progress'},
             )
-            .setFooter({ text: "A bot by Timotej and Toldi.\nBased on Larzm42's Dominions 5 Inspector: https://larzm42.github.io/dom5inspector/" });
+            .setFooter({ text: "A bot by Timotej and Toldi.\nOriginally created for the Immersion server!\nBased on Larzm42's Dominions 5 Inspector: https://larzm42.github.io/dom5inspector/" });
         await interaction.reply({ embeds: [testEmbed] });
 	},
 };

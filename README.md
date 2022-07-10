@@ -22,7 +22,7 @@ Plans:
 ### Possible future plans / ideas
 
 - [x] `/spell spellname`
-- [ ] `/unit unitname`
+- [x] `/unit unitname`
 - [ ] mentor notes
 - [ ] aliases ("gss" for greatsword of sharpness) -- maybe mentors should be able to add aliases?
 - [ ] `/site sitename`
@@ -30,6 +30,7 @@ Plans:
 - [ ] compare multiple things?
 - [ ] show item/unit/spell/site stats as text instead of screenshot?
 - [ ] mod support? maybe something like `/spell DE fuel the fire`, `/unit WH malikastis`
+- [ ] Embed color change for mod related spells, items, units etc.
 - [ ] `/nation`??? to show e.g. list of commanders + path access
 
 Minor improvements:
