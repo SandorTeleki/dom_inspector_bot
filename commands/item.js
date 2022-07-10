@@ -7,7 +7,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('item')
 		.setDescription('Replies with information about an item')
-        .addStringOption(option => option.setName('item_name').setDescription('Enter the name of the item')),
+        .addStringOption(option => option.setName('item_name').setDescription('Enter the name of the item').setRequired(true)),
 
 	async execute(interaction) {
         const itemName = interaction.options.getString('item_name');

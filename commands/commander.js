@@ -7,7 +7,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('commander')
 		.setDescription('Replies with information about a commander')
-        .addStringOption(option => option.setName('commander_name').setDescription('Enter the name of the commander')),
+        .addStringOption(option => option.setName('commander_name').setDescription('Enter the name of the commander').setRequired(true)),
 
 	async execute(interaction) {
         const commanderName = interaction.options.getString('commander_name');
