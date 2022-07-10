@@ -11,17 +11,17 @@ Plans:
 
 ### Possible future plans / ideas
 
-- `/unit unitname`
-- `/spell spellname`
-- mentor notes
-- aliases ("gss" for greatsword of sharpness) -- maybe mentors should be able to add aliases?
-- `/site sitename`
-- `/merc mercname`
-- `/event eventtext`?
-- compare multiple things?
-- show item/unit/spell/site stats as text instead of screenshot?
-- mod support? maybe something like `/spell DE fuel the fire`, `/unit WH malikastis`
-- `/nation`??? to show e.g. list of commanders + path access
+- [x] `/spell spellname`
+- [ ] `/unit unitname`
+- [ ] mentor notes
+- [ ] aliases ("gss" for greatsword of sharpness) -- maybe mentors should be able to add aliases?
+- [ ] `/site sitename`
+- [ ] `/merc mercname`
+- [ ] `/event eventtext`?
+- [ ] compare multiple things?
+- [ ] show item/unit/spell/site stats as text instead of screenshot?
+- [ ] mod support? maybe something like `/spell DE fuel the fire`, `/unit WH malikastis`
+- [ ] `/nation`??? to show e.g. list of commanders + path access
 
 Minor improvements:
-- `/item`: if multiple returns items share the exact same name, then output all.
+- [ ] `/item`: if multiple returns items share the exact same name, then output all.

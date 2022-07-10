@@ -12,8 +12,8 @@ module.exports = {
             .setDescription('List of commands for the bot:')
             .addFields(
                 { name : '/item {item_name}', value: 'Use this command to search for items. Replace {item_name} witht he name of the item. Minor typos in item name are fine.'},
-                { name : '/spell {spell_name}', value: 'work in progress'},
-                { name : '/unit {unit_name}', value: 'work in progress'},
+                { name : '/spell {spell_name}', value: 'Use this command to search for spells. Replace {spell_name} witht he name of the spell. Minor typos in spell name are fine.'},
+                { name : '/mage {mage_name}', value: 'work in progress'},
                 { name : '/event {event_name}', value: 'work in progress'},
             )
             .setFooter({ text: "A bot by Timotej and Toldi.\nBased on Larzm42's Dominions 5 Inspector: https://larzm42.github.io/dom5inspector/" });

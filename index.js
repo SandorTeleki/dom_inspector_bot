@@ -5,14 +5,9 @@ const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 const Discord = require('discord.js');
 const { MessageEmbed } = require('discord.js'); //Put into embededTest.js
-//const Discord = require("discord.js"); //For testing
 
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
-
-//Embed Test
-
-
 
 //Commands
 
@@ -30,27 +25,15 @@ client.once('ready', () => {
 	console.log('Ready!');
 });
 
+
+// !item command
 client.on('messageCreate', async message => {
-	if (message.content.startsWith('!reply')) {
+	if (message.content.startsWith('!item')) {
 	  message.reply('Hey'); //Line (Inline) Reply with mention
 	  message.reply(`My name is ${client.user.username}`); //Line (Inline) Reply without mention
 	}
 });
 
-client.on('messageCreate', async message => {
-	if (message.content.startsWith('!item')) {
-		const exampleEmbed = new MessageEmbed()
-			.setColor('#0099ff')
-			.setTitle('Frost Brand')
-			.setURL('https://discord.js.org/')
-			.setAuthor({ name: ' Timotej & Timotej' })
-			.setDescription('Lot of hassle, but hey, it is working!')
-			.setImage('https://dom5api.illwiki.com/items/14/screenshot')
-			.setTimestamp()
-			.setFooter({ text: 'A small step for Toldi, a giant leap for Discord Dom community' });
-		message.reply({ embeds: [exampleEmbed] });
-	}
-});
 
 
 client.on('interactionCreate', async interaction => {
@@ -87,8 +70,5 @@ for (const file of eventFiles) {
 client.on("ready", () => {
 	client.user.setActivity(' /items', { type: 'LISTENING' });
 });
-
-
-
 
 client.login(token);
