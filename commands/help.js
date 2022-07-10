@@ -1,6 +1,6 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, hideLinkEmbed } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
-
+const url = 'https://larzm42.github.io/dom5inspector/';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,7 +16,7 @@ module.exports = {
                 { name : '/commander {commander_name}', value: 'Use this command to search for commanders (mages, heroes, pretenders etc.). Replace {commander_name} with the name of the commander. Minor typos in commander name are fine.'},
                 { name : '/event {event_name}', value: 'work in progress'},
             )
-            .setFooter({ text: "A bot by Timotej and Toldi.\nOriginally created for the Immersion server!\nBased on Larzm42's Dominions 5 Inspector: https://larzm42.github.io/dom5inspector/" });
+            .setFooter({ text: "A bot by Timotej and Toldi.\nOriginally created for the Immersion server!\nBased on Larzm42's Dominions 5 Inspector: [Dom5Inspector](https://larzm42.github.io/dom5inspector/)" });
         await interaction.reply({ embeds: [testEmbed] });
 	},
 };
