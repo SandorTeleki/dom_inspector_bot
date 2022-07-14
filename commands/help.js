@@ -1,6 +1,5 @@
-const { SlashCommandBuilder, hideLinkEmbed } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
-const url = 'https://larzm42.github.io/dom5inspector/';
 
 module.exports = {
 	data: new SlashCommandBuilder()

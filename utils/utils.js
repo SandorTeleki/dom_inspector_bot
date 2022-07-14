@@ -3,4 +3,5 @@ module.exports = {
     ITEM_URL: 'https://dom5api.illwiki.com/items?match=fuzzy&name=',
     SPELL_URL: 'https://dom5api.illwiki.com/spells?match=fuzzy&name=',
     COMMANDER_URL: 'https://dom5api.illwiki.com/commanders?match=fuzzy&name=',
+    MERC_URL: 'https://dom5api.illwiki.com/mercs?match=fuzzy&name=',
 };
