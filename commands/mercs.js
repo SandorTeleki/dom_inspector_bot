@@ -22,6 +22,10 @@ module.exports = {
             .setTitle(mercAnswer.name)
             .setDescription('Mentor notes will go here.')
             .setImage(BASE_URL + mercAnswer.screenshot)
-        await interaction.reply({ embeds: [mercEmbed] });
+        const mercLeaderEmbed = new MessageEmbed()
+            .setImage(BASE_URL+'/commanders/'+mercAnswer.commander_id+'/screenshot')
+        const mercTroopEmbed = new MessageEmbed()
+            .setImage(BASE_URL+'/commanders/'+mercAnswer.unit_id+'/screenshot')
+        await interaction.reply({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
 	},
 };
