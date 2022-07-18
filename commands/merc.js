@@ -18,7 +18,7 @@ module.exports = {
             await interaction.reply(`No results found for **${mercName}**.`);
 
         const [mercAnswer] = mercs;
-        console.log(mercAnswer);
+        //console.log(mercAnswer);
 		const mercEmbed = new MessageEmbed()
             .setTitle(mercAnswer.name)
             .setDescription('Mentor notes will go here.')

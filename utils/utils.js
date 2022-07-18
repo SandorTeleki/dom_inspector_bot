@@ -7,3 +7,4 @@ module.exports = {
     SITE_URL: 'https://dom5api.illwiki.com/sites?match=fuzzy&name=',
     UNIT_URL: 'https://dom5api.illwiki.com/units?match=fuzzy&name=',
 };
+
