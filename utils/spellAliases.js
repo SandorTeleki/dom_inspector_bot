@@ -6,7 +6,6 @@ const spellAliases = {
     'kyuuman':'summon air elemental',
     'not-lola':'marble warriors',
     'moak':'mother oak',
-    'llp':'lifelong protection',
     'fv':'foul vapors',
 }
 
