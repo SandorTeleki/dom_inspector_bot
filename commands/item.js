@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const { request } = require('undici');
 const { ITEM_URL, BASE_URL } = require('../utils/utils');
+const { itemAliases } =require('../utils/itemAliases')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,7 +11,8 @@ module.exports = {
         .addStringOption(option => option.setName('item_name').setDescription('Enter the name of the item').setRequired(true)),
 
 	async execute(interaction) {
-        const itemName = interaction.options.getString('item_name');
+        let itemName = interaction.options.getString('item_name');
+        if (itemName in itemAliases){ itemName = itemAliases[itemName] };
         const { body } = await request(ITEM_URL + encodeURIComponent(itemName));
         const { items } = await body.json();
         

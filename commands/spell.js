@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const { request } = require('undici');
 const { SPELL_URL, BASE_URL } = require('../utils/utils');
+const { spellAliases } = require('../utils/spellAliases')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,7 +11,8 @@ module.exports = {
         .addStringOption(option => option.setName('spell_name').setDescription('Enter the name of the spell').setRequired(true)),
 
 	async execute(interaction) {
-        const spellName = interaction.options.getString('spell_name');
+        let spellName = interaction.options.getString('spell_name');
+        if (spellName in spellAliases){ spellName = spellAliases[spellName] };
         const { body } = await request(SPELL_URL + encodeURIComponent(spellName));
         const { spells } = await body.json();
         

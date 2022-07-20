@@ -7,6 +7,12 @@ const Discord = require('discord.js');
 const { MessageEmbed } = require('discord.js'); 
 const { request } = require('undici');
 const { BASE_URL, ITEM_URL, SPELL_URL, COMMANDER_URL, MERC_URL, SITE_URL, UNIT_URL } = require('./utils/utils');
+const { itemAliases } =require('./utils/itemAliases');
+const { spellAliases } = require('./utils/spellAliases');
+const { commanderAliases } = require('./utils/commanderAliases');
+const { mercAliases } = require('./utils/mercAliases');
+
+
 
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
@@ -77,7 +83,8 @@ client.on("messageCreate", async (message) => {
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
   	if (message.content.startsWith(`${prefix}item`)) {
-			const itemName = message.content.slice(6);
+			let itemName = message.content.slice(6);
+			if (itemName in itemAliases){ itemName = itemAliases[itemName] };
 			const { body } = await request(ITEM_URL + encodeURIComponent(itemName));
 			const { items } = await body.json();
 			
@@ -93,7 +100,8 @@ client.on("messageCreate", async (message) => {
 	};
 
 	if (message.content.startsWith(`${prefix}spell`)) {
-		const spellName = message.content.slice(7);
+		let spellName = message.content.slice(7);
+		if (spellName in spellAliases){ spellName = spellAliases[spellName] };
 		const { body } = await request(SPELL_URL + encodeURIComponent(spellName));
         const { spells } = await body.json();
         
@@ -109,23 +117,25 @@ client.on("messageCreate", async (message) => {
 	};
 
 	if (message.content.startsWith(`${prefix}commander`)) {
-		const commanderName = message.content.slice(11);
-			const { body } = await request(COMMANDER_URL + encodeURIComponent(commanderName));
-			const { commanders } = await body.json();
-			
-			if (!commanders.length)
-				await message.reply(`No results found for **${commanderName}**.`);
+		let commanderName = message.content.slice(11);
+		if (commanderName in commanderAliases){ commanderName = commanderAliases[commanderName] };
+		const { body } = await request(COMMANDER_URL + encodeURIComponent(commanderName));
+		const { commanders } = await body.json();
+		
+		if (!commanders.length)
+			await message.reply(`No results found for **${commanderName}**.`);
 
-			const [commanderAnswer] = commanders;
-			const commanderEmbed = new MessageEmbed()
-				.setTitle(commanderAnswer.name)
-				.setDescription('Mentor notes will go here.')
-				.setImage(BASE_URL + commanderAnswer.screenshot)
-			await message.reply({ embeds: [commanderEmbed] });
+		const [commanderAnswer] = commanders;
+		const commanderEmbed = new MessageEmbed()
+			.setTitle(commanderAnswer.name)
+			.setDescription('Mentor notes will go here.')
+			.setImage(BASE_URL + commanderAnswer.screenshot)
+		await message.reply({ embeds: [commanderEmbed] });
 	};
 
 	if (message.content.startsWith(`${prefix}merc`)) {
-		const mercName = message.content.slice(6);
+		let mercName = message.content.slice(6);
+		if (mercName in mercAliases){ mercName = mercAliases[mercName] };
         const { body } = await request(MERC_URL + encodeURIComponent(mercName));
         const { mercs } = await body.json();
         

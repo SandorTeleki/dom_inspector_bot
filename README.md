@@ -13,10 +13,10 @@ Plans:
 
 ### Potential v1.0
 - [ ] All spells, items, units, events, mercs (through screenshots)
-- [ ] slash commands and !item etc functionality
+- [ ] slash commands and ?item etc functionality
 - [ ] maybe some interaction emojis? (might be relegated to v2.0 when we move away from screenshots)
 - [ ] mentor notes
-- [ ] common aliases (like gss etc.)
+- [x] common aliases (like gss etc.)
 - [ ] host it 
 
 ### Possible future plans / ideas
@@ -24,9 +24,9 @@ Plans:
 - [x] `/spell spellname`
 - [x] `/unit unitname`
 - [ ] mentor notes
-- [ ] aliases ("gss" for greatsword of sharpness) -- maybe mentors should be able to add aliases?
-- [ ] `/site sitename`
-- [ ] `/merc mercname`
+- [x] aliases ("gss" for greatsword of sharpness) -- maybe mentors should be able to add aliases?
+- [x] `/site sitename`
+- [x] `/merc mercname`
 - [ ] compare multiple things?
 - [ ] show item/unit/spell/site stats as text instead of screenshot?
 - [ ] mod support? maybe something like `/spell DE fuel the fire`, `/unit WH malikastis`

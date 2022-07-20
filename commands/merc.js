@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const { request } = require('undici');
 const { MERC_URL, BASE_URL } = require('../utils/utils');
+const { mercAliases } = require('../utils/mercAliases')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,7 +11,8 @@ module.exports = {
         .addStringOption(option => option.setName('merc_name').setDescription('Enter the name of the mercenary').setRequired(true)),
 
 	async execute(interaction) {
-        const mercName = interaction.options.getString('merc_name');
+        let mercName = interaction.options.getString('merc_name');
+        if (mercName in mercAliases){ mercName = mercAliases[mercName] };
         const { body } = await request(MERC_URL + encodeURIComponent(mercName));
         const { mercs } = await body.json();
         
