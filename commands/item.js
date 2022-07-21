@@ -1,8 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
-const { request } = require('undici');
-const { ITEM_URL, BASE_URL } = require('../utils/utils');
-const { itemAliases } =require('../utils/itemAliases')
+const { getItem } = require('../utils/itemHelper');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,18 +9,7 @@ module.exports = {
 
 	async execute(interaction) {
         let itemName = interaction.options.getString('item_name');
-        if (itemName in itemAliases){ itemName = itemAliases[itemName] };
-        const { body } = await request(ITEM_URL + encodeURIComponent(itemName));
-        const { items } = await body.json();
-        
-        if (!items.length)
-            await interaction.reply(`No results found for **${itemName}**.`);
-
-        const [itemAnswer] = items;
-		const itemEmbed = new MessageEmbed()
-            .setTitle(itemAnswer.name)
-            .setDescription('Mentor notes will go here.')
-            .setImage(BASE_URL + itemAnswer.screenshot)
+        const itemEmbed = await getItem( itemName );
         await interaction.reply({ embeds: [itemEmbed] });
 	},
 };

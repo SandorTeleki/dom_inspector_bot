@@ -11,16 +11,14 @@ Plans:
 
 
 
-### Potential v1.0
-- [ ] All spells, items, units, events, mercs (through screenshots)
-- [ ] slash commands and ?item etc functionality
-- [ ] maybe some interaction emojis? (might be relegated to v2.0 when we move away from screenshots)
-- [ ] mentor notes
+### v1.0 Milestone
+- [ ] All spells, items, units, events, mercs (through screenshots) - missing unit
+- [x] slash commands and prefix (?) command functionality
 - [x] common aliases (like gss etc.)
-- [ ] host it 
+- [x] host it 
 
 ### Possible future plans / ideas
-
+- [ ] maybe some interaction emojis? (might be relegated to v2.0 when we move away from screenshots)
 - [x] `/spell spellname`
 - [x] `/unit unitname`
 - [ ] mentor notes

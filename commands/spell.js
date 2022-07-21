@@ -1,8 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
-const { request } = require('undici');
-const { SPELL_URL, BASE_URL } = require('../utils/utils');
-const { spellAliases } = require('../utils/spellAliases')
+const { getSpell } = require('../utils/spellHelper');
+
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,18 +10,7 @@ module.exports = {
 
 	async execute(interaction) {
         let spellName = interaction.options.getString('spell_name');
-        if (spellName in spellAliases){ spellName = spellAliases[spellName] };
-        const { body } = await request(SPELL_URL + encodeURIComponent(spellName));
-        const { spells } = await body.json();
-        
-        if (!spells.length)
-            await interaction.reply(`No results found for **${spellName}**.`);
-
-        const [answerSpell] = spells;
-		const spellEmbed = new MessageEmbed()
-            .setTitle(answerSpell.name)
-            .setDescription('Mentor notes will go here.')
-            .setImage(BASE_URL + answerSpell.screenshot)
+        const spellEmbed = await getSpell( spellName );
         await interaction.reply({ embeds: [spellEmbed] });
 	},
 };

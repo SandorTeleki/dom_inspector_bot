@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
-const { request } = require('undici');
-const { SITE_URL, BASE_URL } = require('../utils/utils');
+const { getSite } = require('../utils/siteHelper');
+
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -11,17 +10,7 @@ module.exports = {
 
 	async execute(interaction) {
         const siteName = interaction.options.getString('site_name');
-        const { body } = await request(SITE_URL + encodeURIComponent(siteName));
-        const { sites } = await body.json();
-        
-        if (!sites.length)
-            await interaction.reply(`No results found for **${siteName}**.`);
-
-        const [siteAnswer] = sites;
-		const siteEmbed = new MessageEmbed()
-            .setTitle(siteAnswer.name)
-            .setDescription('Mentor notes will go here.')
-            .setImage(BASE_URL + siteAnswer.screenshot)
+        const siteEmbed = await getSite( siteName );
         await interaction.reply({ embeds: [siteEmbed] });
 	},
 };

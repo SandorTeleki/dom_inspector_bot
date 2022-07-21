@@ -5,14 +5,11 @@ const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 const Discord = require('discord.js');
 const { MessageEmbed } = require('discord.js'); 
-const { request } = require('undici');
-const { BASE_URL, ITEM_URL, SPELL_URL, COMMANDER_URL, MERC_URL, SITE_URL, UNIT_URL } = require('./utils/utils');
-const { itemAliases } =require('./utils/itemAliases');
-const { spellAliases } = require('./utils/spellAliases');
-const { commanderAliases } = require('./utils/commanderAliases');
-const { mercAliases } = require('./utils/mercAliases');
-
-
+const { getItem } = require('./utils/itemHelper');
+const { getSpell } = require('./utils/spellHelper');
+const { getCommander } = require('./utils/commanderHelper');
+const { getMerc } = require('./utils/mercHelper');
+const { getSite } = require('./utils/siteHelper');
 
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
@@ -83,92 +80,33 @@ client.on("messageCreate", async (message) => {
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
   	if (message.content.startsWith(`${prefix}item`)) {
-			let itemName = message.content.slice(6);
-			if (itemName in itemAliases){ itemName = itemAliases[itemName] };
-			const { body } = await request(ITEM_URL + encodeURIComponent(itemName));
-			const { items } = await body.json();
-			
-			if (!items.length)
-				await message.reply(`No results found for **${itemName}**.`);
-	
-			const [itemAnswer] = items;
-			const itemEmbed = new MessageEmbed()
-				.setTitle(itemAnswer.name)
-				.setDescription('Mentor notes will go here.')
-				.setImage(BASE_URL + itemAnswer.screenshot)
-			await message.reply({ embeds: [itemEmbed] });
+		let itemName = message.content.slice(6);
+		const itemEmbed = await getItem( itemName );
+		await message.reply({ embeds: [itemEmbed] });
 	};
 
 	if (message.content.startsWith(`${prefix}spell`)) {
 		let spellName = message.content.slice(7);
-		if (spellName in spellAliases){ spellName = spellAliases[spellName] };
-		const { body } = await request(SPELL_URL + encodeURIComponent(spellName));
-        const { spells } = await body.json();
-        
-        if (!spells.length)
-            await message.reply(`No results found for **${spellName}**.`);
-
-        const [answerSpell] = spells;
-		const spellEmbed = new MessageEmbed()
-            .setTitle(answerSpell.name)
-            .setDescription('Mentor notes will go here.')
-            .setImage(BASE_URL + answerSpell.screenshot)
+		const spellEmbed = await getSpell( spellName );
         await message.reply({ embeds: [spellEmbed] });
 	};
 
 	if (message.content.startsWith(`${prefix}commander`)) {
 		let commanderName = message.content.slice(11);
-		if (commanderName in commanderAliases){ commanderName = commanderAliases[commanderName] };
-		const { body } = await request(COMMANDER_URL + encodeURIComponent(commanderName));
-		const { commanders } = await body.json();
-		
-		if (!commanders.length)
-			await message.reply(`No results found for **${commanderName}**.`);
-
-		const [commanderAnswer] = commanders;
-		const commanderEmbed = new MessageEmbed()
-			.setTitle(commanderAnswer.name)
-			.setDescription('Mentor notes will go here.')
-			.setImage(BASE_URL + commanderAnswer.screenshot)
+		const commanderEmbed = await getCommander( commanderName );
 		await message.reply({ embeds: [commanderEmbed] });
 	};
 
 	if (message.content.startsWith(`${prefix}merc`)) {
 		let mercName = message.content.slice(6);
-		if (mercName in mercAliases){ mercName = mercAliases[mercName] };
-        const { body } = await request(MERC_URL + encodeURIComponent(mercName));
-        const { mercs } = await body.json();
-        
-        if (!mercs.length)
-            await message.reply(`No results found for **${mercName}**.`);
-
-        const [mercAnswer] = mercs;
-		const mercEmbed = new MessageEmbed()
-            .setTitle(mercAnswer.name)
-            .setDescription('Mentor notes will go here.')
-            .setImage(BASE_URL + mercAnswer.screenshot)
-        const mercLeaderEmbed = new MessageEmbed()
-            .setImage(BASE_URL+'/commanders/'+mercAnswer.commander_id+'/screenshot')
-            .setDescription('Name of mercenary group leader: '+mercAnswer.bossname)
-        const mercTroopEmbed = new MessageEmbed()
-            .setImage(BASE_URL+'/commanders/'+mercAnswer.unit_id+'/screenshot')
-            .setDescription('Number of units: '+mercAnswer.nrunits)
-        await message.reply({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
+		const mercEmbed = await getMerc( mercName );
+        await message.reply({ embeds: [mercEmbed] });
+		//await message.reply({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
 	};
 
 	if (message.content.startsWith(`${prefix}site`)) {
 		const siteName = message.content.slice(6);
-		const { body } = await request(SITE_URL + encodeURIComponent(siteName));
-		const { sites } = await body.json();
-		
-		if (!sites.length)
-			await message.reply(`No results found for **${siteName}**.`);
-
-		const [siteAnswer] = sites;
-		const siteEmbed = new MessageEmbed()
-			.setTitle(siteAnswer.name)
-			.setDescription('Mentor notes will go here.')
-			.setImage(BASE_URL + siteAnswer.screenshot)
+		const siteEmbed = await getSite( siteName );
 		await message.reply({ embeds: [siteEmbed] });
 	};
 
@@ -191,11 +129,3 @@ client.on("messageCreate", async (message) => {
         await message.reply({ embeds: [testEmbed] });
 		}		
 });
-
-// !item command
-// client.on('messageCreate', async message => {
-// 	if (message.content.startsWith('!item')) {
-// 	  message.reply('Hey'); //Line (Inline) Reply with mention
-// 	  message.reply(`My name is ${client.user.username}`); //Line (Inline) Reply without mention
-// 	}
-// });
