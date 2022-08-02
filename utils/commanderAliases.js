@@ -3,6 +3,8 @@ const commanderAliases = {
     'gold adept': 'adept of the golden order',
     'golden adept':'adept of the golden order',
     'silver adept': 'adept of the silver order',
+    'exe':'demilich',
+    'executor':'demilich',
 }
 
 module.exports = { commanderAliases }
