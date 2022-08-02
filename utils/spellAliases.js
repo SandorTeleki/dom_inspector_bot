@@ -12,6 +12,7 @@ const spellAliases = {
     'rigor':'rigor mortis',
     'wos':'weapons of sharpness',
     'loggy':'gift of reason',
+    'magma child':'pact of raux',
 }
 
 module.exports = { spellAliases }
