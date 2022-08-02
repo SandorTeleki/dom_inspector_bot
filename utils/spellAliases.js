@@ -7,6 +7,10 @@ const spellAliases = {
     'not-lola':'marble warriors',
     'moak':'mother oak',
     'fv':'foul vapors',
+    'gfh':'gifts from heaven',
+    'goh':'gift of health',
+    'rigor':'rigor mortis',
+    'wos':'weapons of sharpness',
 }
 
 module.exports = { spellAliases }
