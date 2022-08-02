@@ -12,7 +12,7 @@ Plans:
 
 
 ### v1.0 Milestone
-- [ ] All spells, items, units, events, mercs (through screenshots) - missing unit
+- [x] All spells, items, units, events, mercs (through screenshots)
 - [x] slash commands and prefix (?) command functionality
 - [x] common aliases (like gss etc.)
 - [x] host it 

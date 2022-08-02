@@ -11,6 +11,7 @@ const spellAliases = {
     'goh':'gift of health',
     'rigor':'rigor mortis',
     'wos':'weapons of sharpness',
+    'loggy':'gift of reason',
 }
 
 module.exports = { spellAliases }

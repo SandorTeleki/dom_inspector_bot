@@ -10,6 +10,8 @@ const { getSpell } = require('./utils/spellHelper');
 const { getCommander } = require('./utils/commanderHelper');
 const { getMerc } = require('./utils/mercHelper');
 const { getSite } = require('./utils/siteHelper');
+const { getUnit } = require('./utils/unitHelper');
+
 
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
@@ -99,15 +101,20 @@ client.on("messageCreate", async (message) => {
 
 	if (message.content.startsWith(`${prefix}merc`)) {
 		let mercName = message.content.slice(6);
-		const mercEmbed = await getMerc( mercName );
-        await message.reply({ embeds: [mercEmbed] });
-		//await message.reply({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
+		let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName);
+		await message.reply({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
 	};
 
 	if (message.content.startsWith(`${prefix}site`)) {
 		const siteName = message.content.slice(6);
 		const siteEmbed = await getSite( siteName );
 		await message.reply({ embeds: [siteEmbed] });
+	};
+
+	if (message.content.startsWith(`${prefix}unit`)) {
+		let unitName = message.content.slice(6);
+		const unitEmbed = await getUnit( unitName );
+        await message.reply({ embeds: [unitEmbed] });
 	};
 
 	if (message.content.startsWith(`${prefix}help`)) {
@@ -120,7 +127,8 @@ client.on("messageCreate", async (message) => {
                 { name : '```/commander {commander_name}```', value: 'Use this command to search for commanders (mages, heroes, pretenders etc.). Replace {commander_name} with the name of the commander. Minor typos in commander name are fine.'},
                 { name : '```/merc {merc_name}```', value: 'Use this command to search for mercenaries. Replace {merc_name} with the name of the mercenary group (not the boss name, although we might add that later). Minor typos in merc name are fine.'},
                 { name : '```/site {site_name}```', value: 'Use this command to search for sites. Replace {site_name} with the name of the site. Minor typos in site name are fine.'},
-                { name : '```/event {event_name}```', value: 'work in progress'},
+				{ name : '```/unit {unit_name}```', value: 'Use this command to search for units (sacreds, indies, summons etc.). Replace {unit_name} with the name of the unit. Minor typos in unit name are fine.'},
+				{ name : '```/event {event_name}```', value: 'work in progress'},
 				{ name : '```? {command_name}```', value: 'All slash commands will work if you type them normally with the "?" prefix before them. Like "?item frost brand"'},
 				{ name : 'Alias support', value: 'Common aliases like gss for greatsword of sharpness have been added. If you have a suggestion for an alias. DM Toldi'},
                 { name : 'Source/background', value: "Based on Larzm42's Dominions 5 Inspector: [Dom5Inspector](https://larzm42.github.io/dom5inspector/)"},

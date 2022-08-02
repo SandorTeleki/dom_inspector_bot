@@ -13,14 +13,14 @@ async function getMerc( mercName ){
         .setTitle(mercAnswer.name)
         .setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + mercAnswer.screenshot)
-    // const mercLeaderEmbed = new MessageEmbed()
-    //     .setImage(BASE_URL+'/commanders/'+ mercAnswer.commander_id+'/screenshot')
-    //     .setDescription('Name of mercenary group leader: '+ mercAnswer.bossname)
-    // const mercTroopEmbed = new MessageEmbed()
-    //     .setImage(BASE_URL+'/commanders/'+ mercAnswer.unit_id+'/screenshot')
-    //     .setDescription('Number of units: '+ mercAnswer.nrunits)
-    return mercEmbed;
-    //return [mercEmbed, mercLeaderEmbed, mercTroopEmbed];
+    const mercLeaderEmbed = new MessageEmbed()
+        .setImage(BASE_URL+'/commanders/'+ mercAnswer.commander_id+'/screenshot')
+        .setDescription('Name of mercenary group leader: '+ mercAnswer.bossname)
+    const mercTroopEmbed = new MessageEmbed()
+        .setImage(BASE_URL+'/commanders/'+ mercAnswer.unit_id+'/screenshot')
+        .setDescription('Number of units: '+ mercAnswer.nrunits)
+    // return mercEmbed;
+    return [mercEmbed, mercLeaderEmbed, mercTroopEmbed];
     
 }
 

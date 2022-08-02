@@ -9,11 +9,8 @@ module.exports = {
         .addStringOption(option => option.setName('merc_name').setDescription('Enter the name of the mercenary').setRequired(true)),
 
 	async execute(interaction) {
-        let mercName = interaction.options.getString('merc_name');
-        const mercEmbed = await getMerc( mercName );
-        // const mercLeaderEmbed = await getMerc( mercName );
-        // const mercTroopEmbed = await getMerc( mercName );
-        await interaction.reply({ embeds: [mercEmbed] });
-        //await interaction.reply({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
+                let mercName = interaction.options.getString('merc_name');
+                let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName);
+                await interaction.reply({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
 	},
 };

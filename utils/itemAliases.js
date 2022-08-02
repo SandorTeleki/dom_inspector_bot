@@ -5,6 +5,7 @@ const itemAliases = {
     'exe': 'skull mentor',
     'gss': 'greatsword of sharpness',
     'llp':'lifelong protection',
+    'bvc':'bane venom charm',
 }
 
 module.exports = { itemAliases }
