@@ -5,6 +5,8 @@ const commanderAliases = {
     'silver adept': 'adept of the silver order',
     'exe':'demilich',
     'executor':'demilich',
+    'jo brandon':'sequani stargazer',
+    'jo':'sequani stargazer',
 }
 
 module.exports = { commanderAliases }
