@@ -1,7 +1,9 @@
 const { MessageEmbed } = require('discord.js');
 const { request } = require('undici');
 const { UNIT_URL, BASE_URL } = require('./utils');
-const { unitAliases } =require('./unitAliases')
+const { unitAliases } =require('./unitAliases');
+const { similarMatches } =require('./similarMatches');
+
 
 async function getUnit( unitName ){
     if (unitName in unitAliases){ unitName = unitAliases[unitName] };
@@ -11,8 +13,9 @@ async function getUnit( unitName ){
     const [unitAnswer] = units;
     const unitEmbed = new MessageEmbed()
         .setTitle(unitAnswer.name)
-        .setDescription('Mentor notes will go here.')
+        //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + unitAnswer.screenshot)
+        .setFooter({text:`Other matches:\n${similarMatches(units)}`})
     return unitEmbed;
 }
 

@@ -1,7 +1,9 @@
 const { MessageEmbed } = require('discord.js');
 const { request } = require('undici');
 const { SPELL_URL, BASE_URL } = require('./utils');
-const { spellAliases } =require('./spellAliases')
+const { spellAliases } =require('./spellAliases');
+const { similarMatches } =require('./similarMatches');
+
 
 async function getSpell( spellName ){
     if (spellName in spellAliases){ spellName = spellAliases[spellName] };
@@ -11,8 +13,9 @@ async function getSpell( spellName ){
     const [spellAnswer] = spells;
     const spellEmbed = new MessageEmbed()
         .setTitle(spellAnswer.name)
-        .setDescription('Mentor notes will go here.')
+        //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + spellAnswer.screenshot)
+        .setFooter({text:`Other matches:\n${similarMatches(spells)}`})
     return spellEmbed;
 }
 

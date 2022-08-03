@@ -1,7 +1,9 @@
 const { MessageEmbed } = require('discord.js');
 const { request } = require('undici');
 const { MERC_URL, BASE_URL } = require('./utils');
-const { mercAliases } =require('./mercAliases')
+const { mercAliases } =require('./mercAliases');
+const { similarMatches } =require('./similarMatches');
+
 
 async function getMerc( mercName ){
     if (mercName in mercAliases){ mercName = mercAliases[mercName] };
@@ -11,8 +13,9 @@ async function getMerc( mercName ){
     const [mercAnswer] = mercs;
     const mercEmbed = new MessageEmbed()
         .setTitle(mercAnswer.name)
-        .setDescription('Mentor notes will go here.')
+        // .setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + mercAnswer.screenshot)
+        .setFooter({text:`Other matches:\n${similarMatches(mercs)}`})
     const mercLeaderEmbed = new MessageEmbed()
         .setImage(BASE_URL+'/commanders/'+ mercAnswer.commander_id+'/screenshot')
         .setDescription('Name of mercenary group leader: '+ mercAnswer.bossname)
