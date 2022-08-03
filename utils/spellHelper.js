@@ -15,7 +15,8 @@ async function getSpell( spellName ){
         .setTitle(spellAnswer.name)
         //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + spellAnswer.screenshot)
-        .setFooter({text:`Other matches:\n${similarMatches(spells)}`})
+        similarMatchesString = similarMatches(spells);
+        if ( similarMatchesString ) {spellEmbed.setFooter({text: similarMatches(spells)})};
     return spellEmbed;
 }
 

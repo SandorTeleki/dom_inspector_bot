@@ -15,7 +15,8 @@ async function getMerc( mercName ){
         .setTitle(mercAnswer.name)
         // .setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + mercAnswer.screenshot)
-        .setFooter({text:`Other matches:\n${similarMatches(mercs)}`})
+        similarMatchesString = similarMatches(mercs);
+        if ( similarMatchesString ) {mercEmbed.setFooter({text: similarMatches(mercs)})};
     const mercLeaderEmbed = new MessageEmbed()
         .setImage(BASE_URL+'/commanders/'+ mercAnswer.commander_id+'/screenshot')
         .setDescription('Name of mercenary group leader: '+ mercAnswer.bossname)

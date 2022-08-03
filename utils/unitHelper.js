@@ -15,7 +15,8 @@ async function getUnit( unitName ){
         .setTitle(unitAnswer.name)
         //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + unitAnswer.screenshot)
-        .setFooter({text:`Other matches:\n${similarMatches(units)}`})
+        similarMatchesString = similarMatches(units);
+        if ( similarMatchesString ) {unitEmbed.setFooter({text: similarMatches(units)})};
     return unitEmbed;
 }
 

@@ -15,7 +15,8 @@ async function getCommander( commanderName ){
         .setTitle(commanderAnswer.name)
         //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + commanderAnswer.screenshot)
-        .setFooter({text:`Other matches:\n${similarMatches(commanders)}`})
+        similarMatchesString = similarMatches(commanders);
+        if ( similarMatchesString ) {commanderEmbed.setFooter({text: similarMatches(commanders)})};
     return commanderEmbed;
 }
 

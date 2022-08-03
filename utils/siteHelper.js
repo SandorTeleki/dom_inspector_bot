@@ -13,7 +13,8 @@ async function getSite( siteName ){
         .setTitle(siteAnswer.name)
         //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + siteAnswer.screenshot)
-        .setFooter({text:`Other matches:\n${similarMatches(sites)}`})
+        similarMatchesString = similarMatches(sites);
+        if ( similarMatchesString ) {siteEmbed.setFooter({text: similarMatches(sites)})};
     return siteEmbed;
 }
 
