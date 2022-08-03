@@ -12,6 +12,7 @@ const itemAliases = {
     'friendship':'crown of overmight',
     'friendship hat':'crown of overmight',
     'dai oni':'holy scourge',
+    'hamnmer':'dwarven hammer',
 
 }
 

@@ -14,7 +14,10 @@ async function getItem( itemName ){
         .setTitle(itemAnswer.name)
         //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + itemAnswer.screenshot)
-        .setFooter({text:`Other matches:\n${similarMatches(items)}`})
+        similarMatchesString = similarMatches(items);
+        if ( similarMatchesString ) {itemEmbed.setFooter({text:`Other matches:\n${similarMatches(items)}`})};
+        //.setFooter({text:`Other matches:\n${similarMatches(items)}`})
+        console.log(items);
     return itemEmbed;
 }
 
