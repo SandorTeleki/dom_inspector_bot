@@ -6,6 +6,13 @@ const itemAliases = {
     'gss': 'greatsword of sharpness',
     'llp':'lifelong protection',
     'bvc':'bane venom charm',
+    'bonk':'midget masher',
+    'water bottle':'bottle of living water',
+    'bop':'braces of protection',
+    'friendship':'crown of overmight',
+    'friendship hat':'crown of overmight',
+    'dai oni':'holy scourge',
+
 }
 
 module.exports = { itemAliases }
