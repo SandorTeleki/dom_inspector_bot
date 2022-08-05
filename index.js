@@ -83,37 +83,37 @@ client.on("messageCreate", async (message) => {
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
   	if (message.content.startsWith(`${prefix}item`)) {
-		let itemName = message.content.slice(6);
+		let itemName = message.content.slice(6).toLowerCase();
 		const itemEmbed = await getItem( itemName );
 		await message.reply({ embeds: [itemEmbed] });
 	};
 
 	if (message.content.startsWith(`${prefix}spell`)) {
-		let spellName = message.content.slice(7);
+		let spellName = message.content.slice(7).toLowerCase();
 		const spellEmbed = await getSpell( spellName );
         await message.reply({ embeds: [spellEmbed] });
 	};
 
 	if (message.content.startsWith(`${prefix}commander`)) {
-		let commanderName = message.content.slice(11);
+		let commanderName = message.content.slice(11).toLowerCase();
 		const commanderEmbed = await getCommander( commanderName );
 		await message.reply({ embeds: [commanderEmbed] });
 	};
 
 	if (message.content.startsWith(`${prefix}merc`)) {
-		let mercName = message.content.slice(6);
+		let mercName = message.content.slice(6).toLowerCase();
 		let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName);
 		await message.reply({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
 	};
 
 	if (message.content.startsWith(`${prefix}site`)) {
-		const siteName = message.content.slice(6);
+		const siteName = message.content.slice(6).toLowerCase();
 		const siteEmbed = await getSite( siteName );
 		await message.reply({ embeds: [siteEmbed] });
 	};
 
 	if (message.content.startsWith(`${prefix}unit`)) {
-		let unitName = message.content.slice(6);
+		let unitName = message.content.slice(6).toLowerCase();
 		const unitEmbed = await getUnit( unitName );
         await message.reply({ embeds: [unitEmbed] });
 	};
