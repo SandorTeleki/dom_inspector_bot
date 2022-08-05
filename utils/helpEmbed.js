@@ -14,7 +14,7 @@ function getHelpEmbed(){
 			{ name : '```?{command}```', value: 'All slash commands can be used with "?" prefix as well, e.g. "?item frost brand"'},
 			{ name : 'Tricks', value: 'Typos in names are fine, we\'ll do our best to understand you. Common aliases, like gss and FV for Greatsword of Sharpness and Foul Vapors, are understood. You can also supply the in-game ID instead of the name'},
 			{ name : 'Feedback', value: 'Feedback, suggestions and bug reports are welcome in [#dom_inspector_bot](https://discord.gg/rfKgfHbY5T) on Immersion or [GitHub](https://github.com/SandorTeleki/dom_inspector_bot).'},
-			{ name : 'About', value: "[Dom_Inspector_Bot](https://github.com/SandorTeleki/dom_inspector_bot) was created by Timotej and Toldi, based on Larzm42's [Dominions 5 Inspector](https://larzm42.github.io/dom5inspector/) using the [dom5api](https://github.com/gtim/dom5api)."},
+			{ name : 'About', value: "[Dom_Inspector_Bot](https://github.com/SandorTeleki/dom_inspector_bot) and [dom5api](https://github.com/gtim/dom5api) were created by Timotej and Toldi, using Larzm42's [dom5inspector](https://larzm42.github.io/dom5inspector/)."},
 		)
 }
 
