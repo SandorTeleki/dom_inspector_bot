@@ -37,6 +37,8 @@ const unitAliases = {
     'fele':'fire elemental',
     'aele':'air elemental',
     'eele':'earth elemental',
+    'kyuu':'strange bird',
+    'kyuumann':'strange bird',
 }
 
 module.exports = { unitAliases }
