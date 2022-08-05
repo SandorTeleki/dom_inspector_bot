@@ -1,38 +1,26 @@
-# Discord Dom Inspector Bot "Abomination of Interspection"
+# Discord Dom Inspector Bot, the Abomination of Interspection
 
-## A port of [Larzm's Mod Inspector](https://larzm42.github.io/dom5inspector/)
+A Discord interface to [Larzm's Mod Inspector](https://larzm42.github.io/dom5inspector/) via the [dom5api](https://github.com/gtim/dom5api). Currently available at the Immersion discord server.
 
-ToDo: rest of the README and add functionality to the bot.
+## Plans
 
-Plans:
-- Using embeds to display mod inspector info
-- Interacting with the API 
-- Expanding on slash commands
+Big future plans
 
+* disambiguate when there's multiple matches (e.g. `/unit size 6 water elemental` and `/commander LA sauromancer`)
+* mentor notes
+* site searcher (e.g. list forest sites that give order)
+* item searcher (e.g. list +MR items, max const4)
+* mod support, e.g. `/spell DE fuel the fire` (color-code embed)
+* `/event`
+* enable "more + show keys" in screenshots somehow, maybe with emoji-react?
 
+Small future ideas / bugs to fix
 
-### v1.0 Milestone
-- [x] All spells, items, units, events, mercs (through screenshots)
-- [x] slash commands and prefix (?) command functionality
-- [x] common aliases (like gss etc.)
-- [x] host it 
+* show mage random paths
+* if multiple items share the exact same name, then output all
 
-### Possible future plans / ideas
-- [ ] maybe some interaction emojis? (might be relegated to v2.0 when we move away from screenshots)
-- [x] `/spell spellname`
-- [x] `/unit unitname`
-- [ ] mentor notes
-- [x] aliases ("gss" for greatsword of sharpness) -- maybe mentors should be able to add aliases?
-- [x] `/site sitename`
-- [x] `/merc mercname`
-- [ ] compare multiple things?
-- [ ] show item/unit/spell/site stats as text instead of screenshot?
-- [ ] mod support? maybe something like `/spell DE fuel the fire`, `/unit WH malikastis`
-- [ ] Embed color change for mod related spells, items, units etc.
-- [ ] `/nation`??? to show e.g. list of commanders + path access
+Potential future ideas to consider 
 
-Minor improvements:
-- [ ] `/item`: if multiple returns items share the exact same name, then output all.
-
-Future/probably list:
-- [ ] `/event eventtext`?
+* show stats as text instead of screenshot?
+* list multiple things?
+* `/nation`?
