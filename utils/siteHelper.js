@@ -1,11 +1,11 @@
 const { MessageEmbed } = require('discord.js');
 const { request } = require('undici');
-const { SITE_URL, BASE_URL } = require('./utils');
+const { FUZZY_MATCH_URL, SITE_URL, BASE_URL } = require('./utils');
 const { similarMatches } =require('./similarMatches');
 
 
 async function getSite( siteName ){
-    const { body } = await request(SITE_URL + encodeURIComponent(siteName));
+    const { body } = await request(BASE_URL + SITE_URL + FUZZY_MATCH_URL + encodeURIComponent(siteName));
     const { sites } = await body.json();
 
     const [siteAnswer] = sites;

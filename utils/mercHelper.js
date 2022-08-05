@@ -1,13 +1,13 @@
 const { MessageEmbed } = require('discord.js');
 const { request } = require('undici');
-const { MERC_URL, BASE_URL } = require('./utils');
+const { FUZZY_MATCH_URL, MERC_URL, BASE_URL } = require('./utils');
 const { mercAliases } =require('./mercAliases');
 const { similarMatches } =require('./similarMatches');
 
 
 async function getMerc( mercName ){
     if (mercName in mercAliases){ mercName = mercAliases[mercName] };
-    const { body } = await request(MERC_URL + encodeURIComponent(mercName));
+    const { body } = await request(BASE_URL + MERC_URL + FUZZY_MATCH_URL + encodeURIComponent(mercName));
     const { mercs } = await body.json();
 
     const [mercAnswer] = mercs;

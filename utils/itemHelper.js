@@ -1,12 +1,12 @@
 const { MessageEmbed } = require('discord.js');
 const { request } = require('undici');
-const { ITEM_URL, BASE_URL } = require('./utils');
+const { FUZZY_MATCH_URL, ITEM_URL, BASE_URL } = require('./utils');
 const { itemAliases } = require('./itemAliases');
 const { similarMatches } =require('./similarMatches');
 
 async function getItem( itemName ){
     if (itemName in itemAliases){ itemName = itemAliases[itemName] };
-    const { body } = await request(ITEM_URL + encodeURIComponent(itemName));
+    const { body } = await request(BASE_URL+ITEM_URL + FUZZY_MATCH_URL + encodeURIComponent(itemName));
     const { items } = await body.json();
 
     const [itemAnswer] = items;

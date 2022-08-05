@@ -1,13 +1,13 @@
 const { MessageEmbed } = require('discord.js');
 const { request } = require('undici');
-const { SPELL_URL, BASE_URL } = require('./utils');
+const { FUZZY_MATCH_URL, SPELL_URL, BASE_URL } = require('./utils');
 const { spellAliases } =require('./spellAliases');
 const { similarMatches } =require('./similarMatches');
 
 
 async function getSpell( spellName ){
     if (spellName in spellAliases){ spellName = spellAliases[spellName] };
-    const { body } = await request(SPELL_URL + encodeURIComponent(spellName));
+    const { body } = await request(BASE_URL + SPELL_URL + FUZZY_MATCH_URL + encodeURIComponent(spellName));
     const { spells } = await body.json();
 
     const [spellAnswer] = spells;

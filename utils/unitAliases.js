@@ -27,6 +27,12 @@ const unitAliases = {
     'bob':'lord of the forest',
     'forester bob':'lord of the forest',
     'vampire':'vampire lord',
+    'ea skratti':'553',
+    'nifel skratti':'553',
+    'ma skratti':'3429',
+    'jotun skratti':'3429',
+    'la skratti':'3432',
+    'utgard skratti':'3432',
 }
 
 module.exports = { unitAliases }

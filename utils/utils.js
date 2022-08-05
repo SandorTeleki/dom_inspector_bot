@@ -1,10 +1,11 @@
 module.exports = {
     BASE_URL: 'https://dom5api.illwiki.com',
-    ITEM_URL: 'https://dom5api.illwiki.com/items?match=fuzzy&name=',
-    SPELL_URL: 'https://dom5api.illwiki.com/spells?match=fuzzy&name=',
-    COMMANDER_URL: 'https://dom5api.illwiki.com/commanders?match=fuzzy&name=',
-    MERC_URL: 'https://dom5api.illwiki.com/mercs?match=fuzzy&name=',
-    SITE_URL: 'https://dom5api.illwiki.com/sites?match=fuzzy&name=',
-    UNIT_URL: 'https://dom5api.illwiki.com/units?match=fuzzy&name=',
+    ITEM_URL: '/items',
+    SPELL_URL: '/spells',
+    COMMANDER_URL: '/commanders',
+    MERC_URL: '/mercs',
+    SITE_URL: '/sites',
+    UNIT_URL: '/units',
+    FUZZY_MATCH_URL: '?match=fuzzy&name=',
 };
 

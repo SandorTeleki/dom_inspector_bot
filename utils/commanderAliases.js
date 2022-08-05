@@ -23,6 +23,12 @@ const commanderAliases = {
     'enchiladas':'first of the gigantes',
     'txoumin':'first of the gigantes',
     'vampire':'vampire lord',
+    'ea skratti':'553',
+    'nifel skratti':'553',
+    'ma skratti':'3429',
+    'jotun skratti':'3429',
+    'la skratti':'3432',
+    'utgard skratti':'3432',
 }
 
 module.exports = { commanderAliases }
