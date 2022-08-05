@@ -26,7 +26,6 @@ const unitAliases = {
     'fat goblin':'bakemono sorcorer',
     'bob':'lord of the forest',
     'forester bob':'lord of the forest',
-    'vampire':'vampire lord',
     'ea skratti':'553',
     'nifel skratti':'553',
     'ma skratti':'3429',
