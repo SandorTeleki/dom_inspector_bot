@@ -4,28 +4,34 @@ const { FUZZY_MATCH_URL, MERC_URL, BASE_URL } = require('./utils');
 const { mercAliases } =require('./mercAliases');
 const { similarMatches } =require('./similarMatches');
 
-
 async function getMerc( mercName ){
     if (mercName in mercAliases){ mercName = mercAliases[mercName] };
-    const { body } = await request(BASE_URL + MERC_URL + FUZZY_MATCH_URL + encodeURIComponent(mercName));
-    const { mercs } = await body.json();
+    var merc;
+    var similarMatchesString;
+    if  (/^\d+$/.test(mercName)){
+        const { body } = await request(BASE_URL + MERC_URL + '/' + encodeURIComponent(mercName));
+        merc  = await body.json();
+    }
 
-    const [mercAnswer] = mercs;
-    const mercEmbed = new MessageEmbed()
-        .setTitle(mercAnswer.name)
-        // .setDescription('Mentor notes will go here.')
-        .setImage(BASE_URL + mercAnswer.screenshot)
+    else {
+        const { body } = await request(BASE_URL + MERC_URL + FUZZY_MATCH_URL + encodeURIComponent(mercName));
+        var { mercs } = await body.json();
+        merc = mercs[0];
         similarMatchesString = similarMatches(mercs);
+    }; 
+
+    const mercEmbed = new MessageEmbed()
+        .setTitle(merc.name)
+        // .setDescription('Mentor notes will go here.')
+        .setImage(BASE_URL + merc.screenshot)
         if ( similarMatchesString ) {mercEmbed.setFooter({text: similarMatches(mercs)})};
     const mercLeaderEmbed = new MessageEmbed()
-        .setImage(BASE_URL+'/commanders/'+ mercAnswer.commander_id+'/screenshot')
-        .setDescription('Name of mercenary group leader: '+ mercAnswer.bossname)
+        .setImage(BASE_URL+'/commanders/'+ merc.commander_id+'/screenshot')
+        .setDescription('Name of mercenary group leader: '+ merc.bossname)
     const mercTroopEmbed = new MessageEmbed()
-        .setImage(BASE_URL+'/commanders/'+ mercAnswer.unit_id+'/screenshot')
-        .setDescription('Number of units: '+ mercAnswer.nrunits)
-    // return mercEmbed;
+        .setImage(BASE_URL+'/commanders/'+ merc.unit_id+'/screenshot')
+        .setDescription('Number of units: '+ merc.nrunits)
     return [mercEmbed, mercLeaderEmbed, mercTroopEmbed];
-    
 }
 
 module.exports = { getMerc }

@@ -4,19 +4,26 @@ const { FUZZY_MATCH_URL, SPELL_URL, BASE_URL } = require('./utils');
 const { spellAliases } =require('./spellAliases');
 const { similarMatches } =require('./similarMatches');
 
-
 async function getSpell( spellName ){
     if (spellName in spellAliases){ spellName = spellAliases[spellName] };
-    const { body } = await request(BASE_URL + SPELL_URL + FUZZY_MATCH_URL + encodeURIComponent(spellName));
-    const { spells } = await body.json();
+    var spell;
+    var similarMatchesString;
+    if  (/^\d+$/.test(spellName)){
+        const { body } = await request(BASE_URL + SPELL_URL + '/' + encodeURIComponent(spellName));
+        spell  = await body.json();
+    }
 
-    const [spellAnswer] = spells;
-    const spellEmbed = new MessageEmbed()
-        .setTitle(spellAnswer.name)
-        //.setDescription('Mentor notes will go here.')
-        .setImage(BASE_URL + spellAnswer.screenshot)
+    else {
+        const { body } = await request(BASE_URL + SPELL_URL + FUZZY_MATCH_URL + encodeURIComponent(spellName));
+        var { spells } = await body.json();
+        spell = spells[0];
         similarMatchesString = similarMatches(spells);
-        if ( similarMatchesString ) {spellEmbed.setFooter({text: similarMatches(spells)})};
+    }; 
+    const spellEmbed = new MessageEmbed()
+        .setTitle(spell.name)
+        //.setDescription('Mentor notes will go here.')
+        .setImage(BASE_URL + spell.screenshot);
+    if ( similarMatchesString ) {spellEmbed.setFooter({text: similarMatchesString})};
     return spellEmbed;
 }
 
