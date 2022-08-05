@@ -33,6 +33,10 @@ const unitAliases = {
     'jotun skratti':'3429',
     'la skratti':'3432',
     'utgard skratti':'3432',
+    'wele':'water elemental',
+    'fele':'fire elemental',
+    'aele':'air elemental',
+    'eele':'earth elemental',
 }
 
 module.exports = { unitAliases }
