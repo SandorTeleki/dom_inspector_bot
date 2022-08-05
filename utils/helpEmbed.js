@@ -2,21 +2,20 @@ const { MessageEmbed } = require('discord.js');
 
 function getHelpEmbed(){
 	return new MessageEmbed()
-		.setTitle('Help for Dom_Inspector_Bot use')
-		.setDescription('List of commands for the bot:')
+		.setTitle('Dom_Inspector_Bot help')
+		.setDescription('The Dom_Inspector_Bot provides you info on items, spells, units, sites and mercenaries.')
 		.addFields(
-			{ name :  "```/item {item_name} ```", value: 'Use this command to search for items. Replace {item_name} with the name of the item. Minor typos in item name are fine.'},
-			{ name : '```/spell {spell_name}```', value: 'Use this command to search for spells. Replace {spell_name} with the name of the spell. Minor typos in spell name are fine.'},
-			{ name : '```/commander {commander_name}```', value: 'Use this command to search for commanders (mages, heroes, pretenders etc.). Replace {commander_name} with the name of the commander. Minor typos in commander name are fine.'},
-			{ name : '```/merc {merc_name}```', value: 'Use this command to search for mercenaries. Replace {merc_name} with the name of the mercenary group (not the boss name, although we might add that later). Minor typos in merc name are fine.'},
-			{ name : '```/site {site_name}```', value: 'Use this command to search for sites. Replace {site_name} with the name of the site. Minor typos in site name are fine.'},
-			{ name : '```/unit {unit_name}```', value: 'Use this command to search for units (sacreds, indies, summons etc.). Replace {unit_name} with the name of the unit. Minor typos in unit name are fine.'},
-			{ name : '```/event {event_name}```', value: 'work in progress'},
-			{ name : '```? {command_name}```', value: 'All slash commands will work if you type them normally with the "?" prefix before them. Like "?item frost brand"'},
-			{ name : 'Alias support', value: 'Common aliases like gss for greatsword of sharpness have been added. If you have a suggestion for an alias. DM Toldi'},
-			{ name : 'Source/background', value: "Based on Larzm42's Dominions 5 Inspector: [Dom5Inspector](https://larzm42.github.io/dom5inspector/)"},
+			{ name :  "```/item {item_name} ```", value: 'Search for item by name.'},
+			{ name : '```/spell {spell_name}```', value: 'Search for spell by name.'},
+			{ name : '```/commander {commander_name}```', value: 'Search for commanders (mages, heroes, pretenders etc.) by name.'},
+			{ name : '```/merc {merc_name}```', value: 'Search for mercenaries by mercenary group name (not leader name).'},
+			{ name : '```/site {site_name}```', value: 'Search for sites by name.'},
+			{ name : '```/unit {unit_name}```', value: 'Search for units (sacreds, indies, summons, commanders etc.) by name.'},
+			{ name : '```?{command}```', value: 'All slash commands can be used with "?" prefix as well, e.g. "?item frost brand"'},
+			{ name : 'Tricks', value: 'Typos in names are fine, we\'ll do our best to understand you. Common aliases, like gss and FV for Greatsword of Sharpness and Foul Vapors, are understood. You can also supply the in-game ID instead of the name'},
+			{ name : 'Feedback', value: 'Feedback, suggestions and bug reports are welcome in [#dom_inspector_bot](https://discord.gg/rfKgfHbY5T) on Immersion or [GitHub](https://github.com/SandorTeleki/dom_inspector_bot).'},
+			{ name : 'About', value: "[Dom_Inspector_Bot](https://github.com/SandorTeleki/dom_inspector_bot) was created by Timotej and Toldi, based on Larzm42's [Dominions 5 Inspector](https://larzm42.github.io/dom5inspector/) using the [dom5api](https://github.com/gtim/dom5api)."},
 		)
-		.setFooter({ text: "A bot by Timotej and Toldi.\nOriginally created for the Immersion server! test" });
 }
 
 module.exports = { getHelpEmbed }
