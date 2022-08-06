@@ -21,7 +21,7 @@ async function getMerc( mercName ){
     }; 
 
     const mercEmbed = new MessageEmbed()
-        .setTitle(merc.name)
+        //.setTitle(merc.name)
         // .setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + merc.screenshot)
         if ( similarMatchesString ) {mercEmbed.setFooter({text: similarMatches(mercs)})};

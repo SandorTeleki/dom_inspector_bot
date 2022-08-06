@@ -20,7 +20,7 @@ async function getSite( siteName ){
         similarMatchesString = similarMatches(sites);
     }; 
     const siteEmbed = new MessageEmbed()
-        .setTitle(site.name)
+        //.setTitle(site.name)
         //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + site.screenshot);
     if ( similarMatchesString ) {siteEmbed.setFooter({text: similarMatchesString})};

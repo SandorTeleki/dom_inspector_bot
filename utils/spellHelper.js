@@ -20,7 +20,7 @@ async function getSpell( spellName ){
         similarMatchesString = similarMatches(spells);
     }; 
     const spellEmbed = new MessageEmbed()
-        .setTitle(spell.name)
+        //.setTitle(spell.name)
         //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + spell.screenshot);
     if ( similarMatchesString ) {spellEmbed.setFooter({text: similarMatchesString})};

@@ -20,7 +20,7 @@ async function getUnit( unitName ){
         similarMatchesString = similarMatches(units);
     }; 
     const unitEmbed = new MessageEmbed()
-        .setTitle(unit.name)
+        //.setTitle(unit.name)
         //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + unit.screenshot);
     if ( similarMatchesString ) {unitEmbed.setFooter({text: similarMatchesString})};

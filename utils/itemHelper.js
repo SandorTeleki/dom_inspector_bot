@@ -20,7 +20,7 @@ async function getItem( itemName ){
         similarMatchesString = similarMatches(items);
     }; 
     const itemEmbed = new MessageEmbed()
-        .setTitle(item.name)
+        //.setTitle(item.name)
         //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + item.screenshot);
     if ( similarMatchesString ) {itemEmbed.setFooter({text: similarMatchesString})};

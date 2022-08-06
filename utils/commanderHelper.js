@@ -9,7 +9,10 @@ async function getCommander( commanderName ){
     var commander;
     var similarMatchesString;
     if  (/^\d+$/.test(commanderName)){
-        const { body } = await request(BASE_URL + COMMANDER_URL + '/' + encodeURIComponent(commanderName));
+        const { body, statusCode } = await request(BASE_URL + COMMANDER_URL + '/' + encodeURIComponent(commanderName));
+        console.log('status code: ', statusCode);
+        returnStatus = statusCode.json();
+        console.log('return status: ', returnStatus);
         commander  = await body.json();
     }
 
@@ -20,7 +23,7 @@ async function getCommander( commanderName ){
         similarMatchesString = similarMatches(commanders);
     }; 
     const commanderEmbed = new MessageEmbed()
-        .setTitle(commander.name)
+        //.setTitle(commander.name)
         //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + commander.screenshot);
     if ( similarMatchesString ) {commanderEmbed.setFooter({text: similarMatchesString})};
