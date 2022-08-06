@@ -37,6 +37,7 @@ const itemAliases = {
     'aim eye':'eye of aiming',
     'astral hat':'starshine skullcap',
     'naaira':'whip of command',
+    'fire skull':'skull of fire',
 }
 
 module.exports = { itemAliases }

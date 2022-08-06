@@ -9,10 +9,10 @@ async function getCommander( commanderName ){
     var commander;
     var similarMatchesString;
     if  (/^\d+$/.test(commanderName)){
-        const { body, statusCode } = await request(BASE_URL + COMMANDER_URL + '/' + encodeURIComponent(commanderName));
-        console.log('status code: ', statusCode);
-        returnStatus = statusCode.json();
-        console.log('return status: ', returnStatus);
+        const { body } = await request(BASE_URL + COMMANDER_URL + '/' + encodeURIComponent(commanderName));
+        // console.log('status code: ', statusCode);
+        // returnStatus = statusCode.json();
+        // console.log('return status: ', returnStatus);
         commander  = await body.json();
     }
 
