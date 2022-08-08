@@ -6,7 +6,6 @@ const { token } = require('./config.json');
 const Discord = require('discord.js');
 const { getItem } = require('./utils/itemHelper');
 const { getSpell } = require('./utils/spellHelper');
-const { getCommander } = require('./utils/commanderHelper');
 const { getMerc } = require('./utils/mercHelper');
 const { getSite } = require('./utils/siteHelper');
 const { getUnit } = require('./utils/unitHelper');
@@ -91,12 +90,6 @@ client.on("messageCreate", async (message) => {
 		let spellName = message.content.slice(7).toLowerCase();
 		const spellEmbed = await getSpell( spellName );
         await message.channel.send({ embeds: [spellEmbed] });
-	};
-
-	if (message.content.startsWith(`${prefix}commander`)) {
-		let commanderName = message.content.slice(11).toLowerCase();
-		const commanderEmbed = await getCommander( commanderName );
-		await message.channel.send({ embeds: [commanderEmbed] });
 	};
 
 	if (message.content.startsWith(`${prefix}merc`)) {
