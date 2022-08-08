@@ -7,7 +7,6 @@ function getHelpEmbed(){
 		.addFields(
 			{ name :  "```/item {item_name} ```", value: 'Search for item by name.'},
 			{ name : '```/spell {spell_name}```', value: 'Search for spell by name.'},
-			{ name : '```/commander {commander_name}```', value: 'Retired, use /unit instead.'},
 			{ name : '```/merc {merc_name}```', value: 'Search for mercenaries by mercenary group name (not leader name).'},
 			{ name : '```/site {site_name}```', value: 'Search for sites by name.'},
 			{ name : '```/unit {unit_name}```', value: 'Search for units (sacreds, indies, summons, commanders etc.) by name.'},
