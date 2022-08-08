@@ -4,7 +4,6 @@ require('discord-reply'); //Before discord.client
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 const Discord = require('discord.js');
-const { MessageEmbed } = require('discord.js'); 
 const { getItem } = require('./utils/itemHelper');
 const { getSpell } = require('./utils/spellHelper');
 const { getCommander } = require('./utils/commanderHelper');

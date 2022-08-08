@@ -39,6 +39,9 @@ const unitAliases = {
     'kyuu':'strange bird',
     'kyuumann':'strange bird',
     'not-lola':'demon jester',
+    'ea dryad':'2187',
+    'ma dryad':'237',
+    'la dryad':'705',
 }
 
 module.exports = { unitAliases }
