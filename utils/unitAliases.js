@@ -73,6 +73,9 @@ const unitAliases = {
     'utgard skratti':'3432',
     'ozzie':'ozelotl',
     'ozzies':'ozelotl',
+    'ea pan':'1535',
+    'ma pan':'238',
+    'la pan':'706',
 }
 
 module.exports = { unitAliases }
