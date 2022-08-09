@@ -10,7 +10,13 @@ async function getUnit( unitName ){
     var similarMatchesString;
     var footerStrings = '';
     if  (/^\d+$/.test(unitName)){
-        const { body } = await request(BASE_URL + UNIT_URL + '/' + encodeURIComponent(unitName));
+        const { body, statusCode } = await request(BASE_URL + UNIT_URL + '/' + encodeURIComponent(unitName));
+        if (statusCode === 404){
+            const errorEmbed = new MessageEmbed()
+            .setTitle("Nothing found. Better luck next time!")
+            .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+            return errorEmbed;
+        }
         unit  = await body.json();
     }
     else {

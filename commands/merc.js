@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { getMerc } = require('../utils/mercHelper');
-
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -9,8 +9,18 @@ module.exports = {
         .addStringOption(option => option.setName('merc_name').setDescription('Enter the name of the mercenary').setRequired(true)),
 
 	async execute(interaction) {
-                let mercName = interaction.options.getString('merc_name');
-                let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName);
-                await interaction.reply({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
+		let mercName = interaction.options.getString('merc_name');
+		try {
+			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName); 
+			await message.channel.send({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
+		}
+		catch {
+			const errorEmbed = new MessageEmbed()
+            	.setTitle("Nothing found. Better luck next time!")
+            	.setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+            await interaction.reply({ embeds: [errorEmbed]});
+		}
+		// let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName);
+		// await interaction.reply({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
 	},
 };

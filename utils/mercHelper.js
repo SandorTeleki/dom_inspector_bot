@@ -9,8 +9,14 @@ async function getMerc( mercName ){
     var merc;
     var similarMatchesString;
     if  (/^\d+$/.test(mercName)){
-        const { body } = await request(BASE_URL + MERC_URL + '/' + encodeURIComponent(mercName));
-        merc  = await body.json();
+        const { body, statusCode } = await request(BASE_URL + MERC_URL + '/' + encodeURIComponent(mercName));
+        if (statusCode === 404){
+            const errorEmbed = new MessageEmbed()
+            .setTitle("Nothing found. Better luck next time!")
+            .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+            return errorEmbed;
+        }
+        merc  = await body.json(); 
     }
 
     else {

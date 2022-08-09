@@ -4,6 +4,7 @@ require('discord-reply'); //Before discord.client
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { getItem } = require('./utils/itemHelper');
 const { getSpell } = require('./utils/spellHelper');
 const { getMerc } = require('./utils/mercHelper');
@@ -94,8 +95,17 @@ client.on("messageCreate", async (message) => {
 
 	if (message.content.startsWith(`${prefix}merc`)) {
 		let mercName = message.content.slice(6).toLowerCase();
-		let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName);
-		await message.channel.send({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
+		try {
+			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName); 
+			await message.channel.send({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
+		}
+		catch {
+			const errorEmbed = new MessageEmbed()
+            	.setTitle("Nothing found. Better luck next time!")
+            	.setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+            await message.channel.send({ embeds: [errorEmbed]});
+		}
+		
 	};
 
 	if (message.content.startsWith(`${prefix}site`)) {

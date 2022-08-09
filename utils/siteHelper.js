@@ -9,7 +9,13 @@ async function getSite( siteName ){
     var site;
     var similarMatchesString;
     if  (/^\d+$/.test(siteName)){
-        const { body } = await request(BASE_URL + SITE_URL + '/' + encodeURIComponent(siteName));
+        const { body, statusCode } = await request(BASE_URL + SITE_URL + '/' + encodeURIComponent(siteName));
+        if (statusCode === 404){
+            const errorEmbed = new MessageEmbed()
+            .setTitle("Nothing found. Better luck next time!")
+            .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+            return errorEmbed;
+        }
         site  = await body.json();
     }
 

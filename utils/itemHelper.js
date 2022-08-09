@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, Message } = require('discord.js');
 const { request } = require('undici');
 const { FUZZY_MATCH_URL, ITEM_URL, BASE_URL } = require('./utils');
 const { itemAliases } = require('./itemAliases');
@@ -9,7 +9,14 @@ async function getItem( itemName ){
     var item;
     var similarMatchesString;
     if  (/^\d+$/.test(itemName)){
-        const { body } = await request(BASE_URL + ITEM_URL + '/' + encodeURIComponent(itemName));
+        const { statusCode, body } = await request(BASE_URL + ITEM_URL + '/' + encodeURIComponent(itemName));
+        console.log('statusCode', statusCode);
+        if (statusCode === 404){
+            const errorEmbed = new MessageEmbed()
+            .setTitle("Nothing found. Better luck next time!")
+            .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+            return errorEmbed;
+        }
         item  = await body.json();
     }
 
