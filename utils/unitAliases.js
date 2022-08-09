@@ -71,6 +71,8 @@ const unitAliases = {
     'jotun skratti':'3429',
     'la skratti':'3432',
     'utgard skratti':'3432',
+    'ozzie':'ozelotl',
+    'ozzies':'ozelotl',
 }
 
 module.exports = { unitAliases }
