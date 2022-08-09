@@ -65,6 +65,7 @@ const spellAliases = {
     'w royal':'queen of the sea',
     'grigori':'release lord of civilization',
     'vampire':'curse of blood',
+    'zan':'fire shield',
 }
 
 module.exports = { spellAliases }
