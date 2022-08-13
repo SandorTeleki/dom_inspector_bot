@@ -12,7 +12,7 @@ module.exports = {
 		let mercName = interaction.options.getString('merc_name');
 		try {
 			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName); 
-			await message.channel.send({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
+			await interaction.reply({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
 		}
 		catch {
 			const errorEmbed = new MessageEmbed()
@@ -20,7 +20,5 @@ module.exports = {
             	.setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
             await interaction.reply({ embeds: [errorEmbed]});
 		}
-		// let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName);
-		// await interaction.reply({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
 	},
 };

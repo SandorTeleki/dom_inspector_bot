@@ -25,17 +25,17 @@ async function getMerc( mercName ){
         merc = mercs[0];
         similarMatchesString = similarMatches(mercs);
     }; 
-
+    console.log(merc);
     const mercEmbed = new MessageEmbed()
         //.setTitle(merc.name)
         // .setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + merc.screenshot)
         if ( similarMatchesString ) {mercEmbed.setFooter({text: similarMatches(mercs)})};
     const mercLeaderEmbed = new MessageEmbed()
-        .setImage(BASE_URL+'/commanders/'+ merc.commander_id+'/screenshot')
+        .setImage(BASE_URL+'/units/'+ merc.commander_id+'/screenshot')
         .setDescription('Name of mercenary group leader: '+ merc.bossname)
     const mercTroopEmbed = new MessageEmbed()
-        .setImage(BASE_URL+'/commanders/'+ merc.unit_id+'/screenshot')
+        .setImage(BASE_URL+'/units/'+ merc.unit_id+'/screenshot')
         .setDescription('Number of units: '+ merc.nrunits)
     return [mercEmbed, mercLeaderEmbed, mercTroopEmbed];
 }
