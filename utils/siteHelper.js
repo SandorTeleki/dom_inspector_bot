@@ -1,13 +1,13 @@
 const { MessageEmbed } = require('discord.js');
 const { request } = require('undici');
 const { FUZZY_MATCH_URL, SITE_URL, BASE_URL } = require('./utils');
-const { aliases } = require('./aliases')
+const { siteAliases } = require('./siteAliases');
 const { similarMatches } =require('./similarMatches');
 
 async function getSite( siteName ){
-    if (siteName in aliases.site){ siteName = aliases.site[siteName] };
-    let site;
-    let similarMatchesString;
+    if (siteName in siteAliases){ siteName = siteAliases[siteName] };
+    var site;
+    var similarMatchesString;
     if  (/^\d+$/.test(siteName)){
         const { body, statusCode } = await request(BASE_URL + SITE_URL + '/' + encodeURIComponent(siteName));
         if (statusCode === 404){
@@ -21,7 +21,7 @@ async function getSite( siteName ){
 
     else {
         const { body } = await request(BASE_URL + SITE_URL + FUZZY_MATCH_URL + encodeURIComponent(siteName));
-        let { sites } = await body.json();
+        var { sites } = await body.json();
         site = sites[0];
         similarMatchesString = similarMatches(sites);
     }; 

@@ -1,15 +1,15 @@
 const { MessageEmbed, Message } = require('discord.js');
 const { request } = require('undici');
 const { FUZZY_MATCH_URL, ITEM_URL, BASE_URL } = require('./utils');
-const { aliases } = require('./aliases')
+const { itemAliases } = require('./itemAliases');
 const { similarMatches } =require('./similarMatches');
 
-async function getEntity(entityName ){
-    if (entityName in aliases.item){ entityName = aliases.item[entityName] };
-    let item;
-    let similarMatchesString;
-    if  (/^\d+$/.test(entityName)){
-        const { statusCode, body } = await request(BASE_URL + ITEM_URL + '/' + encodeURIComponent(entityName));
+async function getItem( itemName ){
+    if (itemName in itemAliases){ itemName = itemAliases[itemName] };
+    var item;
+    var similarMatchesString;
+    if  (/^\d+$/.test(itemName)){
+        const { statusCode, body } = await request(BASE_URL + ITEM_URL + '/' + encodeURIComponent(itemName));
         console.log('statusCode', statusCode);
         if (statusCode === 404){
             const errorEmbed = new MessageEmbed()
@@ -21,8 +21,8 @@ async function getEntity(entityName ){
     }
 
     else {
-        const { body } = await request(BASE_URL + ITEM_URL + FUZZY_MATCH_URL + encodeURIComponent(entityName));
-        let { items } = await body.json();
+        const { body } = await request(BASE_URL + ITEM_URL + FUZZY_MATCH_URL + encodeURIComponent(itemName));
+        var { items } = await body.json();
         item = items[0];
         similarMatchesString = similarMatches(items);
     }; 
@@ -34,4 +34,4 @@ async function getEntity(entityName ){
     return itemEmbed;
 }
 
-module.exports = { getEntity }
+module.exports = { getItem }

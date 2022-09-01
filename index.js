@@ -5,7 +5,7 @@ const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 const Discord = require('discord.js');
 const { MessageEmbed } = require('discord.js');
-const { getEntity } = require('./utils/itemHelper');
+const { getItem } = require('./utils/itemHelper');
 const { getSpell } = require('./utils/spellHelper');
 const { getMerc } = require('./utils/mercHelper');
 const { getSite } = require('./utils/siteHelper');
@@ -82,8 +82,8 @@ client.on("messageCreate", async (message) => {
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
   	if (message.content.startsWith(`${prefix}item`)) {
-		let entityName = message.content.slice(6).toLowerCase();
-		const itemEmbed = await getEntity( entityName );
+		let itemName = message.content.slice(6).toLowerCase();
+		const itemEmbed = await getItem( itemName );
 		await message.channel.send({ embeds: [itemEmbed] });
 	};
 
