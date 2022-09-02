@@ -84,7 +84,10 @@ client.on("messageCreate", async (message) => {
   	if (message.content.startsWith(`${prefix}item`)) {
 		let entityName = message.content.slice(6).toLowerCase();
 		const itemEmbed = await getEntity( entityName );
+<<<<<<< HEAD
 		console.log('just another log');
+=======
+>>>>>>> cc510596bc8ade80c7cbc946f6613a43ee69b185
 		await message.channel.send({ embeds: [itemEmbed] });
 	};
 
