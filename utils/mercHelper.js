@@ -1,13 +1,13 @@
 const { MessageEmbed } = require('discord.js');
 const { request } = require('undici');
 const { FUZZY_MATCH_URL, MERC_URL, BASE_URL } = require('./utils');
-const { mercAliases } =require('./mercAliases');
+const { aliases } = require('./aliases')
 const { similarMatches } =require('./similarMatches');
 
 async function getMerc( mercName ){
-    if (mercName in mercAliases){ mercName = mercAliases[mercName] };
-    var merc;
-    var similarMatchesString;
+    if (mercName in aliases.merc){ mercName = aliases.merc[mercName] };
+    let merc;
+    let similarMatchesString;
     if  (/^\d+$/.test(mercName)){
         const { body, statusCode } = await request(BASE_URL + MERC_URL + '/' + encodeURIComponent(mercName));
         if (statusCode === 404){
@@ -21,7 +21,7 @@ async function getMerc( mercName ){
 
     else {
         const { body } = await request(BASE_URL + MERC_URL + FUZZY_MATCH_URL + encodeURIComponent(mercName));
-        var { mercs } = await body.json();
+        let { mercs } = await body.json();
         merc = mercs[0];
         similarMatchesString = similarMatches(mercs);
     }; 
