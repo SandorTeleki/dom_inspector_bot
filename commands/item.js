@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { getEntity } = require('../utils/itemHelper');
+const { getItem } = require('../utils/itemHelper');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -8,8 +8,8 @@ module.exports = {
         .addStringOption(option => option.setName('item_name').setDescription('Enter the name of the item').setRequired(true)),
 
 	async execute(interaction) {
-        let entityName = interaction.options.getString('item_name');
-        const entityEmbed = await getEntity(entityName );
-        await interaction.reply({ embeds: [entityEmbed] });
+        let itemName = interaction.options.getString('item_name');
+        const itemEmbed = await getItem( itemName );
+        await interaction.reply({ embeds: [itemEmbed] });
 	},
 };

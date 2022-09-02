@@ -1,14 +1,14 @@
 const { MessageEmbed } = require('discord.js');
 const { request } = require('undici');
 const { FUZZY_MATCH_URL, UNIT_URL, BASE_URL } = require('./utils');
-const { aliases } = require('./aliases')
+const { unitAliases } =require('./unitAliases');
 const { similarMatches } =require('./similarMatches');
 
 async function getUnit( unitName ){
-    if (unitName in aliases.unit){ unitName = aliases.unit[unitName] };
-    let unit;
-    let similarMatchesString;
-    let footerStrings = '';
+    if (unitName in unitAliases){ unitName = unitAliases[unitName] };
+    var unit;
+    var similarMatchesString;
+    var footerStrings = '';
     if  (/^\d+$/.test(unitName)){
         const { body, statusCode } = await request(BASE_URL + UNIT_URL + '/' + encodeURIComponent(unitName));
         if (statusCode === 404){
@@ -21,7 +21,7 @@ async function getUnit( unitName ){
     }
     else {
         const { body } = await request(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(unitName));
-        let { units } = await body.json();
+        var { units } = await body.json();
         unit = units[0];
         similarMatchesString = similarMatches(units);  
     }; 
