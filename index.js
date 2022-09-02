@@ -82,12 +82,6 @@ client.on("messageCreate", async (message) => {
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
   	if (message.content.startsWith(`${prefix}item`)) {
-
-		let entityName = message.content.slice(6).toLowerCase();
-		const itemEmbed = await getEntity( entityName );
-
-		console.log('just another log');
-
 		let itemName = message.content.slice(6).toLowerCase();
 		const itemEmbed = await getItem( itemName );
 
