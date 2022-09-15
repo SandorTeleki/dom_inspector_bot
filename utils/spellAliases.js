@@ -78,6 +78,7 @@ const spellAliases = {
     's dome':'dome of arcane warding',
     'water dome':'frost dome',
     'w dome':'frost dome',
+    'summon naiad':'contact naiad',
 }
 
 module.exports = { spellAliases }
