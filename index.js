@@ -84,6 +84,7 @@ client.on("messageCreate", async (message) => {
   	if (message.content.startsWith(`${prefix}item`)) {
 		let itemName = message.content.slice(6).toLowerCase();
 		const itemEmbed = await getItem( itemName );
+
 		await message.channel.send({ embeds: [itemEmbed] });
 	};
 

@@ -66,6 +66,19 @@ const spellAliases = {
     'grigori':'release lord of civilization',
     'vampire':'curse of blood',
     'zan':'fire shield',
+    'air dome':'dome of solid air',
+    'a dome':'dome of solid air',
+    'nature dome':'forest dome',
+    'n dome':'forest dome',
+    'fire dome':'dome of flaming death',
+    'f dome':'dome of flaming death',
+    'blood dome':'dome of corruption',
+    'b dome':'dome of corruption',
+    'astral dome':'dome of arcane warding',
+    's dome':'dome of arcane warding',
+    'water dome':'frost dome',
+    'w dome':'frost dome',
+    'summon naiad':'contact naiad',
 }
 
 module.exports = { spellAliases }

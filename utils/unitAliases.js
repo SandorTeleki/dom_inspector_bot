@@ -76,6 +76,8 @@ const unitAliases = {
     'ea pan':'1535',
     'ma pan':'238',
     'la pan':'706',
+    'fuwafuwa':'1434',
+    'solstice':'3247',
 }
 
 module.exports = { unitAliases }
