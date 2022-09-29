@@ -13,6 +13,7 @@ Big future plans
 * mod support, e.g. `/spell DE fuel the fire` (color-code embed)
 * `/event`
 * enable "more + show keys" in screenshots somehow, maybe with emoji-react?
+* moving away from inspector screenshots to information in the embed itself
 
 Small future ideas / bugs to fix
 
