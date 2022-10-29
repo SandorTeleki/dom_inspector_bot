@@ -78,6 +78,7 @@ const unitAliases = {
     'la pan':'706',
     'fuwafuwa':'1434',
     'solstice':'3247',
+    'pale rider':'longdead horseman',
 }
 
 module.exports = { unitAliases }
