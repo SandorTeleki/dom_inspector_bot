@@ -1,5 +1,6 @@
 const mercAliases = {
     'hannibal': 'elephant corps',
+    'gote':'63',
     
 }
 
