@@ -79,6 +79,7 @@ const spellAliases = {
     'water dome':'frost dome',
     'w dome':'frost dome',
     'summon naiad':'contact naiad',
+    'average dominions':'army of rats',
 }
 
 module.exports = { spellAliases }
