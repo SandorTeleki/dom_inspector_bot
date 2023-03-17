@@ -11,8 +11,7 @@ const { getMerc } = require('./utils/mercHelper');
 const { getSite } = require('./utils/siteHelper');
 const { getUnit } = require('./utils/unitHelper');
 const { getHelpEmbed } = require('./utils/helpEmbed');
-
-
+const { WRONG_BOT_URL, ALL_BOOLI_URL } = require('./utils/utils');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
 
@@ -123,5 +122,25 @@ client.on("messageCreate", async (message) => {
 
 	if (message.content.startsWith(`${prefix}help`)) {
 		await message.channel.send({ embeds: [getHelpEmbed()] });
-	}		
+	}	
+	
+	if (message.content.startsWith(`${prefix}undone`)){
+		const undoneEmbed = new MessageEmbed()
+            	.setTitle("Who, me?!")
+            	.setImage(WRONG_BOT_URL);
+        await message.channel.send({ embeds: [undoneEmbed]});
+	}
+	if (message.content.startsWith(`${prefix}timer`)){
+		const timerEmbed = new MessageEmbed()
+            	.setTitle("Who, me?!")
+            	.setImage(WRONG_BOT_URL);
+        await message.channel.send({ embeds: [timerEmbed]});
+	}
+	if (message.content.startsWith(`${prefix}booli`)){
+		var randomBooli = ALL_BOOLI_URL[Math.floor(Math.random() * ALL_BOOLI_URL.length)];
+		const booliEmbed = new MessageEmbed()
+            	.setTitle("Do your turn!")
+            	.setImage(randomBooli);
+        await message.channel.send({ embeds: [booliEmbed]});
+	}
 });
