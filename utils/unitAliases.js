@@ -79,6 +79,8 @@ const unitAliases = {
     'fuwafuwa':'1434',
     'solstice':'3247',
     'pale rider':'longdead horseman',
+    'ma royal guard':'134',
+    'la royal guard':'2115',
 }
 
 module.exports = { unitAliases }
