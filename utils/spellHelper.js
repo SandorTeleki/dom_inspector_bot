@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const { request } = require('undici');
 const { FUZZY_MATCH_URL, SPELL_URL, BASE_URL } = require('./utils');
 const { spellAliases } =require('./spellAliases');
@@ -11,7 +11,7 @@ async function getSpell( spellName ){
     if  (/^\d+$/.test(spellName)){
         const { body, statusCode } = await request(BASE_URL + SPELL_URL + '/' + encodeURIComponent(spellName));
         if (statusCode === 404){
-            const errorEmbed = new MessageEmbed()
+            const errorEmbed = new EmbedBuilder()
             .setTitle("Nothing found. Better luck next time!")
             .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
             return errorEmbed;
@@ -25,7 +25,7 @@ async function getSpell( spellName ){
         spell = spells[0];
         similarMatchesString = similarMatches(spells);
     }; 
-    const spellEmbed = new MessageEmbed()
+    const spellEmbed = new EmbedBuilder()
         //.setTitle(spell.name)
         //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + spell.screenshot);

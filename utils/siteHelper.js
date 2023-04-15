@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const { request } = require('undici');
 const { FUZZY_MATCH_URL, SITE_URL, BASE_URL } = require('./utils');
 const { siteAliases } = require('./siteAliases');
@@ -11,7 +11,7 @@ async function getSite( siteName ){
     if  (/^\d+$/.test(siteName)){
         const { body, statusCode } = await request(BASE_URL + SITE_URL + '/' + encodeURIComponent(siteName));
         if (statusCode === 404){
-            const errorEmbed = new MessageEmbed()
+            const errorEmbed = new EmbedBuilder()
             .setTitle("Nothing found. Better luck next time!")
             .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
             return errorEmbed;
@@ -25,7 +25,7 @@ async function getSite( siteName ){
         site = sites[0];
         similarMatchesString = similarMatches(sites);
     }; 
-    const siteEmbed = new MessageEmbed()
+    const siteEmbed = new EmbedBuilder()
         //.setTitle(site.name)
         //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + site.screenshot);

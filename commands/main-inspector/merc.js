@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { getMerc } = require('../utils/mercHelper');
-const { MessageEmbed } = require('discord.js');
+const { getMerc } = require('../../utils/mercHelper');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,7 +15,7 @@ module.exports = {
 			await interaction.reply({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
 		}
 		catch {
-			const errorEmbed = new MessageEmbed()
+			const errorEmbed = new EmbderBuilder()
             	.setTitle("Nothing found. Better luck next time!")
             	.setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
             await interaction.reply({ embeds: [errorEmbed]});

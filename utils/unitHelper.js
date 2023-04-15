@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const { request } = require('undici');
 const { FUZZY_MATCH_URL, UNIT_URL, BASE_URL } = require('./utils');
 const { unitAliases } =require('./unitAliases');
@@ -8,11 +8,11 @@ async function getUnit( unitName ){
     if (unitName in unitAliases){ unitName = unitAliases[unitName] };
     var unit;
     var similarMatchesString;
-    var footerStrings = '';
+    var footerStrings = ' ';
     if  (/^\d+$/.test(unitName)){
         const { body, statusCode } = await request(BASE_URL + UNIT_URL + '/' + encodeURIComponent(unitName));
         if (statusCode === 404){
-            const errorEmbed = new MessageEmbed()
+            const errorEmbed = new EmbedBuilder()
             .setTitle("Nothing found. Better luck next time!")
             .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
             return errorEmbed;
@@ -25,8 +25,7 @@ async function getUnit( unitName ){
         unit = units[0];
         similarMatchesString = similarMatches(units);  
     }; 
-
-    const unitEmbed = new MessageEmbed()
+    const unitEmbed = new EmbedBuilder()
         //.setTitle(unit.name)
         //.setDescription('Mentor notes will go here.')
         .setImage(BASE_URL + unit.screenshot)

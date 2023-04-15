@@ -1,7 +1,7 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 function getHelpEmbed(){
-	return new MessageEmbed()
+	return new EmbedBuilder()
 		.setTitle('Dom_Inspector_Bot help')
 		.setDescription('The Dom_Inspector_Bot provides you info on items, spells, units, sites and mercenaries.')
 		.addFields(

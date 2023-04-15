@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { getSpell } = require('../utils/spellHelper');
+const { getSpell } = require('../../utils/spellHelper');
 
 
 module.exports = {

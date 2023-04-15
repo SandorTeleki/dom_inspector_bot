@@ -1,10 +1,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
 require('discord-reply'); //Before discord.client
-const { Client, Collection, Intents } = require('discord.js');
+const { Client, Collection, Intents, Events, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
 const Discord = require('discord.js');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
+// const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Events} = require('discord.js'); --- For Buttons, waiting on v14...
 const { getItem } = require('./utils/itemHelper');
 const { getSpell } = require('./utils/spellHelper');
 const { getMerc } = require('./utils/mercHelper');
@@ -13,35 +14,56 @@ const { getUnit } = require('./utils/unitHelper');
 const { getHelpEmbed } = require('./utils/helpEmbed');
 const { WRONG_BOT_URL, ALL_BOOLI_URL } = require('./utils/utils');
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
+const client = new Client({ 
+	intents: [
+		GatewayIntentBits.Guilds, 
+		GatewayIntentBits.GuildMessages, 
+		GatewayIntentBits.GuildMessageReactions,
+		GatewayIntentBits.MessageContent,
+	] 
+}); 
 
 //Commands
 client.commands = new Collection();
-const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+const foldersPath = path.join(__dirname, 'commands');
+const commandFolders = fs.readdirSync(foldersPath);
 
-for (const file of commandFiles) {
-	const filePath = path.join(commandsPath, file);
-	const command = require(filePath);
-	client.commands.set(command.data.name, command);
+for (const folder of commandFolders) {
+	const commandsPath = path.join(foldersPath, folder);
+	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+	for (const file of commandFiles) {
+		const filePath = path.join(commandsPath, file);
+		const command = require(filePath);
+		// Set a new item in the Collection with the key as the command name and the value as the exported module
+		if ('data' in command && 'execute' in command) {
+			client.commands.set(command.data.name, command);
+		} else {
+			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+		}
+	}
 }
 
+// client.on('interactionCreate', async interaction => {
+// 	if (!interaction.isChatInputCommand()) return;
 
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
+// 	const command = interaction.client.commands.get(interaction.commandName);
+	
+// 	if (!command) {
+// 		console.error(`No command matching ${interaction.commandName} was found.`);
+// 		return;
+// 	}
 
-	const command = client.commands.get(interaction.commandName);
-
-	if (!command) return;
-
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-	}
-});
-
+// 	try {
+// 		await command.execute(interaction);
+// 	} catch (error) {
+// 		console.error(error);
+// 		if (interaction.replied || interaction.deferred) {
+// 			await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+// 		} else {
+// 			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+// 		}
+// 	}
+// });
 
 //Events
 const eventsPath = path.join(__dirname, 'events');
@@ -58,11 +80,6 @@ for (const file of eventFiles) {
 }
 
 
-//Ready message in console
-// client.once('ready', () => {
-// 	console.log('Ready!');
-// });
-
 //Set Bot activity
 client.on("ready", () => {
 	client.user.setActivity(' your questions', { type: 'LISTENING' });
@@ -75,7 +92,7 @@ client.login(token);
 
 //########################################################################
 
-//Testing prefix commands
+//Prefix commands
 const prefix = "?";
 client.on("messageCreate", async (message) => {
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -100,7 +117,7 @@ client.on("messageCreate", async (message) => {
 			await message.channel.send({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
 		}
 		catch {
-			const errorEmbed = new MessageEmbed()
+			const errorEmbed = new EmbedBuilder()
             	.setTitle("Nothing found. Better luck next time!")
             	.setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
             await message.channel.send({ embeds: [errorEmbed]});
@@ -125,22 +142,36 @@ client.on("messageCreate", async (message) => {
 	}	
 	
 	if (message.content.startsWith(`${prefix}undone`)){
-		const undoneEmbed = new MessageEmbed()
+		const undoneEmbed = new EmbedBuilder()
             	.setTitle("Who, me?!")
             	.setImage(WRONG_BOT_URL);
         await message.channel.send({ embeds: [undoneEmbed]});
 	}
 	if (message.content.startsWith(`${prefix}timer`)){
-		const timerEmbed = new MessageEmbed()
+		const timerEmbed = new EmbedBuilder()
             	.setTitle("Who, me?!")
             	.setImage(WRONG_BOT_URL);
         await message.channel.send({ embeds: [timerEmbed]});
 	}
 	if (message.content.startsWith(`${prefix}booli`)){
 		var randomBooli = ALL_BOOLI_URL[Math.floor(Math.random() * ALL_BOOLI_URL.length)];
-		const booliEmbed = new MessageEmbed()
+		const booliEmbed = new EmbedBuilder()
             	.setTitle("Do your turn!")
             	.setImage(randomBooli);
         await message.channel.send({ embeds: [booliEmbed]});
 	}
+	
+	//Button Test - waiting for discord.js v14 first...
+	// if (message.content.startsWith(`${prefix}button`)){
+	// 	const row = new ActionRowBuilder()
+	// 	.addComponents(
+	// 		new ButtonBuilder()
+	// 			.setCustomId('primary')
+	// 			.setLabel('Click me!')
+	// 			.setStyle(ButtonStyle.Primary),
+	// 	);
+	// 	const buttonEmbed = new EmbedBuilder()
+    //         	.setTitle("Testing Button")	
+    //     await message.channel.send({ embeds: [buttonEmbed], components: [row] });
+	// }
 });
