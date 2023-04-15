@@ -2,7 +2,7 @@
 
 A Discord interface to [Larzm's Mod Inspector](https://larzm42.github.io/dom5inspector/) via the [dom5api](https://github.com/gtim/dom5api). Currently available at the Immersion discord server.
 
-Updated to discord.js v14
+Updated to discord.js v14 to add new functionality.
 
 ## Plans
 

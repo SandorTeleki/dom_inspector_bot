@@ -14,6 +14,7 @@ module.exports = {
 
 		try {
 			await command.execute(interaction);
+			console.log(`User: #${interaction.user.tag} ID: ${interaction.user.id} channel: #${interaction.channel.name} server: ${interaction.guild.name} triggered an interaction.`);
 		} catch (error) {
 			console.error(`Error executing ${interaction.commandName}`);
 			console.error(error);
