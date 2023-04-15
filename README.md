@@ -1,7 +1,8 @@
 # Discord Dom Inspector Bot, the Abomination of Interspection
 
 A Discord interface to [Larzm's Mod Inspector](https://larzm42.github.io/dom5inspector/) via the [dom5api](https://github.com/gtim/dom5api). Currently available at the Immersion discord server.
-Currently running on discord.js v14
+
+Updated to discord.js v14
 
 ## Plans
 
