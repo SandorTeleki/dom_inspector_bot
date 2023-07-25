@@ -76,6 +76,8 @@ const unitAliases = {
     'pale rider':'longdead horseman',
     'ma royal guard':'134',
     'la royal guard':'2115',
+    'shitty vampire':'405',
+    'blood rite vampire':'405',
 }
 
 module.exports = { unitAliases }
