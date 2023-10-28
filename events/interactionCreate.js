@@ -14,7 +14,17 @@ module.exports = {
 
 		try {
 			await command.execute(interaction);
-			console.log(`User: #${interaction.user.tag} ID: ${interaction.user.id} channel: #${interaction.channel.name} server: ${interaction.guild.name} triggered an interaction.`);
+			console.log(`
+				Server Name: ${interaction.guild.name} 
+				Server ID: ${interaction.guild.id} 
+				Channel Name: #${interaction.channel.name}
+				Channel ID: #${interaction.channel.id}
+				User: #${interaction.user.tag} 
+				User ID: ${interaction.user.id} 
+				Command: ${interaction}
+				Time(createdAt): ${interaction.createdAt}
+				Time(timestamp): ${interaction.createdTimestamp}
+				`)
 		} catch (error) {
 			console.error(`Error executing ${interaction.commandName}`);
 			console.error(error);
