@@ -24,7 +24,7 @@ const client = new Client({
 	] 
 }); 
 
-//Commands
+// Slash Commands
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
@@ -71,12 +71,15 @@ client.login(token);
 
 //########################################################################
 
-//Prefix commands
-const prefix = "?";
+//Prefix commands list (might need some refactoring)
+//Prefix symbol "?" be changed to other symbol if needed at a later date -> will need to update help command if so
+const prefix = "?"; 
+
 client.on("messageCreate", async (message) => {
 	// console.log(`message: ${message}, ${message.id}, ${message.content}`);
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
+	// Item command
   	if (message.content.startsWith(`${prefix}item`)) {
 		let itemName = message.content.slice(6).toLowerCase();
 		const itemEmbed = await getItem( itemName );
@@ -85,7 +88,7 @@ client.on("messageCreate", async (message) => {
 
 		await message.channel.send({ embeds: [itemEmbed] });
 	};
-
+	// Spell command
 	if (message.content.startsWith(`${prefix}spell`)) {
 		let spellName = message.content.slice(7).toLowerCase();
 		const spellEmbed = await getSpell( spellName );
@@ -94,7 +97,7 @@ client.on("messageCreate", async (message) => {
 
         await message.channel.send({ embeds: [spellEmbed] });
 	};
-
+	// Merc command
 	if (message.content.startsWith(`${prefix}merc`)) {
 		let mercName = message.content.slice(6).toLowerCase();
 		try {
@@ -112,7 +115,7 @@ client.on("messageCreate", async (message) => {
 		}
 		
 	};
-
+	// Site command
 	if (message.content.startsWith(`${prefix}site`)) {
 		const siteName = message.content.slice(6).toLowerCase();
 		const siteEmbed = await getSite( siteName );
@@ -121,7 +124,7 @@ client.on("messageCreate", async (message) => {
 
 		await message.channel.send({ embeds: [siteEmbed] });
 	};
-
+	// Unit command
 	if (message.content.startsWith(`${prefix}unit`)) {
 		let unitName = message.content.slice(6).toLowerCase();
 		const unitEmbed = await getUnit( unitName );
@@ -130,14 +133,14 @@ client.on("messageCreate", async (message) => {
 
         await message.channel.send({ embeds: [unitEmbed] });
 	};
-
+	// Help command
 	if (message.content.startsWith(`${prefix}help`)) {
 		createLog(message);
 		createLogEmbed(message);
 
 		await message.channel.send({ embeds: [getHelpEmbed()] });
 	}	
-	
+	// Undone command
 	if (message.content.startsWith(`${prefix}undone`)){
 		const undoneEmbed = new EmbedBuilder()
             	.setTitle("Who, me?!")
@@ -147,6 +150,7 @@ client.on("messageCreate", async (message) => {
 
         await message.channel.send({ embeds: [undoneEmbed]});
 	}
+	// Timer command
 	if (message.content.startsWith(`${prefix}timer`)){
 		const timerEmbed = new EmbedBuilder()
             	.setTitle("Who, me?!")
@@ -156,6 +160,7 @@ client.on("messageCreate", async (message) => {
 
         await message.channel.send({ embeds: [timerEmbed]});
 	}
+	// Booli command
 	if (message.content.startsWith(`${prefix}booli`)){
 		var randomBooli = ALL_BOOLI_URL[Math.floor(Math.random() * ALL_BOOLI_URL.length)];
 		const booliEmbed = new EmbedBuilder()
@@ -182,7 +187,7 @@ client.on("messageCreate", async (message) => {
 	// }
 });
 
-// Log interaction - logs interaction and sends an embed with all info to a prespecified channel
+// Logs slash command interaction - (also sends an embed with all the information to a prespecified Discord channel)
 client.on(Events.InteractionCreate, async function logInteraction(interaction) {
 	//console.log(interaction);
 	if (!interaction) return;
@@ -199,7 +204,7 @@ client.on(Events.InteractionCreate, async function logInteraction(interaction) {
 		const createdAt = interaction.createdAt;
 		const timestamp = interaction.createdTimestamp;
 
-		const embed = new EmbedBuilder()
+		const logEmbed = new EmbedBuilder()
 			.setTitle('Chat command used')
 			.addFields({ name: 'Server Name', value: `${serverName}`})
 			.addFields({ name: 'Server ID', value: `${serverId}`})
@@ -211,10 +216,11 @@ client.on(Events.InteractionCreate, async function logInteraction(interaction) {
 			.addFields({ name: 'Created At', value: `${createdAt}`})
 			.addFields({ name: 'Timestamp', value: `${timestamp}`})
 			// .setTimestamp();
-		await channel.send({embeds: [embed] });
+		await channel.send({embeds: [logEmbed] });
 	}
 })
 
+// Logging for prefix commands
 function createLog(message){
 	//Read more: https://old.discordjs.dev/#/docs/discord.js/main/search?query=message
 	// and: https://old.discordjs.dev/#/docs/discord.js/main/class/Message
@@ -225,7 +231,8 @@ function createLog(message){
 	const user = message.author.tag;
 	const userId = message.author.id;
 	const text = message.content;
-	const timestamp = message.createdAt;
+	const createdAt = message.createdAt;
+	const unixTimestamp = message.createdTimestamp;
 	// const infodump = stringify(e.client.user);
 
 	console.log(`
@@ -236,10 +243,13 @@ function createLog(message){
 	User Name: ${user}
 	User Id: ${userId}
 	Command Name: ${text}
-	Timestamp: ${timestamp}
+	Created At: ${createdAt}
+	Unix Timestamp: ${unixTimestamp}
 	`)
 }
 
+
+// Embed creation for prefix commands
 async function createLogEmbed(message) {
     //console.log(interaction);
     if (!message) return;
@@ -252,9 +262,10 @@ async function createLogEmbed(message) {
         const user = message.author.tag;
 		const userId = message.author.id;
 		const text = message.content;
-        const timestamp = message.createdAt;
+        const createdAt = message.createdAt;
+		const unixTimestamp = message.createdTimestamp;
 
-        const embed = new EmbedBuilder()
+        const logEmbed = new EmbedBuilder()
             .setTitle('Chat command used')
             .addFields({ name: 'Server Name', value: `${server}`})
 			.addFields({ name: 'Server ID', value: `${serverId}`})
@@ -263,9 +274,10 @@ async function createLogEmbed(message) {
             .addFields({ name: 'Chat command', value: `${text}`})
             .addFields({ name: 'User name', value: `${user}`})
 			.addFields({ name: 'User ID', value: `${userId}`})
-            .addFields({ name: 'Timestamp', value: `${timestamp}`})
+            .addFields({ name: 'Created At', value: `${createdAt}`})
+			.addFields({ name: 'Unix Timestamp', value: `${unixTimestamp}`})
             // .setTimestamp();
-        await channel.send({embeds: [embed] });
+        await channel.send({embeds: [logEmbed] });
     }
 }
 

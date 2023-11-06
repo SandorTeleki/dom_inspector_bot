@@ -22,8 +22,8 @@ module.exports = {
 				User: #${interaction.user.tag} 
 				User ID: ${interaction.user.id} 
 				Command: ${interaction}
-				Time(createdAt): ${interaction.createdAt}
-				Time(timestamp): ${interaction.createdTimestamp}
+				Created At: ${interaction.createdAt}
+				Unix Timestamp: ${interaction.createdTimestamp}
 				`)
 		} catch (error) {
 			console.error(`Error executing ${interaction.commandName}`);
