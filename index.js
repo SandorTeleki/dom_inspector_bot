@@ -214,7 +214,7 @@ client.on(Events.InteractionCreate, async function logInteraction(interaction) {
 			.addFields({ name: 'User ID', value: `${userId}`})
 			.addFields({ name: 'Chat command', value: `${command}`})
 			.addFields({ name: 'Created At', value: `${createdAt}`})
-			.addFields({ name: 'Timestamp', value: `${timestamp}`})
+			.addFields({ name: 'Unix Timestamp', value: `${timestamp}`})
 			// .setTimestamp();
 		await channel.send({embeds: [logEmbed] });
 	}
