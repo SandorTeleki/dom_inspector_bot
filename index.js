@@ -334,10 +334,10 @@ const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE,(err)=>{
 // })
 
 // Query the data
-sql = `SELECT * FROM logs`;
-db.all(sql,[],(err,rows) => {
-	if(err) return console.error(err.message);
-		rows.forEach(row=>{console.log(row);
-		}
-	)
-})
+// sql = `SELECT * FROM logs`;
+// db.all(sql,[],(err,rows) => {
+// 	if(err) return console.error(err.message);
+// 		rows.forEach(row=>{console.log(row);
+// 		}
+// 	)
+// })
