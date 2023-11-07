@@ -300,17 +300,17 @@ const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE,(err)=>{
 });
 
 // Create table
-sql = `CREATE TABLE logs (
-		id INTEGER PRIMARY KEY,
-		server_name TEXT,
-		server_id INTEGER,
-		channel_name TEXT,
-		channel_id INTEGER,
-		user_name TEXT,
-		user_id INTEGER,
-		chat_command BLOB,
-		unix_timestamp INTEGER)`;
-db.run(sql);
+// sql = `CREATE TABLE logs (
+// 		id INTEGER PRIMARY KEY,
+// 		server_name TEXT,
+// 		server_id INTEGER,
+// 		channel_name TEXT,
+// 		channel_id INTEGER,
+// 		user_name TEXT,
+// 		user_id INTEGER,
+// 		chat_command BLOB,
+// 		unix_timestamp INTEGER)`;
+// db.run(sql);
 
 //Drop table
 // db.run("DROP TABLE logs");
