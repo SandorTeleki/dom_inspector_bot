@@ -3,3 +3,4 @@ node_modules
 config.json
 config2.json
 configOG.json
+logs.db

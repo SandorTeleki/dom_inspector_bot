@@ -14,6 +14,9 @@ const { getUnit } = require('./utils/unitHelper');
 const { getHelpEmbed } = require('./utils/helpEmbed');
 const { WRONG_BOT_URL, ALL_BOOLI_URL } = require('./utils/utils');
 const { stringify } = require('node:querystring');
+// sqlite3 imports
+const sqlite3 = require('sqlite3').verbose();
+
 
 const client = new Client({ 
 	intents: [
@@ -69,7 +72,7 @@ client.login(token);
 
 
 
-//########################################################################
+//#####################################################################################################
 
 //Prefix commands list (might need some refactoring)
 //Prefix symbol "?" be changed to other symbol if needed at a later date -> will need to update help command if so
@@ -189,7 +192,7 @@ client.on("messageCreate", async (message) => {
 
 // Logs slash command interaction - (also sends an embed with all the information to a prespecified Discord channel)
 client.on(Events.InteractionCreate, async function logInteraction(interaction) {
-	//console.log(interaction);
+	// console.log(interaction);
 	if (!interaction) return;
 	if (!interaction.isChatInputCommand()) return;
 	else {
@@ -200,7 +203,7 @@ client.on(Events.InteractionCreate, async function logInteraction(interaction) {
 		const channelId = interaction.channel.id;
 		const userName = interaction.user.tag; 
 		const userId = interaction.user.id; 
-		const command = interaction;
+		const command = interaction.toString();
 		const createdAt = interaction.createdAt;
 		const timestamp = interaction.createdTimestamp;
 
@@ -224,9 +227,9 @@ client.on(Events.InteractionCreate, async function logInteraction(interaction) {
 function createLog(message){
 	//Read more: https://old.discordjs.dev/#/docs/discord.js/main/search?query=message
 	// and: https://old.discordjs.dev/#/docs/discord.js/main/class/Message
-	const server = message.guild;
+	const server = message.guild.name;
 	const serverId = message.guildId;
-	const channelName = message.channel;
+	const channelName = message.channel.name;
 	const channelId = message.channelId;
 	const user = message.author.tag;
 	const userId = message.author.id;
@@ -246,6 +249,11 @@ function createLog(message){
 	Created At: ${createdAt}
 	Unix Timestamp: ${unixTimestamp}
 	`)
+
+	sql = `INSERT INTO logs(server_name,server_id,channel_name,channel_id,user_name,user_id,chat_command,unix_timestamp) VALUES (?,?,?,?,?,?,?,?)`
+	db.run(sql,[server,serverId,channelName,channelId,user,userId,text,unixTimestamp],(err) => {
+		if(err) return console.error(err.message);
+	});
 }
 
 
@@ -271,9 +279,9 @@ async function createLogEmbed(message) {
 			.addFields({ name: 'Server ID', value: `${serverId}`})
 			.addFields({ name: 'Channel Name', value: `${channelName}`})
 			.addFields({ name: 'Channel ID', value: `${channelId}`})
-            .addFields({ name: 'Chat command', value: `${text}`})
             .addFields({ name: 'User name', value: `${user}`})
 			.addFields({ name: 'User ID', value: `${userId}`})
+			.addFields({ name: 'Chat command', value: `${text}`})
             .addFields({ name: 'Created At', value: `${createdAt}`})
 			.addFields({ name: 'Unix Timestamp', value: `${unixTimestamp}`})
             // .setTimestamp();
@@ -281,3 +289,55 @@ async function createLogEmbed(message) {
     }
 }
 
+
+//#####################################################################################################
+// SQLite3 Stuff
+let sql;
+
+// Connects to DB
+const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE,(err)=>{
+	if(err) return console.error(err.message);
+});
+
+// Create table
+sql = `CREATE TABLE logs (
+		id INTEGER PRIMARY KEY,
+		server_name TEXT,
+		server_id INTEGER,
+		channel_name TEXT,
+		channel_id INTEGER,
+		user_name TEXT,
+		user_id INTEGER,
+		chat_command BLOB,
+		unix_timestamp INTEGER)`;
+db.run(sql);
+
+//Drop table
+// db.run("DROP TABLE logs");
+
+// Insert data into table
+// sql = `INSERT INTO logs(server_name,server_id,channel_name,channel_id,user_name,user_id,chat_command,unix_timestamp) VALUES (?,?,?,?,?,?,?,?)`
+// db.run(sql,["testserver2","1234567890","testchannel2","1234567890","testuser2", "1234567890","/item zyzz","1699264797252"],(err) => {
+// 	if(err) return console.error(err.message);
+// });
+
+//Update data (will be needed for mentor notes)
+// sql = `UPDATE logs SET server_name = ? WHERE id = ?`;
+// db.run(sql,['testserver2',2],(err)=>{
+// 	if(err) return console.error(err.message);
+// })
+
+// Delete data (will be need for mentor notes)
+// sql = `DELETE FROM logs WHERE id = ?`;
+// db.run(sql,[2],(err)=>{
+// 	if(err) return console.error(err.message);
+// })
+
+// Query the data
+sql = `SELECT * FROM logs`;
+db.all(sql,[],(err,rows) => {
+	if(err) return console.error(err.message);
+		rows.forEach(row=>{console.log(row);
+		}
+	)
+})
