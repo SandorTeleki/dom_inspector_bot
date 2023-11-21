@@ -5,16 +5,17 @@ const { siteAliases } = require('./siteAliases');
 const { similarMatches } =require('./similarMatches');
 const sqlite3 = require('sqlite3').verbose();
 
-async function getSite( siteName, siteMessage ){
+async function getSite( siteName, siteInteraction ){
     //Grabbing useful parts of the message
-    const server = siteMessage.guild.name;
-    const serverId = siteMessage.guildId;
-    const channelName = siteMessage.channel.name;
-    const channelId = siteMessage.channelId;
-    const user = siteMessage.author.tag;
-    const userId = siteMessage.author.id;
-    const text = siteMessage.content;
-    const unixTimestamp = siteMessage.createdTimestamp;
+    const serverName = siteInteraction.guild.name;
+    const serverId = siteInteraction.guild.id;
+    const channelName = siteInteraction.channel.name;
+    const channelId = siteInteraction.channel.id;
+    const userName = siteInteraction.user.tag; 
+    const userId = siteInteraction.user.id; 
+    const command = siteInteraction.toString();
+    const createdAt = siteInteraction.createdAt;
+    const timestamp = siteInteraction.createdTimestamp;
     
     if (siteName in siteAliases){ siteName = siteAliases[siteName] };
     var site;

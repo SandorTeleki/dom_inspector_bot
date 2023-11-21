@@ -5,16 +5,17 @@ const { unitAliases } =require('./unitAliases');
 const { similarMatches } =require('./similarMatches');
 const sqlite3 = require('sqlite3').verbose();
 
-async function getUnit( unitName, unitMessage ){
+async function getUnit( unitName, unitInteraction ){
     //Grabbing useful parts of the message
-    const server = unitMessage.guild.name;
-    const serverId = unitMessage.guildId;
-    const channelName = unitMessage.channel.name;
-    const channelId = unitMessage.channelId;
-    const user = unitMessage.author.tag;
-    const userId = unitMessage.author.id;
-    const text = unitMessage.content;
-    const unixTimestamp = unitMessage.createdTimestamp;
+    const serverName = unitInteraction.guild.name;
+    const serverId = unitInteraction.guild.id;
+    const channelName = unitInteraction.channel.name;
+    const channelId = unitInteraction.channel.id;
+    const userName = unitInteraction.user.tag; 
+    const userId = unitInteraction.user.id; 
+    const command = unitInteraction.toString();
+    const createdAt = unitInteraction.createdAt;
+    const timestamp = unitInteraction.createdTimestamp;
 
     if (unitName in unitAliases){ unitName = unitAliases[unitName] };
     var unit;

@@ -5,18 +5,18 @@ const { Client, Collection, Intents, Events, GatewayIntentBits } = require('disc
 const { token } = require('./config.json');
 const Discord = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
-// const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Events} = require('discord.js'); --- For Buttons, waiting on v14...
+//const { ActionRowBuilder, ButtonBuilder, ButtonStyle} = require('discord.js'); //--- For Buttons, waiting on v14...
 const { getItem } = require('./utils/itemHelper');
 const { getSpell } = require('./utils/spellHelper');
 const { getMerc } = require('./utils/mercHelper');
 const { getSite } = require('./utils/siteHelper');
 const { getUnit } = require('./utils/unitHelper');
 const { getHelpEmbed } = require('./utils/helpEmbed');
-const { WRONG_BOT_URL, ALL_BOOLI_URL } = require('./utils/utils');
+const { WRONG_BOT_URL, ALL_BOOLI_URL, BASE_URL } = require('./utils/utils');
+const { request } = require('undici');
 const { stringify } = require('node:querystring');
 // sqlite3 imports
 const sqlite3 = require('sqlite3').verbose();
-
 
 const client = new Client({ 
 	intents: [
@@ -85,7 +85,8 @@ client.on("messageCreate", async (message) => {
 	// Item command
   	if (message.content.startsWith(`${prefix}item`)) {
 		let itemName = message.content.slice(6).toLowerCase();
-		const itemEmbed = await getItem( itemName );
+		var itemMessage = message;
+		const itemEmbed = await getItem( itemName, itemMessage );
 		createLog(message);
 		createLogEmbed(message);
 
@@ -94,7 +95,8 @@ client.on("messageCreate", async (message) => {
 	// Spell command
 	if (message.content.startsWith(`${prefix}spell`)) {
 		let spellName = message.content.slice(7).toLowerCase();
-		const spellEmbed = await getSpell( spellName );
+		var spellMessage = message;
+		const spellEmbed = await getSpell( spellName, spellMessage );
 		createLog(message);
 		createLogEmbed(message);
 
@@ -103,8 +105,9 @@ client.on("messageCreate", async (message) => {
 	// Merc command
 	if (message.content.startsWith(`${prefix}merc`)) {
 		let mercName = message.content.slice(6).toLowerCase();
+		var mercMessage = message;
 		try {
-			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName); 
+			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName, mercMessage); 
 			createLog(message);
 			createLogEmbed(message);
 
@@ -116,12 +119,12 @@ client.on("messageCreate", async (message) => {
             	.setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
             await message.channel.send({ embeds: [errorEmbed]});
 		}
-		
 	};
 	// Site command
 	if (message.content.startsWith(`${prefix}site`)) {
 		const siteName = message.content.slice(6).toLowerCase();
-		const siteEmbed = await getSite( siteName );
+		var siteMessage = message;
+		const siteEmbed = await getSite( siteName, siteMessage );
 		createLog(message);
 		createLogEmbed(message);
 
@@ -130,7 +133,8 @@ client.on("messageCreate", async (message) => {
 	// Unit command
 	if (message.content.startsWith(`${prefix}unit`)) {
 		let unitName = message.content.slice(6).toLowerCase();
-		const unitEmbed = await getUnit( unitName );
+		var unitMessage = message;
+		const unitEmbed = await getUnit( unitName, unitMessage );
 		createLog(message);
 		createLogEmbed(message);
 
@@ -174,8 +178,152 @@ client.on("messageCreate", async (message) => {
 
         await message.channel.send({ embeds: [booliEmbed]});
 	}
-	
-	//Button Test - waiting for discord.js v14 first...
+
+	// Note command
+	if (message.content.startsWith(`${prefix}note`)){
+		// Parts of the message we need to use later
+		const server = message.guild.name;
+		const serverId = message.guildId;
+		const channelName = message.channel.name;
+		const channelId = message.channelId;
+		const user = message.author.tag;
+		const userId = message.author.id;
+		const text = message.content;
+		const unixTimestamp = message.createdTimestamp;
+
+
+		const mentorWhitelist = ['522764785696243712', '576781542370836521', '293099185283137536'];
+		const channelWhiteList = ['996378750474256385', '1175513268320735322', '1176173846118805554'];
+
+		//Check user permission to use the ?note command 
+		if (mentorWhitelist.every((item)=>{ return item !== userId })){
+			message.reply('You are not whitelisted to write mentor notes.');
+			return;
+		};
+
+		//Check channel permission to have the ?note command used in it
+		if (channelWhiteList.every((item)=>{ return item !== channelId })){
+			message.reply('This channel is not whitelisted to use the `?note` command.');
+			return;
+		};
+
+
+		//Split the note into matching groups using regex to make error checking and logging easier
+		const regEx = /^(item|spell|unit|site|merc)\s(\d+)\s(.*)/i;
+
+		const note = message.content.slice(6);
+		const noteMatch = note.match(regEx);
+
+		// Error handling if note syntax is incorrect
+		if (noteMatch === null) {
+			message.reply("Incorrect syntax. The correct syntax is: `?note {class} {id} {text}`\n`{class}` is the name of the command (item, merc, unit etc.) \n`{id}` is the id of the item, merc, unit etc. \n`{text}` is the text of your mentor note (cannot be blank).");
+			return;
+		} 
+
+		// Length related constants
+		const noteLengthLimitMax = 250;
+		const noteLengthLimitMin = 3;
+
+		// Error handling if note is too long
+		const noteText = noteMatch[3];
+		if (noteText.length > noteLengthLimitMax) {
+			message.reply(`Max note length is \`${noteLengthLimitMax}\` characters, yours is \`${noteText.length - noteLengthLimitMax}\` too long.`)
+			return;
+		}
+
+		// Error handling if note is too short
+		if (noteText.length < noteLengthLimitMin) {
+			message.reply(`Min note length is \`${noteLengthLimitMin}\` characters, yours is \`${noteLengthLimitMin - noteText.length}\` too short.`)
+			return;
+		}
+
+		// Creating constants to hold data from result of note.match(regEx)
+		//const fullMatchInfo = noteMatch[0];
+		const commandUsed = noteMatch[1].toLowerCase();
+		const idUsed = noteMatch[2];
+		const noteWritten = noteMatch[3];
+
+		//Checking if ID exists
+		var commandResult;
+		async function checkId() {
+			const { statusCode, body } = await request(BASE_URL + '/' + commandUsed + 's/' + idUsed);
+			//Error handling in case server responds with a '404' - mostly because not all IDs exist
+			if (statusCode === 404){
+				message.reply(`For the "${commandUsed}" command nothing was found matching ID: ${idUsed}. Please double check the ID and try again...`);
+				return;
+			}
+			commandResult = await body.json();
+			//Runs if we don't hit a 404 above
+			commandName = commandResult.name;
+
+			function checkNoteMatch() {
+				sql = `SELECT class, class_id FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`
+				db.get(sql,[commandUsed,idUsed,serverId],(err, row) => {
+					if(err) return console.error(err.message);
+				console.log(JSON.stringify(row));
+					
+					// If no match was found, we INSERT the new note
+					if (row === undefined){ 			
+						sql = `INSERT INTO mentor_notes(class,class_id,name,note,guild_name,guild_id,written_time,written_by_user) VALUES (?,?,?,?,?,?,?,?)`
+						db.run(sql,[commandUsed,idUsed,commandName,noteWritten,server,serverId,unixTimestamp,user],(err) => {
+							if(err) return console.error(err.message);
+						});
+						console.log('Nothing found, inserting new note...');
+						message.reply("Note was added!")
+
+						//Adding command log usage
+						sql = `INSERT INTO logs(server_name,server_id,channel_name,channel_id,user_name,user_id,chat_command,unix_timestamp) VALUES (?,?,?,?,?,?,?,?)`
+						db.run(sql,[server,serverId,channelName,channelId,user,userId,text,unixTimestamp],(err) => {
+							if(err) return console.error(err.message);
+						});
+
+						//Adding mentor note log
+						sql = `INSERT INTO mentor_logs(class,class_id,name,note,guild_name,guild_id,written_time,written_by_user) VALUES (?,?,?,?,?,?,?,?)`
+						db.run(sql,[commandUsed,idUsed,commandName,noteWritten,server,serverId,unixTimestamp,user],(err) => {
+							if(err) return console.error(err.message);
+						});
+
+						// Gotta return so we don't UPDATE the just INSERT-ed note right away
+						return;
+					}
+			
+					//Since a match was found, we UPDATE the note
+					function updateNote() {
+						sql = `UPDATE mentor_notes SET note = ? WHERE class = ? AND class_id = ? AND guild_id = ?`
+						db.run(sql,[noteWritten,commandUsed,idUsed,serverId],(err)=> {
+							if(err) return console.error(err.message);
+						});
+
+						//Adding command log usage
+						sql = `INSERT INTO logs(server_name,server_id,channel_name,channel_id,user_name,user_id,chat_command,unix_timestamp) VALUES (?,?,?,?,?,?,?,?)`
+						db.run(sql,[server,serverId,channelName,channelId,user,userId,text,unixTimestamp],(err) => {
+							if(err) return console.error(err.message);
+						});
+
+						//Adding mentor note log
+						sql = `INSERT INTO mentor_logs(class,class_id,name,note,guild_name,guild_id,written_time,written_by_user) VALUES (?,?,?,?,?,?,?,?)`
+						db.run(sql,[commandUsed,idUsed,commandName,noteWritten,server,serverId,unixTimestamp,user],(err) => {
+							if(err) return console.error(err.message);
+						});
+						
+						console.log("Note was found, updating note...")
+						message.reply("Note was updated!")
+
+					}
+					
+					updateNote();
+				});
+			}
+			
+			checkNoteMatch();
+		}
+
+		checkId(); 
+	}
+
+// --------------------------------TESTING------------------------------ //
+
+	//Button Test - button loading and works. Will need to add stuff to happen once button is actually clicked
 	// if (message.content.startsWith(`${prefix}button`)){
 	// 	const row = new ActionRowBuilder()
 	// 	.addComponents(
@@ -238,17 +386,17 @@ function createLog(message){
 	const unixTimestamp = message.createdTimestamp;
 	// const infodump = stringify(e.client.user);
 
-	console.log(`
-	Server Name: ${server}
-	Server ID: ${serverId}
-	Channel Name: ${channelName}
-	Channel ID: ${channelId}
-	User Name: ${user}
-	User Id: ${userId}
-	Command Name: ${text}
-	Created At: ${createdAt}
-	Unix Timestamp: ${unixTimestamp}
-	`)
+	// console.log(`
+	// Server Name: ${server}
+	// Server ID: ${serverId}
+	// Channel Name: ${channelName}
+	// Channel ID: ${channelId}
+	// User Name: ${user}
+	// User Id: ${userId}
+	// Command Name: ${text}
+	// Created At: ${createdAt}
+	// Unix Timestamp: ${unixTimestamp}
+	// `)
 
 	sql = `INSERT INTO logs(server_name,server_id,channel_name,channel_id,user_name,user_id,chat_command,unix_timestamp) VALUES (?,?,?,?,?,?,?,?)`
 	db.run(sql,[server,serverId,channelName,channelId,user,userId,text,unixTimestamp],(err) => {
@@ -262,7 +410,7 @@ async function createLogEmbed(message) {
     //console.log(interaction);
     if (!message) return;
     else {
-        const channel = await client.channels.cache.get('1165999070272303174');
+        const channel = client.channels.cache.get('1165999070272303174');
         const server = message.guild;
 		const serverId = message.guildId;
 		const channelName = message.channel;
@@ -299,7 +447,7 @@ const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE,(err)=>{
 	if(err) return console.error(err.message);
 });
 
-// Create table
+// Create table to store usage logs
 sql = `CREATE TABLE IF NOT EXISTS logs (
 	id INTEGER PRIMARY KEY,
 	server_name TEXT,
@@ -312,8 +460,36 @@ sql = `CREATE TABLE IF NOT EXISTS logs (
 	unix_timestamp INTEGER)`;
 db.run(sql);
 
+// Create table to store mentor notes
+sql = `CREATE TABLE IF NOT EXISTS mentor_notes (
+	class TEXT,
+	class_id INTEGER,
+	name TEXT,
+	note TEXT,
+	guild_name TEXT,
+	guild_id INTEGER,
+	written_time INTEGER,
+	written_by_user TEXT)`;
+db.run(sql);
+
+// Cretea table to store mentor note logs
+sql = `CREATE TABLE IF NOT EXISTS mentor_logs (
+	class TEXT,
+	class_id INTEGER,
+	name TEXT,
+	note TEXT,
+	guild_name TEXT,
+	guild_id INTEGER,
+	written_time INTEGER,
+	written_by_user TEXT)`;
+db.run(sql);
+
+
 //Drop table
 // db.run("DROP TABLE logs");
+// db.run("DROP TABLE mentor_notes");
+// db.run("DROP TABLE mentor_logs");
+
 
 // Insert data into table
 // sql = `INSERT INTO logs(server_name,server_id,channel_name,channel_id,user_name,user_id,chat_command,unix_timestamp) VALUES (?,?,?,?,?,?,?,?)`
@@ -330,7 +506,7 @@ db.run(sql);
 // Delete data (will be need for mentor notes)
 // sql = `DELETE FROM logs WHERE id = ?`;
 // db.run(sql,[2],(err)=>{
-// 	if(err) return console.error(err.message);
+// 	if(err) return console.error(err.message);vvc
 // })
 
 // Query the data
@@ -341,3 +517,54 @@ db.run(sql);
 // 		}
 // 	)
 // })
+
+
+
+//Working note UPDATE
+// function updateNote() {
+// 	sql = `UPDATE mentor_notes SET note = ? WHERE class = ? AND class_id = ? AND guild_id = ?`
+// 	db.run(sql,["blah blah another time blah","spell","151","989810287056134145"],(err)=> {
+// 		if(err) return console.error(err.message);
+// 	});
+// 	console.log("this worked!")
+// }
+
+// updateNote();
+
+
+
+// function checkNoteMatch() {
+// 	sql = `SELECT class, class_id FROM mentor_notes WHERE class = "spell" AND class_id = "161" AND guild_id = "989810287056134145"`
+// 	db.get(sql,[],(err, row) => {
+// 		if(err) return console.error(err.message);
+// 		console.log(JSON.stringify(row));
+		
+// 		// If no match was found, we INSERT the new note
+// 		if (row === undefined){ 
+// 			console.log('nothing found, inserting new note');
+
+// 			sql = `INSERT INTO mentor_notes(class,class_id,name,note,guild_name,guild_id,written_time,written_by_user) VALUES (?,?,?,?,?,?,?,?)`
+// 			db.run(sql,["spell","161","random test name","we are testing INSERT now","bob's","989810287056134145","1234","me"],(err) => {
+// 				if(err) return console.error(err.message);
+// 			});
+// 			// Gotta return so we don't UPDATE the just INSERT-ed note right away
+// 			return;
+// 		}
+
+// 		//Since a match was found, we UPDATE the note
+// 		function updateNote() {
+// 			sql = `UPDATE mentor_notes SET note = ? WHERE class = ? AND class_id = ? AND guild_id = ?`
+// 			db.run(sql,["testing UPDATE now","spell","161","989810287056134145"],(err)=> {
+// 				if(err) return console.error(err.message);
+// 			});
+// 			console.log("note was found, updating note")
+// 		}
+		
+// 		updateNote();
+// 	});
+// }
+
+// checkNoteMatch();
+
+
+

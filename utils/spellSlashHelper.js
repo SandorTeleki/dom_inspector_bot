@@ -5,16 +5,17 @@ const { spellAliases } =require('./spellAliases');
 const { similarMatches } =require('./similarMatches');
 const sqlite3 = require('sqlite3').verbose();
 
-async function getSpell( spellName, spellMessage ){
+async function getSpell( spellName, spellInteraction ){
     //Grabbing useful parts of the message
-    const server = spellMessage.guild.name;
-    const serverId = spellMessage.guildId;
-    const channelName = spellMessage.channel.name;
-    const channelId = spellMessage.channelId;
-    const user = spellMessage.author.tag;
-    const userId = spellMessage.author.id;
-    const text = spellMessage.content;
-    const unixTimestamp = spellMessage.createdTimestamp;
+    const serverName = spellInteraction.guild.name;
+    const serverId = spellInteraction.guild.id;
+    const channelName = spellInteraction.channel.name;
+    const channelId = spellInteraction.channel.id;
+    const userName = spellInteraction.user.tag; 
+    const userId = spellInteraction.user.id; 
+    const command = spellInteraction.toString();
+    const createdAt = spellInteraction.createdAt;
+    const timestamp = spellInteraction.createdTimestamp;
 
     if (spellName in spellAliases){ spellName = spellAliases[spellName] };
     var spell;

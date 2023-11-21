@@ -5,16 +5,17 @@ const { mercAliases } =require('./mercAliases');
 const { similarMatches } =require('./similarMatches');
 const sqlite3 = require('sqlite3').verbose();
 
-async function getMerc( mercName, mercMessage ){
+async function getMerc( mercName, mercInteraction ){
     //Grabbing useful parts of the message
-    const server = mercMessage.guild.name;
-    const serverId = mercMessage.guildId;
-    const channelName = mercMessage.channel.name;
-    const channelId = mercMessage.channelId;
-    const user = mercMessage.author.tag;
-    const userId = mercMessage.author.id;
-    const text = mercMessage.content;
-    const unixTimestamp = mercMessage.createdTimestamp;
+    const serverName = mercInteraction.guild.name;
+    const serverId = mercInteraction.guild.id;
+    const channelName = mercInteraction.channel.name;
+    const channelId = mercInteraction.channel.id;
+    const userName = mercInteraction.user.tag; 
+    const userId = mercInteraction.user.id; 
+    const command = mercInteraction.toString();
+    const createdAt = mercInteraction.createdAt;
+    const timestamp = mercInteraction.createdTimestamp;
 
     if (mercName in mercAliases){ mercName = mercAliases[mercName] };
     var merc;

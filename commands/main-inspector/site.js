@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { getSite } = require('../../utils/siteHelper');
-
+// const { getSite } = require('../../utils/siteHelper');
+const { getSite } = require('../../utils/siteSlashHelper');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,7 +10,8 @@ module.exports = {
 
 	async execute(interaction) {
         const siteName = interaction.options.getString('site_name');
-        const siteEmbed = await getSite( siteName );
+		var siteInteraction = interaction;
+        const siteEmbed = await getSite( siteName, siteInteraction );
         await interaction.reply({ embeds: [siteEmbed] });
 	},
 };

@@ -16,17 +16,17 @@ module.exports = {
 
 		try {
 			await command.execute(interaction);
-			console.log(`
-				Server Name: ${interaction.guild.name} 
-				Server ID: ${interaction.guild.id} 
-				Channel Name: #${interaction.channel.name}
-				Channel ID: #${interaction.channel.id}
-				User: #${interaction.user.tag} 
-				User ID: ${interaction.user.id} 
-				Command: ${interaction}
-				Created At: ${interaction.createdAt}
-				Unix Timestamp: ${interaction.createdTimestamp}
-				`)
+			// console.log(`
+			// 	Server Name: ${interaction.guild.name} 
+			// 	Server ID: ${interaction.guild.id} 
+			// 	Channel Name: #${interaction.channel.name}
+			// 	Channel ID: #${interaction.channel.id}
+			// 	User: #${interaction.user.tag} 
+			// 	User ID: ${interaction.user.id} 
+			// 	Command: ${interaction}
+			// 	Created At: ${interaction.createdAt}
+			// 	Unix Timestamp: ${interaction.createdTimestamp}
+			// 	`)
 
 			const commandContent = interaction.toString();
 			

@@ -5,20 +5,23 @@ const { itemAliases } = require('./itemAliases');
 const { similarMatches } =require('./similarMatches');
 const sqlite3 = require('sqlite3').verbose();
 
-async function getItem( itemName, itemMessage ){
+async function getItem( itemName, itemInteraction ){
     //Grabbing useful parts of the message
-    const server = itemMessage.guild.name;
-    const serverId = itemMessage.guildId;
-    const channelName = itemMessage.channel.name;
-    const channelId = itemMessage.channelId;
-    const user = itemMessage.author.tag;
-    const userId = itemMessage.author.id;
-    const text = itemMessage.content;
-    const unixTimestamp = itemMessage.createdTimestamp;
+    const serverName = itemInteraction.guild.name;
+    const serverId = itemInteraction.guild.id;
+    const channelName = itemInteraction.channel.name;
+    const channelId = itemInteraction.channel.id;
+    const userName = itemInteraction.user.tag; 
+    const userId = itemInteraction.user.id; 
+    const command = itemInteraction.toString();
+    const createdAt = itemInteraction.createdAt;
+    const timestamp = itemInteraction.createdTimestamp;
 
     if (itemName in itemAliases){ itemName = itemAliases[itemName] };
+
     var item;
     var similarMatchesString;    
+
     if  (/^\d+$/.test(itemName)){
         const { statusCode, body } = await request(BASE_URL + ITEM_URL + '/' + encodeURIComponent(itemName));
         console.log('statusCode', statusCode);

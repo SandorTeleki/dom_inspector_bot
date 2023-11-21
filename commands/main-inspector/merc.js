@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { getMerc } = require('../../utils/mercHelper');
+//const { getMerc } = require('../../utils/mercHelper');
+const { getMerc } = require('../../utils/mercSlashHelper');
 const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -10,8 +11,9 @@ module.exports = {
 
 	async execute(interaction) {
 		let mercName = interaction.options.getString('merc_name');
+		var mercInteraction = interaction;
 		try {
-			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName); 
+			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName, mercInteraction); 
 			await interaction.reply({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
 		}
 		catch {
