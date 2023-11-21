@@ -192,7 +192,7 @@ client.on("messageCreate", async (message) => {
 		const unixTimestamp = message.createdTimestamp;
 
 
-		const mentorWhitelist = ['522764785696243712', '576781542370836521', '293099185283137536'];
+		const mentorWhitelist = ['522764785696243712', '576781542370836521', '293099185283137536', '335649144872108034'];
 		const channelWhiteList = ['996378750474256385', '1175513268320735322', '1176173846118805554','1007203153252454401'];
 
 		//Check user permission to use the ?note command 
