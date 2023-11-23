@@ -5,16 +5,20 @@ const { siteAliases } = require('./siteAliases');
 const { similarMatches } =require('./similarMatches');
 const sqlite3 = require('sqlite3').verbose();
 
-async function getSite( siteName, siteMessage ){
-    //Grabbing useful parts of the message
-    const server = siteMessage.guild.name;
-    const serverId = siteMessage.guildId;
-    const channelName = siteMessage.channel.name;
-    const channelId = siteMessage.channelId;
-    const user = siteMessage.author.tag;
-    const userId = siteMessage.author.id;
-    const text = siteMessage.content;
-    const unixTimestamp = siteMessage.createdTimestamp;
+async function getSite( siteName, siteCommandData ){
+    //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
+    const channelId = (siteCommandData.type === 0 ? siteCommandData.channelId : siteCommandData.channel.id );
+    const serverId = (siteCommandData.type === 0 ? siteCommandData.guildId : siteCommandData.guild.id );
+    
+    //----Other useful parts of the message/interaction----//
+    // const server = siteCommandData.guild.name;
+    // const serverId = siteCommandData.guildId;
+    // const channelName = siteCommandData.channel.name;
+    // const channelId = siteCommandData.channelId;
+    // const user = siteCommandData.author.tag;
+    // const userId = siteCommandData.author.id;
+    // const text = siteCommandData.content;
+    // const unixTimestamp = siteCommandData.createdTimestamp;
     
     if (siteName in siteAliases){ siteName = siteAliases[siteName] };
     var site;

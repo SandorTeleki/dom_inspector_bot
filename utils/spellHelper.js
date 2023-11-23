@@ -5,16 +5,20 @@ const { spellAliases } =require('./spellAliases');
 const { similarMatches } =require('./similarMatches');
 const sqlite3 = require('sqlite3').verbose();
 
-async function getSpell( spellName, spellMessage ){
-    //Grabbing useful parts of the message
-    const server = spellMessage.guild.name;
-    const serverId = spellMessage.guildId;
-    const channelName = spellMessage.channel.name;
-    const channelId = spellMessage.channelId;
-    const user = spellMessage.author.tag;
-    const userId = spellMessage.author.id;
-    const text = spellMessage.content;
-    const unixTimestamp = spellMessage.createdTimestamp;
+async function getSpell( spellName, spellCommandData ){
+    //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
+    const channelId = (spellCommandData.type === 0 ? spellCommandData.channelId : spellCommandData.channel.id );
+    const serverId = (spellCommandData.type === 0 ? spellCommandData.guildId : spellCommandData.guild.id );
+    
+    //----Other useful parts of the message/interaction----//
+    // const server = spellCommandData.guild.name;
+    // const serverId = spellCommandData.guildId;
+    // const channelName = spellCommandData.channel.name;
+    // const channelId = spellCommandData.channelId;
+    // const user = spellCommandData.author.tag;
+    // const userId = spellCommandData.author.id;
+    // const text = spellCommandData.content;
+    // const unixTimestamp = spellCommandData.createdTimestamp;
 
     if (spellName in spellAliases){ spellName = spellAliases[spellName] };
     var spell;

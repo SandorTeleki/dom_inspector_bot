@@ -5,16 +5,20 @@ const { itemAliases } = require('./itemAliases');
 const { similarMatches } =require('./similarMatches');
 const sqlite3 = require('sqlite3').verbose();
 
-async function getItem( itemName, itemMessage ){
-    //Grabbing useful parts of the message
-    const server = itemMessage.guild.name;
-    const serverId = itemMessage.guildId;
-    const channelName = itemMessage.channel.name;
-    const channelId = itemMessage.channelId;
-    const user = itemMessage.author.tag;
-    const userId = itemMessage.author.id;
-    const text = itemMessage.content;
-    const unixTimestamp = itemMessage.createdTimestamp;
+async function getItem( itemName, itemCommandData ){
+    //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
+    const channelId = (itemCommandData.type === 0 ? itemCommandData.channelId : itemCommandData.channel.id );
+    const serverId = (itemCommandData.type === 0 ? itemCommandData.guildId : itemCommandData.guild.id );
+    
+    //----Other useful parts of the message/interaction----//
+    // const server = itemCommandData.guild.name;
+    // const serverId = itemCommandData.guildId;
+    // const channelName = itemCommandData.channel.name;
+    // const channelId = itemCommandData.channelId;
+    // const user = itemCommandData.author.tag;
+    // const userId = itemCommandData.author.id;
+    // const text = itemCommandData.content;
+    // const unixTimestamp = itemCommandData.createdTimestamp;
 
 
     if (itemName in itemAliases){ itemName = itemAliases[itemName] };
@@ -22,7 +26,7 @@ async function getItem( itemName, itemMessage ){
     var similarMatchesString;    
     if  (/^\d+$/.test(itemName)){
         const { statusCode, body } = await request(BASE_URL + ITEM_URL + '/' + encodeURIComponent(itemName));
-        console.log('statusCode', statusCode);
+        //console.log('statusCode', statusCode); //Check status code, if needed for debugging
         if (statusCode === 404){
             const errorEmbed = new EmbedBuilder()
             .setTitle("Nothing found. Better luck next time!")

@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-//const { getSpell } = require('../../utils/spellHelper');
-const { getSpell } = require('../../utils/spellSlashHelper');
+const { getSpell } = require('../../utils/spellHelper');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,8 +9,8 @@ module.exports = {
 
 	async execute(interaction) {
         let spellName = interaction.options.getString('spell_name');
-		var spellInteraction = interaction;
-        const spellEmbed = await getSpell( spellName, spellInteraction );
+		var spellCommandData = interaction;
+        const spellEmbed = await getSpell( spellName, spellCommandData );
         await interaction.reply({ embeds: [spellEmbed] });
 	},
 };

@@ -85,8 +85,8 @@ client.on("messageCreate", async (message) => {
 	// Item command
   	if (message.content.startsWith(`${prefix}item`)) {
 		let itemName = message.content.slice(6).toLowerCase();
-		var itemMessage = message;
-		const itemEmbed = await getItem( itemName, itemMessage );
+		var itemCommandData = message;
+		const itemEmbed = await getItem( itemName, itemCommandData );
 		createLog(message);
 		createLogEmbed(message);
 
@@ -95,8 +95,8 @@ client.on("messageCreate", async (message) => {
 	// Spell command
 	if (message.content.startsWith(`${prefix}spell`)) {
 		let spellName = message.content.slice(7).toLowerCase();
-		var spellMessage = message;
-		const spellEmbed = await getSpell( spellName, spellMessage );
+		var spellCommandData = message;
+		const spellEmbed = await getSpell( spellName, spellCommandData );
 		createLog(message);
 		createLogEmbed(message);
 
@@ -105,9 +105,9 @@ client.on("messageCreate", async (message) => {
 	// Merc command
 	if (message.content.startsWith(`${prefix}merc`)) {
 		let mercName = message.content.slice(6).toLowerCase();
-		var mercMessage = message;
+		var mercCommandData = message;
 		try {
-			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName, mercMessage); 
+			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName, mercCommandData); 
 			createLog(message);
 			createLogEmbed(message);
 
@@ -123,8 +123,8 @@ client.on("messageCreate", async (message) => {
 	// Site command
 	if (message.content.startsWith(`${prefix}site`)) {
 		const siteName = message.content.slice(6).toLowerCase();
-		var siteMessage = message;
-		const siteEmbed = await getSite( siteName, siteMessage );
+		var siteCommandData = message;
+		const siteEmbed = await getSite( siteName, siteCommandData );
 		createLog(message);
 		createLogEmbed(message);
 
@@ -133,8 +133,8 @@ client.on("messageCreate", async (message) => {
 	// Unit command
 	if (message.content.startsWith(`${prefix}unit`)) {
 		let unitName = message.content.slice(6).toLowerCase();
-		var unitMessage = message;
-		const unitEmbed = await getUnit( unitName, unitMessage );
+		var unitCommandData = message;
+		const unitEmbed = await getUnit( unitName, unitCommandData );
 		createLog(message);
 		createLogEmbed(message);
 

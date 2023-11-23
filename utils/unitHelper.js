@@ -5,16 +5,20 @@ const { unitAliases } =require('./unitAliases');
 const { similarMatches } =require('./similarMatches');
 const sqlite3 = require('sqlite3').verbose();
 
-async function getUnit( unitName, unitMessage ){
-    //Grabbing useful parts of the message
-    const server = unitMessage.guild.name;
-    const serverId = unitMessage.guildId;
-    const channelName = unitMessage.channel.name;
-    const channelId = unitMessage.channelId;
-    const user = unitMessage.author.tag;
-    const userId = unitMessage.author.id;
-    const text = unitMessage.content;
-    const unixTimestamp = unitMessage.createdTimestamp;
+async function getUnit( unitName, unitCommandData ){
+    //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
+    const channelId = (unitCommandData.type === 0 ? unitCommandData.channelId : unitCommandData.channel.id );
+    const serverId = (unitCommandData.type === 0 ? unitCommandData.guildId : unitCommandData.guild.id );
+    
+    //----Other useful parts of the message/interaction----//
+    //const server = unitCommandData.guild.name;
+    //const serverId = unitCommandData.guildId;
+    //const channelName = unitCommandData.channel.name;
+    //const channelId = unitCommandData.channelId;
+    //const user = unitCommandData.author.tag;
+    //const userId = unitCommandData.author.id;
+    //const text = unitCommandData.content;
+    //const unixTimestamp = unitCommandData.createdTimestamp;
 
     if (unitName in unitAliases){ unitName = unitAliases[unitName] };
     var unit;
@@ -82,7 +86,7 @@ async function getUnit( unitName, unitMessage ){
         if(mentorNote !== undefined){
             unitEmbed.setDescription(`Mentor Note: ${mentorNote}`);
         }
-    }        
+    }  
     return unitEmbed;
 }
 

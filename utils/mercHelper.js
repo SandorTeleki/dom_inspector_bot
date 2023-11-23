@@ -5,16 +5,20 @@ const { mercAliases } =require('./mercAliases');
 const { similarMatches } =require('./similarMatches');
 const sqlite3 = require('sqlite3').verbose();
 
-async function getMerc( mercName, mercMessage ){
-    //Grabbing useful parts of the message
-    const server = mercMessage.guild.name;
-    const serverId = mercMessage.guildId;
-    const channelName = mercMessage.channel.name;
-    const channelId = mercMessage.channelId;
-    const user = mercMessage.author.tag;
-    const userId = mercMessage.author.id;
-    const text = mercMessage.content;
-    const unixTimestamp = mercMessage.createdTimestamp;
+async function getMerc( mercName, mercCommandData ){
+    //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
+    const channelId = (mercCommandData.type === 0 ? mercCommandData.channelId : mercCommandData.channel.id );
+    const serverId = (mercCommandData.type === 0 ? mercCommandData.guildId : mercCommandData.guild.id );
+    
+    //----Other useful parts of the message/interaction----//
+    // const server = mercCommandData.guild.name;
+    // const serverId = mercCommandData.guildId;
+    // const channelName = mercCommandData.channel.name;
+    // const channelId = mercCommandData.channelId;
+    // const user = mercCommandData.author.tag;
+    // const userId = mercCommandData.author.id;
+    // const text = mercCommandData.content;
+    // const unixTimestamp = mercCommandData.createdTimestamp;
 
     if (mercName in mercAliases){ mercName = mercAliases[mercName] };
     var merc;
