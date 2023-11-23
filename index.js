@@ -439,6 +439,7 @@ async function createLogEmbed(message) {
 
 
 //#####################################################################################################
+
 // SQLite3 Stuff
 let sql;
 
@@ -518,53 +519,6 @@ db.run(sql);
 // 	)
 // })
 
-
-
-//Working note UPDATE
-// function updateNote() {
-// 	sql = `UPDATE mentor_notes SET note = ? WHERE class = ? AND class_id = ? AND guild_id = ?`
-// 	db.run(sql,["blah blah another time blah","spell","151","989810287056134145"],(err)=> {
-// 		if(err) return console.error(err.message);
-// 	});
-// 	console.log("this worked!")
-// }
-
-// updateNote();
-
-
-
-// function checkNoteMatch() {
-// 	sql = `SELECT class, class_id FROM mentor_notes WHERE class = "spell" AND class_id = "161" AND guild_id = "989810287056134145"`
-// 	db.get(sql,[],(err, row) => {
-// 		if(err) return console.error(err.message);
-// 		console.log(JSON.stringify(row));
-		
-// 		// If no match was found, we INSERT the new note
-// 		if (row === undefined){ 
-// 			console.log('nothing found, inserting new note');
-
-// 			sql = `INSERT INTO mentor_notes(class,class_id,name,note,guild_name,guild_id,written_time,written_by_user) VALUES (?,?,?,?,?,?,?,?)`
-// 			db.run(sql,["spell","161","random test name","we are testing INSERT now","bob's","989810287056134145","1234","me"],(err) => {
-// 				if(err) return console.error(err.message);
-// 			});
-// 			// Gotta return so we don't UPDATE the just INSERT-ed note right away
-// 			return;
-// 		}
-
-// 		//Since a match was found, we UPDATE the note
-// 		function updateNote() {
-// 			sql = `UPDATE mentor_notes SET note = ? WHERE class = ? AND class_id = ? AND guild_id = ?`
-// 			db.run(sql,["testing UPDATE now","spell","161","989810287056134145"],(err)=> {
-// 				if(err) return console.error(err.message);
-// 			});
-// 			console.log("note was found, updating note")
-// 		}
-		
-// 		updateNote();
-// 	});
-// }
-
-// checkNoteMatch();
 
 
 
