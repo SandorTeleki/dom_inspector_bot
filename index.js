@@ -13,9 +13,9 @@ const { getSite } = require('./utils/siteHelper');
 const { getUnit } = require('./utils/unitHelper');
 const { getHelpEmbed } = require('./utils/helpEmbed');
 const { WRONG_BOT_URL, ALL_BOOLI_URL, BASE_URL } = require('./utils/utils');
+const { mentorWhitelist, channelWhiteList } = require('./utils/whitelist');
 const { request } = require('undici');
 const { stringify } = require('node:querystring');
-// sqlite3 imports
 const sqlite3 = require('sqlite3').verbose();
 
 const client = new Client({ 
@@ -75,7 +75,7 @@ client.login(token);
 //#####################################################################################################
 
 //Prefix commands list (might need some refactoring)
-//Prefix symbol "?" be changed to other symbol if needed at a later date -> will need to update help command if so
+//Prefix symbol "?" be changed to other symbol if needed -> will need to update help command if so
 const prefix = "?"; 
 
 client.on("messageCreate", async (message) => {
@@ -191,9 +191,9 @@ client.on("messageCreate", async (message) => {
 		const text = message.content;
 		const unixTimestamp = message.createdTimestamp;
 
-
-		const mentorWhitelist = ['522764785696243712', '576781542370836521', '293099185283137536', '335649144872108034','172206317170196480', '335549078022651906', '444479732960985098', '313651176489091073'];
-		const channelWhiteList = ['996378750474256385', '1175513268320735322', '1176173846118805554','1007203153252454401'];
+		// Move mentor and channel whitelist to a utils array? 
+		//const mentorWhitelist = ['522764785696243712', '576781542370836521', '293099185283137536', '335649144872108034','172206317170196480', '335549078022651906', '444479732960985098', '313651176489091073'];
+		//const channelWhiteList = ['996378750474256385', '1175513268320735322', '1176173846118805554','1007203153252454401'];
 
 		//Check user permission to use the ?note command 
 		if (mentorWhitelist.every((item)=>{ return item !== userId })){

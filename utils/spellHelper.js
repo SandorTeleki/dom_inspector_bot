@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const { request } = require('undici');
 const { FUZZY_MATCH_URL, SPELL_URL, BASE_URL } = require('./utils');
+const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { spellAliases } =require('./spellAliases');
 const { similarMatches } =require('./similarMatches');
 const sqlite3 = require('sqlite3').verbose();
@@ -70,9 +71,9 @@ async function getSpell( spellName, spellCommandData ){
     if (similarMatchesString) {
         spellEmbed.setFooter({ text: similarMatchesString });
     }
-    const channelWhiteList = [996378750474256385, 1175513268320735322, 1176173846118805554,1007203153252454401];
+    //const channelWhiteList = ['996378750474256385', '1175513268320735322', '1176173846118805554', '1007203153252454401'];
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
-    if (channelWhiteList.every((item)=>{ return item !== channelId })) {
+    if (channelWhiteList.some((item)=>{ return item === channelId })) {
         spellEmbed.setTitle(`ID: ${spell.id}`);
         if(mentorNote !== undefined){
             spellEmbed.setDescription(`Mentor Note: ${mentorNote}`);

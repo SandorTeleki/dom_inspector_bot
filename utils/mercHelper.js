@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const { request } = require('undici');
 const { FUZZY_MATCH_URL, MERC_URL, BASE_URL } = require('./utils');
+const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { mercAliases } =require('./mercAliases');
 const { similarMatches } =require('./similarMatches');
 const sqlite3 = require('sqlite3').verbose();
@@ -71,9 +72,9 @@ async function getMerc( mercName, mercCommandData ){
     if (similarMatchesString) {
         mercEmbed.setFooter({ text: similarMatchesString });
     }
-    const channelWhiteList = [996378750474256385, 1175513268320735322, 1176173846118805554,1007203153252454401];
+    //const channelWhiteList = ['996378750474256385', '1175513268320735322', '1176173846118805554', '1007203153252454401'];
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
-    if (channelWhiteList.every((item)=>{ return item !== channelId })) {
+    if (channelWhiteList.some((item)=>{ return item === channelId })) {
         mercEmbed.setTitle(`ID: ${merc.id}`);
         if(mentorNote !== undefined){
             mercEmbed.setDescription(`Mentor Note: ${mentorNote}`);
