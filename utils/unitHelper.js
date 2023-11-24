@@ -80,7 +80,6 @@ async function getUnit( unitName, unitCommandData ){
     else {
         unitEmbed.setFooter({ text: footerStrings });
     };
-    //const channelWhiteList = ['996378750474256385', '1175513268320735322', '1176173846118805554', '1007203153252454401'];
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         unitEmbed.setTitle(`ID: ${unit.id}`);

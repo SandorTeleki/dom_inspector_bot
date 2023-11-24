@@ -73,8 +73,6 @@ async function getItem( itemName, itemCommandData ){
     if (similarMatchesString) {
         itemEmbed.setFooter({ text: similarMatchesString });
     }
-
-    //const channelWhiteList = ['996378750474256385', '1175513268320735322', '1176173846118805554', '1007203153252454401'];
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         itemEmbed.setTitle(`ID: ${item.id}`);
