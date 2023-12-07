@@ -335,35 +335,12 @@ client.on("messageCreate", async (message) => {
 });
 
 // Logs slash command interaction - (also sends an embed with all the information to a prespecified Discord channel)
-client.on(Events.InteractionCreate, async function logInteraction(interaction) {
-	// console.log(interaction);
-	if (!interaction) return;
-	if (!interaction.isChatInputCommand()) return;
+client.on(Events.InteractionCreate, async function logInteraction(data) {
+	// console.log(data);
+	if (!data) return;
+	if (!data.isChatInputCommand()) return;
 	else {
-		const channel = await client.channels.cache.get('1165999070272303174');
-		const serverName = interaction.guild.name;
-		const serverId = interaction.guild.id;
-		const channelName = interaction.channel.name;
-		const channelId = interaction.channel.id;
-		const userName = interaction.user.tag; 
-		const userId = interaction.user.id; 
-		const command = interaction.toString();
-		const createdAt = interaction.createdAt;
-		const timestamp = interaction.createdTimestamp;
-
-		const logEmbed = new EmbedBuilder()
-			.setTitle('Chat command used')
-			.addFields({ name: 'Server Name', value: `${serverName}`})
-			.addFields({ name: 'Server ID', value: `${serverId}`})
-			.addFields({ name: 'Channel Name', value: `${channelName}`})
-			.addFields({ name: 'Channel ID', value: `${channelId}`})
-			.addFields({ name: 'User Name', value: `${userName}`})
-			.addFields({ name: 'User ID', value: `${userId}`})
-			.addFields({ name: 'Chat command', value: `${command}`})
-			.addFields({ name: 'Created At', value: `${createdAt}`})
-			.addFields({ name: 'Unix Timestamp', value: `${timestamp}`})
-			// .setTimestamp();
-		await channel.send({embeds: [logEmbed] });
+		logEmbedBuilder(data);
 	}
 })
 
@@ -400,37 +377,41 @@ function createLog(message){
 	});
 }
 
-
 // Embed creation for prefix commands
-async function createLogEmbed(message) {
+async function createLogEmbed(data) {
     //console.log(interaction);
-    if (!message) return;
+    if (!data) return;
     else {
-        const channel = client.channels.cache.get('1165999070272303174');
-        const server = message.guild;
-		const serverId = message.guildId;
-		const channelName = message.channel;
-		const channelId = message.channelId;
-        const user = message.author.tag;
-		const userId = message.author.id;
-		const text = message.content;
-        const createdAt = message.createdAt;
-		const unixTimestamp = message.createdTimestamp;
-
-        const logEmbed = new EmbedBuilder()
-            .setTitle('Chat command used')
-            .addFields({ name: 'Server Name', value: `${server}`})
-			.addFields({ name: 'Server ID', value: `${serverId}`})
-			.addFields({ name: 'Channel Name', value: `${channelName}`})
-			.addFields({ name: 'Channel ID', value: `${channelId}`})
-            .addFields({ name: 'User name', value: `${user}`})
-			.addFields({ name: 'User ID', value: `${userId}`})
-			.addFields({ name: 'Chat command', value: `${text}`})
-            .addFields({ name: 'Created At', value: `${createdAt}`})
-			.addFields({ name: 'Unix Timestamp', value: `${unixTimestamp}`})
-            // .setTimestamp();
-        await channel.send({embeds: [logEmbed] });
+		logEmbedBuilder(data);
     }
+}
+
+//Messages and interactions use different synthax. Message (type = 0) and interaction (type = 2)
+async function logEmbedBuilder (data) {
+	const channel = client.channels.cache.get('1165999070272303174');
+	const serverName = (data.type === 0 ? data.guild : data.guild.name );
+	const serverId = (data.type === 0 ? data.guildId : data.guild.id );
+	const channelName = (data.type === 0 ? data.channel : data.channel.name );
+	const channelId = (data.type === 0 ? data.channelId : data.channel.id );
+	const userName = (data.type === 0 ? data.author.tag : data.user.tag );
+	const userId = (data.type === 0 ? data.author.id : data.user.id );
+	const command = (data.type === 0 ? data.content : data.toString() );
+	const createdAt = data.createdAt;
+	const timestamp = data.createdTimestamp;
+
+	const logEmbed = new EmbedBuilder()
+		.setTitle('Chat command used')
+		.addFields({ name: 'Server Name', value: `${serverName}`})
+		.addFields({ name: 'Server ID', value: `${serverId}`})
+		.addFields({ name: 'Channel Name', value: `${channelName}`})
+		.addFields({ name: 'Channel ID', value: `${channelId}`})
+		.addFields({ name: 'User Name', value: `${userName}`})
+		.addFields({ name: 'User ID', value: `${userId}`})
+		.addFields({ name: 'Chat command', value: `${command}`})
+		.addFields({ name: 'Created At', value: `${createdAt}`})
+		.addFields({ name: 'Unix Timestamp', value: `${timestamp}`})
+		// .setTimestamp();
+	await channel.send({embeds: [logEmbed] });
 }
 
 
