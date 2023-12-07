@@ -6,6 +6,10 @@ const { token } = require('./config.json');
 const Discord = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
 //const { ActionRowBuilder, ButtonBuilder, ButtonStyle} = require('discord.js'); //--- For Buttons, waiting on v14...
+const { request } = require('undici');
+const { stringify } = require('node:querystring');
+const sqlite3 = require('sqlite3').verbose();
+
 const { getItem } = require('./utils/itemHelper');
 const { getSpell } = require('./utils/spellHelper');
 const { getMerc } = require('./utils/mercHelper');
@@ -14,9 +18,7 @@ const { getUnit } = require('./utils/unitHelper');
 const { getHelpEmbed } = require('./utils/helpEmbed');
 const { WRONG_BOT_URL, ALL_BOOLI_URL, BASE_URL } = require('./utils/utils');
 const { mentorWhitelist, channelWhiteList } = require('./utils/whitelist');
-const { request } = require('undici');
-const { stringify } = require('node:querystring');
-const sqlite3 = require('sqlite3').verbose();
+
 
 const client = new Client({ 
 	intents: [
@@ -306,18 +308,15 @@ client.on("messageCreate", async (message) => {
 						message.reply("Note was updated!")
 
 					}
-					
 					updateNote();
 				});
 			}
-			
 			checkNoteMatch();
 		}
-
 		checkId(); 
 	}
 
-// --------------------------------TESTING------------------------------ //
+// --------------------------------TESTING START------------------------------ //
 
 	//Button Test - button loading and works. Will need to add stuff to happen once button is actually clicked
 	// if (message.content.startsWith(`${prefix}button`)){
@@ -334,15 +333,25 @@ client.on("messageCreate", async (message) => {
 	// }
 });
 
+// --------------------------------TESTING END------------------------------ //
+
+
 // Logs slash command interaction - (also sends an embed with all the information to a prespecified Discord channel)
 client.on(Events.InteractionCreate, async function logInteraction(data) {
-	// console.log(data);
 	if (!data) return;
 	if (!data.isChatInputCommand()) return;
 	else {
 		logEmbedBuilder(data);
 	}
 })
+
+// Embed creation for prefix commands
+async function createLogEmbed(data) {
+    if (!data) return;
+    else {
+		logEmbedBuilder(data);
+    }
+}
 
 // Logging for prefix commands
 function createLog(message){
@@ -355,35 +364,12 @@ function createLog(message){
 	const user = message.author.tag;
 	const userId = message.author.id;
 	const text = message.content;
-	const createdAt = message.createdAt;
 	const unixTimestamp = message.createdTimestamp;
-	// const infodump = stringify(e.client.user);
-
-	// console.log(`
-	// Server Name: ${server}
-	// Server ID: ${serverId}
-	// Channel Name: ${channelName}
-	// Channel ID: ${channelId}
-	// User Name: ${user}
-	// User Id: ${userId}
-	// Command Name: ${text}
-	// Created At: ${createdAt}
-	// Unix Timestamp: ${unixTimestamp}
-	// `)
 
 	sql = `INSERT INTO logs(server_name,server_id,channel_name,channel_id,user_name,user_id,chat_command,unix_timestamp) VALUES (?,?,?,?,?,?,?,?)`
 	db.run(sql,[server,serverId,channelName,channelId,user,userId,text,unixTimestamp],(err) => {
 		if(err) return console.error(err.message);
 	});
-}
-
-// Embed creation for prefix commands
-async function createLogEmbed(data) {
-    //console.log(interaction);
-    if (!data) return;
-    else {
-		logEmbedBuilder(data);
-    }
 }
 
 //Messages and interactions use different synthax. Message (type = 0) and interaction (type = 2)
