@@ -31,7 +31,6 @@ Currently running on Discord.js v14 to support new functionality.
 * Create an config.json file to hold the "clientID", "guildID" and "token" for the bot if you plan to host it on a single server. 
 * If you plan to have your version of the bot on multiple servers, you won't need a clientID or guildID in your config.json file, you will only need your bot token.
 * If you plan to publish your version of the bot to github, remember to include your token containing file in the .gitignore list.
-* Push your slash commands with `node deploy-commands.js` to the servers
-* Spin up the bot instance with `node index.js`
-* Close your bot instance by pressing 'control' and 'c' buttons (might depend on your IDE).
-
+* Run `npm install` to install dependencies.
+* Push your slash commands with `node deploy-commands.js` to the servers.
+* Spin up the bot instance with `node index.js`.
