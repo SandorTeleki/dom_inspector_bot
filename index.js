@@ -205,7 +205,6 @@ client.on("messageCreate", async (message) => {
 			return;
 		};
 
-
 		//Split the note into matching groups using regex to make error checking and logging easier
 		const regEx = /^(item|spell|unit|site|merc)\s(\d+)\s(.*)/i;
 
@@ -335,7 +334,6 @@ client.on("messageCreate", async (message) => {
 
 // --------------------------------TESTING END------------------------------ //
 
-
 // Logs slash command interaction - (also sends an embed with all the information to a prespecified Discord channel)
 client.on(Events.InteractionCreate, async function logInteraction(data) {
 	if (!data) return;
@@ -400,7 +398,6 @@ async function logEmbedBuilder (data) {
 	await channel.send({embeds: [logEmbed] });
 }
 
-
 //#####################################################################################################
 
 // SQLite3 Stuff
@@ -448,7 +445,6 @@ sql = `CREATE TABLE IF NOT EXISTS mentor_logs (
 	written_by_user TEXT)`;
 db.run(sql);
 
-
 //Drop table
 // db.run("DROP TABLE logs");
 // db.run("DROP TABLE mentor_notes");
@@ -481,7 +477,3 @@ db.run(sql);
 // 		}
 // 	)
 // })
-
-
-
-
