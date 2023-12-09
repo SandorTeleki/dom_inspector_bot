@@ -198,11 +198,28 @@ client.on("messageCreate", async (message) => {
 			return;
 		};
 
-		//Check channel permission to have the ?note command used in it
+		//Check channel permission to have the note command used in it
 		if (channelWhiteList.every((item)=>{ return item !== channelId })){
 			message.reply('This channel is not whitelisted to use the `?note` command.');
 			return;
 		};
+		
+
+		//function checkCommandPermissions(userId, channelId) {
+		// 	//Check user permission to use the ?note command 
+		// 	if (mentorWhitelist.every((item)=>{ return item !== userId })){
+		// 		message.reply('You are not whitelisted to write mentor notes.');
+		// 		return;
+		// 	};
+
+		// 	//Check channel permission to have the note command used in it
+		// 	if (channelWhiteList.every((item)=>{ return item !== channelId })){
+		// 		message.reply('This channel is not whitelisted to use the `?note` command.');
+		// 		return;
+		// 	};
+		// }
+
+		// checkCommandPermissions(userId, channelId);
 
 		//Split the note into matching groups using regex to make error checking and logging easier
 		const regEx = /^(item|spell|unit|site|merc)\s(\d+)\s(.*)/i;
