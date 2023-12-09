@@ -2,7 +2,9 @@ const { BASE_URL } = require('./utils');
 const { checkNoteMatch } = require('./checkNoteMatch'); 
 const { request } = require('undici');
 
-async function checkId(commandResult, message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp) {
+var commandResult;
+
+async function checkId(message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp) {
     const { statusCode, body } = await request(BASE_URL + '/' + commandUsed + 's/' + idUsed);
     //Error handling in case server responds with a '404' - mostly because not all IDs exist
     if (statusCode === 404){

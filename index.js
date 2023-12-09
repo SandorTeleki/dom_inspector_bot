@@ -233,15 +233,13 @@ client.on("messageCreate", async (message) => {
 			return;
 		}
 
-		// Creating constants to hold data from result of note.match(regEx)
-		//const fullMatchInfo = noteMatch[0];
+		// Creating constants to hold data from result of note.match(regEx) - noteMatch[0] will return everything
 		const commandUsed = noteMatch[1].toLowerCase();
 		const idUsed = noteMatch[2];
 		const noteWritten = noteMatch[3];
 
 		//Checking if ID exists
-		var commandResult;
-		checkId(commandResult, message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp); 
+		checkId( message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp); 
 	}
 
 // --------------------------------TESTING START------------------------------ //
