@@ -6,8 +6,6 @@ const { token } = require('./config.json');
 const Discord = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
 //const { ActionRowBuilder, ButtonBuilder, ButtonStyle} = require('discord.js'); //--- For Buttons, waiting on v14...
-const { request } = require('undici');
-const { stringify } = require('node:querystring');
 const sqlite3 = require('sqlite3').verbose();
 
 const { getItem } = require('./utils/itemHelper');
@@ -16,9 +14,8 @@ const { getMerc } = require('./utils/mercHelper');
 const { getSite } = require('./utils/siteHelper');
 const { getUnit } = require('./utils/unitHelper');
 const { getHelpEmbed } = require('./utils/helpEmbed');
-const { WRONG_BOT_URL, ALL_BOOLI_URL, BASE_URL } = require('./utils/utils');
+const { WRONG_BOT_URL, ALL_BOOLI_URL } = require('./utils/utils');
 const { mentorWhitelist, channelWhiteList } = require('./utils/whitelist');
-const { checkNoteMatch } = require('./utils/checkNoteMatch');
 const { checkId } = require('./utils/checkId');
 
 
