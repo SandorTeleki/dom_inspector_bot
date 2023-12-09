@@ -18,4 +18,3 @@ module.exports = {
         '1007203153252454401', // Dom Inspector Bot Test Server -- #main-bot-testing
     ],
 };
-

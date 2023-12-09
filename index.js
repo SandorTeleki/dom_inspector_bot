@@ -194,39 +194,19 @@ client.on("messageCreate", async (message) => {
 
 		//Check user permission to use the ?note command 
 		if (mentorWhitelist.every((item)=>{ return item !== userId })){
-			message.reply('You are not whitelisted to write mentor notes.');
+			message.reply('You are not whitelisted to use the `?note` command.');
 			return;
 		};
-
 		//Check channel permission to have the note command used in it
 		if (channelWhiteList.every((item)=>{ return item !== channelId })){
 			message.reply('This channel is not whitelisted to use the `?note` command.');
 			return;
 		};
-		
-
-		//function checkCommandPermissions(userId, channelId) {
-		// 	//Check user permission to use the ?note command 
-		// 	if (mentorWhitelist.every((item)=>{ return item !== userId })){
-		// 		message.reply('You are not whitelisted to write mentor notes.');
-		// 		return;
-		// 	};
-
-		// 	//Check channel permission to have the note command used in it
-		// 	if (channelWhiteList.every((item)=>{ return item !== channelId })){
-		// 		message.reply('This channel is not whitelisted to use the `?note` command.');
-		// 		return;
-		// 	};
-		// }
-
-		// checkCommandPermissions(userId, channelId);
 
 		//Split the note into matching groups using regex to make error checking and logging easier
 		const regEx = /^(item|spell|unit|site|merc)\s(\d+)\s(.*)/i;
-
 		const note = message.content.slice(6);
 		const noteMatch = note.match(regEx);
-
 		// Error handling if note syntax is incorrect
 		if (noteMatch === null) {
 			message.reply("Incorrect syntax. The correct syntax is: `?note {class} {id} {text}`\n`{class}` is the name of the command (item, merc, unit etc.) \n`{id}` is the id of the item, merc, unit etc. \n`{text}` is the text of your mentor note (cannot be blank).");
@@ -243,7 +223,6 @@ client.on("messageCreate", async (message) => {
 			message.reply(`Max note length is \`${noteLengthLimitMax}\` characters, yours is \`${noteText.length - noteLengthLimitMax}\` too long.`)
 			return;
 		}
-
 		// Error handling if note is too short
 		if (noteText.length < noteLengthLimitMin) {
 			message.reply(`Min note length is \`${noteLengthLimitMin}\` characters, yours is \`${noteLengthLimitMin - noteText.length}\` too short.`)
