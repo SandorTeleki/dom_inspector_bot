@@ -6,7 +6,6 @@ const { token } = require('./config.json');
 const Discord = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
 //const { ActionRowBuilder, ButtonBuilder, ButtonStyle} = require('discord.js'); //--- For Buttons, waiting on v14...
-const sqlite3 = require('sqlite3').verbose();
 
 const { getItem } = require('./utils/itemHelper');
 const { getSpell } = require('./utils/spellHelper');
@@ -17,7 +16,7 @@ const { getHelpEmbed } = require('./utils/helpEmbed');
 const { WRONG_BOT_URL, ALL_BOOLI_URL } = require('./utils/utils');
 const { mentorWhitelist, channelWhiteList } = require('./utils/whitelist');
 const { checkId } = require('./utils/checkId');
-const { sqlInsertLog } = require('./utils/sqlHelper');
+const { sqlInsertLog, sqlBuildTables, sqlDropTables } = require('./utils/sqlHelper');
 
 const client = new Client({ 
 	intents: [
@@ -318,82 +317,7 @@ async function logEmbedBuilder (data) {
 	await channel.send({embeds: [logEmbed] });
 }
 
-//#####################################################################################################
-
-// SQLite3 Stuff
-let sql;
-
-// Connects to DB
-const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE,(err)=>{
-	if(err) return console.error(err.message);
-});
-
-// Create table to store usage logs
-sql = `CREATE TABLE IF NOT EXISTS logs (
-	id INTEGER PRIMARY KEY,
-	server_name TEXT,
-	server_id INTEGER,
-	channel_name TEXT,
-	channel_id INTEGER,
-	user_name TEXT,
-	user_id INTEGER,
-	chat_command BLOB,
-	unix_timestamp INTEGER)`;
-db.run(sql);
-
-// Create table to store mentor notes
-sql = `CREATE TABLE IF NOT EXISTS mentor_notes (
-	class TEXT,
-	class_id INTEGER,
-	name TEXT,
-	note TEXT,
-	guild_name TEXT,
-	guild_id INTEGER,
-	written_time INTEGER,
-	written_by_user TEXT)`;
-db.run(sql);
-
-// Cretea table to store mentor note logs
-sql = `CREATE TABLE IF NOT EXISTS mentor_logs (
-	class TEXT,
-	class_id INTEGER,
-	name TEXT,
-	note TEXT,
-	guild_name TEXT,
-	guild_id INTEGER,
-	written_time INTEGER,
-	written_by_user TEXT)`;
-db.run(sql);
-
-//Drop table
-// db.run("DROP TABLE logs");
-// db.run("DROP TABLE mentor_notes");
-// db.run("DROP TABLE mentor_logs");
-
-
-// Insert data into table
-// sql = `INSERT INTO logs(server_name,server_id,channel_name,channel_id,user_name,user_id,chat_command,unix_timestamp) VALUES (?,?,?,?,?,?,?,?)`
-// db.run(sql,["testserver2","1234567890","testchannel2","1234567890","testuser2", "1234567890","/item zyzz","1699264797252"],(err) => {
-// 	if(err) return console.error(err.message);
-// });
-
-//Update data (will be needed for mentor notes)
-// sql = `UPDATE logs SET server_name = ? WHERE id = ?`;
-// db.run(sql,['testserver2',2],(err)=>{
-// 	if(err) return console.error(err.message);
-// })
-
-// Delete data (will be need for mentor notes)
-// sql = `DELETE FROM logs WHERE id = ?`;
-// db.run(sql,[2],(err)=>{
-// 	if(err) return console.error(err.message);vvc
-// })
-
-// Query the data
-// sql = `SELECT * FROM logs`;
-// db.all(sql,[],(err,rows) => {
-// 	if(err) return console.error(err.message);
-// 		rows.forEach(row=>{console.log(row);
-// 		}
-// 	)
-// })
+//SQL build/drop tables
+sqlBuildTables();
+// If needed, uncomment sqlDropTables to drop all tables (or go into helper function for granular control over table drop)
+//sqlDropTables();

@@ -40,4 +40,49 @@ function sqlUpdateNote(noteWritten,commandUsed,idUsed,serverId){
     });
 }
 
-module.exports = { sqlSelectNote, sqlInsertNote, sqlInsertLog, sqlInsertMentorLog, sqlUpdateNote }
+function sqlBuildTables(){
+    // Create table to store usage logs
+    sql = `CREATE TABLE IF NOT EXISTS logs (
+        id INTEGER PRIMARY KEY,
+        server_name TEXT,
+        server_id INTEGER,
+        channel_name TEXT,
+        channel_id INTEGER,
+        user_name TEXT,
+        user_id INTEGER,
+        chat_command BLOB,
+        unix_timestamp INTEGER)`;
+    db.run(sql);
+
+    // Create table to store mentor notes
+    sql = `CREATE TABLE IF NOT EXISTS mentor_notes (
+        class TEXT,
+        class_id INTEGER,
+        name TEXT,
+        note TEXT,
+        guild_name TEXT,
+        guild_id INTEGER,
+        written_time INTEGER,
+        written_by_user TEXT)`;
+    db.run(sql);
+
+    // Cretea table to store mentor note logs
+    sql = `CREATE TABLE IF NOT EXISTS mentor_logs (
+        class TEXT,
+        class_id INTEGER,
+        name TEXT,
+        note TEXT,
+        guild_name TEXT,
+        guild_id INTEGER,
+        written_time INTEGER,
+        written_by_user TEXT)`;
+    db.run(sql);
+}
+
+function sqlDropTables(){
+    db.run("DROP TABLE logs");
+    db.run("DROP TABLE mentor_notes");
+    db.run("DROP TABLE mentor_logs");
+}
+
+module.exports = { sqlSelectNote, sqlInsertNote, sqlInsertLog, sqlInsertMentorLog, sqlUpdateNote, sqlBuildTables, sqlDropTables }
