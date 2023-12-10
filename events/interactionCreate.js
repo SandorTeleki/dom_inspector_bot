@@ -1,6 +1,5 @@
 const { Events } = require('discord.js');
-const sqlite3 = require('sqlite3').verbose();
-
+const { sqlInsertLog } = require('../utils/sqlHelper');
 
 module.exports = {
 	name: Events.InteractionCreate,
@@ -16,31 +15,16 @@ module.exports = {
 
 		try {
 			await command.execute(interaction);
-			// console.log(`
-			// 	Server Name: ${interaction.guild.name} 
-			// 	Server ID: ${interaction.guild.id} 
-			// 	Channel Name: #${interaction.channel.name}
-			// 	Channel ID: #${interaction.channel.id}
-			// 	User: #${interaction.user.tag} 
-			// 	User ID: ${interaction.user.id} 
-			// 	Command: ${interaction}
-			// 	Created At: ${interaction.createdAt}
-			// 	Unix Timestamp: ${interaction.createdTimestamp}
-			// 	`)
-
-			const commandContent = interaction.toString();
+			const server = interaction.guild.name;
+			const serverId = interaction.guild.id;
+			const channelName = interaction.channel.name;
+			const channelId = interaction.channel.id;
+			const user = interaction.user.tag;
+			const userId = interaction.user.id;
+			const text = interaction.toString();
+			const unixTimestamp = interaction.createdTimestamp;
 			
-			let sql;
-
-			// Connects to DB
-			const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE,(err)=>{
-				if(err) return console.error(err.message);
-			});
-
-			sql = `INSERT INTO logs(server_name,server_id,channel_name,channel_id,user_name,user_id,chat_command,unix_timestamp) VALUES (?,?,?,?,?,?,?,?)`
-			db.run(sql,[interaction.guild.name,interaction.guild.id,interaction.channel.name,interaction.channel.id,interaction.user.tag,interaction.user.id,commandContent,interaction.createdTimestamp],(err) => {
-				if(err) return console.error(err.message);
-			});
+			sqlInsertLog(server,serverId,channelName,channelId,user,userId,text,unixTimestamp);
 
 		} catch (error) {
 			console.error(`Error executing ${interaction.commandName}`);
