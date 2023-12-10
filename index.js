@@ -17,7 +17,7 @@ const { getHelpEmbed } = require('./utils/helpEmbed');
 const { WRONG_BOT_URL, ALL_BOOLI_URL } = require('./utils/utils');
 const { mentorWhitelist, channelWhiteList } = require('./utils/whitelist');
 const { checkId } = require('./utils/checkId');
-
+const { sqlInsertLog } = require('./utils/sqlHelper');
 
 const client = new Client({ 
 	intents: [
@@ -287,10 +287,7 @@ function createLog(message){
 	const text = message.content;
 	const unixTimestamp = message.createdTimestamp;
 
-	sql = `INSERT INTO logs(server_name,server_id,channel_name,channel_id,user_name,user_id,chat_command,unix_timestamp) VALUES (?,?,?,?,?,?,?,?)`
-	db.run(sql,[server,serverId,channelName,channelId,user,userId,text,unixTimestamp],(err) => {
-		if(err) return console.error(err.message);
-	});
+	sqlInsertLog(server,serverId,channelName,channelId,user,userId,text,unixTimestamp);
 }
 
 //Messages and interactions use different synthax. Message (type = 0) and interaction (type = 2)
