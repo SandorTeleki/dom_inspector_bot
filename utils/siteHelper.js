@@ -76,7 +76,7 @@ async function getSite( siteName, siteCommandData ){
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         siteEmbed.setTitle(`ID: ${site.id}`);
         if(mentorNote !== undefined){
-            siteEmbed.setDescription(`||Mentor Note: ${mentorNote}||`);
+            siteEmbed.setDescription(`Mentor "hot takes": ||${mentorNote}||`);
         }
     }
     return siteEmbed;

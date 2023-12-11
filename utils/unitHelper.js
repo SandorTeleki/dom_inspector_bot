@@ -84,7 +84,7 @@ async function getUnit( unitName, unitCommandData ){
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         unitEmbed.setTitle(`ID: ${unit.id}`);
         if(mentorNote !== undefined){
-            unitEmbed.setDescription(`||Mentor Note: ${mentorNote}||`);
+            unitEmbed.setDescription(`Mentor "hot takes": ||${mentorNote}||`);
         }
     }  
     return unitEmbed;

@@ -75,7 +75,7 @@ async function getSpell( spellName, spellCommandData ){
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         spellEmbed.setTitle(`ID: ${spell.id}`);
         if(mentorNote !== undefined){
-            spellEmbed.setDescription(`||Mentor Note: ${mentorNote}||`);
+            spellEmbed.setDescription(`Mentor "hot takes": ||${mentorNote}||`);
         }
     }
     return spellEmbed;
