@@ -5,7 +5,7 @@ const { Client, Collection, Intents, Events, GatewayIntentBits } = require('disc
 const { token } = require('./config.json');
 const Discord = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
-//const { ActionRowBuilder, ButtonBuilder, ButtonStyle} = require('discord.js'); //--- For Buttons, waiting on v14...
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 
 const { getItem } = require('./utils/itemHelper');
 const { getSpell } = require('./utils/spellHelper');
@@ -236,23 +236,57 @@ client.on("messageCreate", async (message) => {
 		//Checking if ID exists
 		checkId( message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp); 
 	}
+});
 
 // --------------------------------TESTING START------------------------------ //
 
-	//Button Test - button loading and works. Will need to add stuff to happen once button is actually clicked
-	// if (message.content.startsWith(`${prefix}button`)){
-	// 	const row = new ActionRowBuilder()
-	// 	.addComponents(
-	// 		new ButtonBuilder()
-	// 			.setCustomId('primary')
-	// 			.setLabel('Click me!')
-	// 			.setStyle(ButtonStyle.Primary),
-	// 	);
-	// 	const buttonEmbed = new EmbedBuilder()
-    //         	.setTitle("Testing Button")	
-    //     await message.channel.send({ embeds: [buttonEmbed], components: [row] });
-	// }
-});
+//Button Test - button loading and works. Will need to add stuff to happen once button is actually clicked
+// async function handleNoteOverwrite (message){	
+// 	const yesButton = new ButtonBuilder()
+// 		.setLabel('Yes')
+// 		.setStyle(ButtonStyle.Success)
+// 		.setCustomId('yes-button')
+	
+// 	const noButton = new ButtonBuilder()
+// 		.setLabel('No')
+// 		.setStyle(ButtonStyle.Danger)
+// 		.setCustomId('no-button')
+// 	const buttonRow = new ActionRowBuilder().addComponents(yesButton, noButton);
+
+// 	const reply = await message.reply({content: 'A mentor note already exists, are you sure you want to overwrite it?', components: [buttonRow]});
+
+// 	const filter = (i) => i.user.id === message.author.id;
+
+// 	const collector = reply.createMessageComponentCollector({
+// 		componentType: ComponentType.Button,
+// 		filter,
+// 		time: 10_000,
+// 		max: 1
+// 	});
+
+// 	collector.on('collect', (interaction) => {
+// 		if (interaction.customId === 'yes-button'){
+// 			interaction.reply({content: 'You overwrote the existing mentor note'});
+// 			return;
+// 		}
+
+// 		if (interaction.customId === 'no-button'){
+// 			interaction.reply({content: 'You discarded your changes'});
+// 			return;
+// 		}
+// 	});
+
+// 	collector.on('end', () => {
+// 		yesButton.setDisabled(true);
+// 		noButton.setDisabled(true);
+
+// 		reply.edit({
+// 			content: 'You picked an option',
+// 			components: [buttonRow]
+// 		})
+// 	})
+
+// }
 
 // --------------------------------TESTING END------------------------------ //
 

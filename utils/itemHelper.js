@@ -49,9 +49,12 @@ async function getItem( itemName, itemCommandData ){
     // Connects to DB
     const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE);
 
-    sql = `SELECT note FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
+    var type = "item";
+    var typeId = item.id;
+
     const row = await new Promise((resolve, reject) => {
-        db.get(sql, ["item", item.id, serverId], (err, row) => {
+        sql = `SELECT note FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
+        db.get(sql, [type, typeId, serverId], (err, row) => {
             if (err) {
                 console.error(err.message);
                 reject(err);

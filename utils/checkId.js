@@ -1,5 +1,6 @@
 const { request } = require('undici');
 const sqlite3 = require('sqlite3').verbose();
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { BASE_URL } = require('./utils');
 const { sqlSelectNote, sqlInsertNote, sqlInsertLog, sqlInsertMentorLog, sqlUpdateNote } = require('./sqlHelper');
 
@@ -44,9 +45,57 @@ async function checkId(message, noteWritten, commandUsed, idUsed, serverId, serv
                 sqlInsertLog(server,serverId,channelName,channelId,user,userId,text,unixTimestamp);
                 sqlInsertMentorLog(commandUsed,idUsed,commandName,noteWritten,server,serverId,unixTimestamp,user);
                 console.log("Note was found, updating note...");
-                message.reply("Note was updated!");
+                //message.reply("Note was updated!");
             }
-            updateNote(message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp);
+
+            // Check if user wants to overwrite (UPDATE) existing note before commiting the update
+            async function handleNoteOverwrite (message){	
+                const yesButton = new ButtonBuilder()
+                    .setLabel('Yes')
+                    .setStyle(ButtonStyle.Success)
+                    .setCustomId('yes-button')
+                
+                const noButton = new ButtonBuilder()
+                    .setLabel('No')
+                    .setStyle(ButtonStyle.Danger)
+                    .setCustomId('no-button')
+                const buttonRow = new ActionRowBuilder().addComponents(yesButton, noButton);
+            
+                const reply = await message.reply({content: 'A mentor note already exists, are you sure you want to overwrite it?', components: [buttonRow]});
+            
+                const filter = (i) => i.user.id === message.author.id;
+            
+                const collector = reply.createMessageComponentCollector({
+                    componentType: ComponentType.Button,
+                    filter,
+                    time: 10_000,
+                    max: 1
+                });
+            
+                collector.on('collect', (interaction) => {
+                    if (interaction.customId === 'yes-button'){
+                        updateNote(message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp);
+                        interaction.reply({content: 'You overwrote the existing mentor note'});
+                        return;
+                    }
+            
+                    if (interaction.customId === 'no-button'){
+                        interaction.reply({content: 'You discarded your changes'});
+                        return;
+                    }
+                });
+            
+                collector.on('end', () => {
+                    yesButton.setDisabled(true);
+                    noButton.setDisabled(true);
+            
+                    reply.edit({
+                    components: [buttonRow]
+                    })
+                })
+            
+            }
+            handleNoteOverwrite(message);
         });
     }
     checkNoteMatch(message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp);
