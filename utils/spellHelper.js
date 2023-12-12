@@ -46,10 +46,13 @@ async function getSpell( spellName, spellCommandData ){
     let sql;
     // Connects to DB
     const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE);
+    
+    var type = "spell";
+    var typeId = spell.id;
 
-    sql = `SELECT note, written_by_user FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
     const row = await new Promise((resolve, reject) => {
-        db.get(sql, ["spell", spell.id, serverId], (err, row) => {
+        sql = `SELECT note, written_by_user FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
+        db.get(sql, [type, typeId, serverId], (err, row) => {
             if (err) {
                 console.error(err.message);
                 reject(err);
