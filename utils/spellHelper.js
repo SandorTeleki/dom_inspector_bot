@@ -47,7 +47,7 @@ async function getSpell( spellName, spellCommandData ){
     // Connects to DB
     const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE);
 
-    sql = `SELECT note FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
+    sql = `SELECT note, written_by_user FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
     const row = await new Promise((resolve, reject) => {
         db.get(sql, ["spell", spell.id, serverId], (err, row) => {
             if (err) {
@@ -60,7 +60,7 @@ async function getSpell( spellName, spellCommandData ){
     });
 
     // Destructuring the note property from the row object
-    const { note: mentorNote } = row || {};
+    const { note: mentorNote, written_by_user: noteAuthor } = row || {};
 
     console.log("mentorNote: " + mentorNote);
 
@@ -75,7 +75,10 @@ async function getSpell( spellName, spellCommandData ){
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         spellEmbed.setTitle(`ID: ${spell.id}`);
         if(mentorNote !== undefined){
-            spellEmbed.setDescription(`Mentor scribbles: ||${mentorNote}||`);
+            spellEmbed.addFields([
+                {name: "Mentor scribble:", value: `||${mentorNote}||`, inline: true},
+                {name: "Written by:", value: noteAuthor, inline: true}
+            ])        
         }
     }
     return spellEmbed;

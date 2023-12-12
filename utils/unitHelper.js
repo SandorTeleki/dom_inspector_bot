@@ -47,7 +47,7 @@ async function getUnit( unitName, unitCommandData ){
     // Connects to DB
     const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE);
 
-    sql = `SELECT note FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
+    sql = `SELECT note, written_by_user FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
     const row = await new Promise((resolve, reject) => {
         db.get(sql, ["unit", unit.id, serverId], (err, row) => {
             if (err) {
@@ -60,7 +60,7 @@ async function getUnit( unitName, unitCommandData ){
     });
 
     // Destructuring the note property from the row object
-    const { note: mentorNote } = row || {};
+    const { note: mentorNote, written_by_user: noteAuthor } = row || {};
 
     console.log("mentorNote: " + mentorNote);
 
@@ -84,7 +84,10 @@ async function getUnit( unitName, unitCommandData ){
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         unitEmbed.setTitle(`ID: ${unit.id}`);
         if(mentorNote !== undefined){
-            unitEmbed.setDescription(`Mentor scribbles: ||${mentorNote}||`);
+            unitEmbed.addFields([
+                {name: "Mentor scribble:", value: `||${mentorNote}||`, inline: true},
+                {name: "Written by:", value: noteAuthor, inline: true}
+            ])
         }
     }  
     return unitEmbed;

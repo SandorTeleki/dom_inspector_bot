@@ -48,7 +48,7 @@ async function getSite( siteName, siteCommandData ){
     // Connects to DB
     const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE);
 
-    sql = `SELECT note FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
+    sql = `SELECT note, written_by_user FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
     const row = await new Promise((resolve, reject) => {
         db.get(sql, ["site", site.id, serverId], (err, row) => {
             if (err) {
@@ -61,7 +61,7 @@ async function getSite( siteName, siteCommandData ){
     });
 
     // Destructuring the note property from the row object
-    const { note: mentorNote } = row || {};
+    const { note: mentorNote, written_by_user: noteAuthor } = row || {};
 
     console.log("mentorNote: " + mentorNote);
 
@@ -76,7 +76,10 @@ async function getSite( siteName, siteCommandData ){
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         siteEmbed.setTitle(`ID: ${site.id}`);
         if(mentorNote !== undefined){
-            siteEmbed.setDescription(`Mentor scribbles: ||${mentorNote}||`);
+            siteEmbed.addFields([
+                {name: "Mentor scribble:", value: `||${mentorNote}||`, inline: true},
+                {name: "Written by:", value: noteAuthor, inline: true}
+            ])  
         }
     }
     return siteEmbed;

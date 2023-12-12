@@ -48,7 +48,7 @@ async function getMerc( mercName, mercCommandData ){
     // Connects to DB
     const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE);
 
-    sql = `SELECT note FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
+    sql = `SELECT note, written_by_user FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
     const row = await new Promise((resolve, reject) => {
         db.get(sql, ["merc", merc.id, serverId], (err, row) => {
             if (err) {
@@ -61,7 +61,7 @@ async function getMerc( mercName, mercCommandData ){
     });
 
     // Destructuring the note property from the row object
-    const { note: mentorNote } = row || {};
+    const { note: mentorNote, written_by_user: noteAuthor } = row || {};
 
     console.log("mentorNote: " + mentorNote);
 
@@ -76,7 +76,10 @@ async function getMerc( mercName, mercCommandData ){
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         mercEmbed.setTitle(`ID: ${merc.id}`);
         if(mentorNote !== undefined){
-            mercEmbed.setDescription(`Mentor scribbles: ||${mentorNote}||`);
+            mercEmbed.addFields([
+                {name: "Mentor scribble:", value: `||${mentorNote}||`, inline: true},
+                {name: "Written by:", value: noteAuthor, inline: true}
+            ])
         }
     }
 

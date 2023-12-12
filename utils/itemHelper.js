@@ -53,7 +53,7 @@ async function getItem( itemName, itemCommandData ){
     var typeId = item.id;
 
     const row = await new Promise((resolve, reject) => {
-        sql = `SELECT note FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
+        sql = `SELECT note, written_by_user FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
         db.get(sql, [type, typeId, serverId], (err, row) => {
             if (err) {
                 console.error(err.message);
@@ -65,7 +65,7 @@ async function getItem( itemName, itemCommandData ){
     });
 
     // Destructuring the note property from the row object
-    const { note: mentorNote } = row || {};
+    const { note: mentorNote, written_by_user: noteAuthor } = row || {};
 
     console.log("mentorNote: " + mentorNote);
 
@@ -80,7 +80,10 @@ async function getItem( itemName, itemCommandData ){
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         itemEmbed.setTitle(`ID: ${item.id}`);
         if(mentorNote !== undefined){
-            itemEmbed.setDescription(`Mentor scribbles: ||${mentorNote}||`);
+            itemEmbed.addFields([
+                {name: "Mentor scribble:", value: `||${mentorNote}||`, inline: true},
+                {name: "Written by:", value: noteAuthor, inline: true}
+            ])
         }
     }
     return itemEmbed;
