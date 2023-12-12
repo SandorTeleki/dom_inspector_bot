@@ -80,7 +80,7 @@ async function getItem( itemName, itemCommandData ){
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         itemEmbed.setTitle(`ID: ${item.id}`);
         if(mentorNote !== undefined){
-            itemEmbed.setDescription(`Mentor "hot takes": ||${mentorNote}||`);
+            itemEmbed.setDescription(`Mentor scribbles: ||${mentorNote}||`);
         }
     }
     return itemEmbed;

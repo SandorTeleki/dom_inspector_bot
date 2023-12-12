@@ -76,7 +76,7 @@ async function getMerc( mercName, mercCommandData ){
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         mercEmbed.setTitle(`ID: ${merc.id}`);
         if(mentorNote !== undefined){
-            mercEmbed.setDescription(`Mentor "hot takes": ||${mentorNote}||`);
+            mercEmbed.setDescription(`Mentor scribbles: ||${mentorNote}||`);
         }
     }
 
