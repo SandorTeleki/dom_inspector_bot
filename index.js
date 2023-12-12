@@ -191,6 +191,10 @@ client.on("messageCreate", async (message) => {
 		const text = message.content;
 		const unixTimestamp = message.createdTimestamp;
 
+		// Note length related constants
+		const noteLengthLimitMin = 3;
+		const noteLengthLimitMax = 250;
+
 		//Check user permission to use the ?note command 
 		if (mentorWhitelist.every((item)=>{ return item !== userId })){
 			message.reply('You are not whitelisted to use the `?note` command.');
@@ -205,16 +209,16 @@ client.on("messageCreate", async (message) => {
 		//Split the note into matching groups using regex to make error checking and logging easier
 		const regEx = /^(item|spell|unit|site|merc)\s(\d+)\s(.*)/i;
 		const note = message.content.slice(6);
+		if(note === "help"){
+			message.reply("The syntax is:`?note {class} {id} {text}`\n`{class}` is the name of the command (item, merc, unit etc.) \n`{id}` is the id of the item, merc, unit etc. \n`{text}` is the text of your mentor note (cannot be blank). \n Note: the current note min-length is "+`${noteLengthLimitMin}`+" characters and the max-length is "+`${noteLengthLimitMax}`+" characters.");
+			return;
+		}
 		const noteMatch = note.match(regEx);
 		// Error handling if note syntax is incorrect
 		if (noteMatch === null) {
-			message.reply("Incorrect syntax. The correct syntax is: `?note {class} {id} {text}`\n`{class}` is the name of the command (item, merc, unit etc.) \n`{id}` is the id of the item, merc, unit etc. \n`{text}` is the text of your mentor note (cannot be blank).");
+			message.reply("Syntax error. Please refer to `?note help` for syntax information.");
 			return;
 		} 
-
-		// Length related constants
-		const noteLengthLimitMax = 250;
-		const noteLengthLimitMin = 3;
 
 		// Error handling if note is too long
 		const noteText = noteMatch[3];
