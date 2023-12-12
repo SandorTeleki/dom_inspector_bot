@@ -205,7 +205,7 @@ client.on("messageCreate", async (message) => {
 			message.reply('This channel is not whitelisted to use the `?note` command.');
 			return;
 		};
-		if (message.content = "?note"){
+		if (message.content === "?note"){
 			message.reply("The syntax is: `?note {class} {id} {text}`\n`{class}` is the name of the command (item, merc, unit etc.) \n`{id}` is the id of the item, merc, unit etc. \n`{text}` is the text of your mentor note (cannot be blank). \n Note: the current note min-length is "+`${noteLengthLimitMin}`+" characters and the max-length is "+`${noteLengthLimitMax}`+" characters.");
 			return;
 		}
