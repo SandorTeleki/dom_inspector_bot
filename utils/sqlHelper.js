@@ -5,11 +5,12 @@ let sql;
 // Connects to DB
 const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE);
 
-function sqlSelectNote(commandUsed, idUsed, serverId){
+async function sqlSelectNote(commandUsed, idUsed, serverId){
     sql = `SELECT class, class_id FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`
     db.get(sql,[commandUsed,idUsed,serverId],(err, row) => {
         if(err) return console.error(err.message);
     console.log(JSON.stringify(row));
+    return row;
 })};
 
 const sqlGetMentorNote = (type, typeId, serverId) => {
