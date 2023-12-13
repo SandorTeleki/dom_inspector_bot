@@ -26,15 +26,11 @@ async function getUnit( unitName, unitCommandData ){
     var similarMatchesString;
     var footerStrings = ' ';
 
-    //const regEx = /^(\d+)\s?(\d)?/;
     const regExId = /^(\d+)/;
-    const regExSize = /^(\d)/;
-    // const unitIdMatch = unitName.match(regEx);
+    const regExSize = /^.+\s?(\d)/;
     if  (unitName.match(regExId)){
         const unitIdMatch = unitName.match(regExId);
         const unitId = unitIdMatch[1];
-        // const unitSize = unitIdMatch[2];
-        // console.log("unit size: " + unitSize);
         const { body, statusCode } = await request(BASE_URL + UNIT_URL + '/' + encodeURIComponent(unitId));
         if (statusCode === 404){
             const errorEmbed = new EmbedBuilder()
@@ -44,9 +40,16 @@ async function getUnit( unitName, unitCommandData ){
         }
         unit  = await body.json();
     } else {
+        const regExSizeMatch = unitName.match(regExSize);
+        const size = (regExSizeMatch ? regExSizeMatch[1] : undefined);
         const { body } = await request(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(unitName));
         var { units } = await body.json();
-        unit = units[0];
+        var sizeMatch = units.filter(function(unit){
+            var unitSize = unit.size;
+            return +unitSize === +size;
+        })
+        const correctSize = sizeMatch[0];
+        unit = (correctSize ? correctSize : units[0]);
         similarMatchesString = similarMatches(units);  
     }; 
 
