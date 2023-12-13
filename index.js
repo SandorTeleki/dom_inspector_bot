@@ -220,23 +220,22 @@ client.on("messageCreate", async (message) => {
 			message.reply("Syntax error. Please refer to `?note` for syntax information.");
 			return;
 		} 
-
-		// Error handling if note is too long
-		const noteText = noteMatch[3];
-		if (noteText.length > noteLengthLimitMax) {
-			message.reply(`Max note length is \`${noteLengthLimitMax}\` characters, yours is \`${noteText.length - noteLengthLimitMax}\` too long.`)
-			return;
-		}
-		// Error handling if note is too short
-		if (noteText.length < noteLengthLimitMin) {
-			message.reply(`Min note length is \`${noteLengthLimitMin}\` characters, yours is \`${noteLengthLimitMin - noteText.length}\` too short.`)
-			return;
-		}
-
+		
 		// Creating constants to hold data from result of note.match(regEx) - noteMatch[0] will return everything
 		const commandUsed = noteMatch[1].toLowerCase();
 		const idUsed = noteMatch[2];
 		const noteWritten = noteMatch[3];
+
+		// Error handling if note is too long
+		if (noteWritten.length > noteLengthLimitMax) {
+			message.reply(`Max note length is \`${noteLengthLimitMax}\` characters, yours is \`${noteWritten.length - noteLengthLimitMax}\` too long.`)
+			return;
+		}
+		// Error handling if note is too short
+		if (noteWritten.length < noteLengthLimitMin) {
+			message.reply(`Min note length is \`${noteLengthLimitMin}\` characters, yours is \`${noteLengthLimitMin - noteWritten.length}\` too short.`)
+			return;
+		}
 
 		//Checking if ID exists
 		checkId( message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp); 
