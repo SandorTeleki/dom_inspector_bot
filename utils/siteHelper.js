@@ -24,8 +24,12 @@ async function getSite( siteName, siteCommandData ){
     if (siteName in siteAliases){ siteName = siteAliases[siteName] };
     var site;
     var similarMatchesString;
-    if  (/^\d+$/.test(siteName)){
-        const { body, statusCode } = await request(BASE_URL + SITE_URL + '/' + encodeURIComponent(siteName));
+    const regExId = /^(\d+)/;
+
+    if  (siteName.match(regExId)){
+        const siteIdMatch = siteName.match(regExId);
+        const siteId = siteIdMatch[1];
+        const { body, statusCode } = await request(BASE_URL + SITE_URL + '/' + encodeURIComponent(siteId));
         if (statusCode === 404){
             const errorEmbed = new EmbedBuilder()
             .setTitle("Nothing found. Better luck next time!")

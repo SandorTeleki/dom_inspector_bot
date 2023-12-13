@@ -25,8 +25,12 @@ async function getItem( itemName, itemCommandData ){
     if (itemName in itemAliases){ itemName = itemAliases[itemName] };
     var item;
     var similarMatchesString;    
-    if  (/^\d+$/.test(itemName)){
-        const { statusCode, body } = await request(BASE_URL + ITEM_URL + '/' + encodeURIComponent(itemName));
+    const regExId = /^(\d+)/;
+
+    if  (itemName.match(regExId)){
+        const itemIdMatch = itemName.match(regExId);
+        const itemId = itemIdMatch[1];
+        const { statusCode, body } = await request(BASE_URL + ITEM_URL + '/' + encodeURIComponent(itemId));
         //console.log('statusCode', statusCode); //Check status code, if needed for debugging
         if (statusCode === 404){
             const errorEmbed = new EmbedBuilder()

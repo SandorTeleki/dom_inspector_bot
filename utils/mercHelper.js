@@ -24,8 +24,12 @@ async function getMerc( mercName, mercCommandData ){
     if (mercName in mercAliases){ mercName = mercAliases[mercName] };
     var merc;
     var similarMatchesString;
-    if  (/^\d+$/.test(mercName)){
-        const { body, statusCode } = await request(BASE_URL + MERC_URL + '/' + encodeURIComponent(mercName));
+    const regExId = /^(\d+)/;
+
+    if  (mercName.match(regExId)){
+        const mercIdMatch = mercName.match(regExId);
+        const mercId = mercIdMatch[1];
+        const { body, statusCode } = await request(BASE_URL + MERC_URL + '/' + encodeURIComponent(mercId));
         if (statusCode === 404){
             const errorEmbed = new EmbedBuilder()
             .setTitle("Nothing found. Better luck next time!")

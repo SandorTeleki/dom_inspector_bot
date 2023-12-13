@@ -24,8 +24,12 @@ async function getSpell( spellName, spellCommandData ){
     if (spellName in spellAliases){ spellName = spellAliases[spellName] };
     var spell;
     var similarMatchesString;
-    if  (/^\d+$/.test(spellName)){
-        const { body, statusCode } = await request(BASE_URL + SPELL_URL + '/' + encodeURIComponent(spellName));
+    const regExId = /^(\d+)/;
+
+    if  (spellName.match(regExId)){
+        const spellIdMatch = spellName.match(regExId);
+        const spellId = spellIdMatch[1];
+        const { body, statusCode } = await request(BASE_URL + SPELL_URL + '/' + encodeURIComponent(spellId));
         if (statusCode === 404){
             const errorEmbed = new EmbedBuilder()
             .setTitle("Nothing found. Better luck next time!")

@@ -25,8 +25,17 @@ async function getUnit( unitName, unitCommandData ){
     var unit;
     var similarMatchesString;
     var footerStrings = ' ';
-    if  (/^\d+$/.test(unitName)){
-        const { body, statusCode } = await request(BASE_URL + UNIT_URL + '/' + encodeURIComponent(unitName));
+
+    //const regEx = /^(\d+)\s?(\d)?/;
+    const regExId = /^(\d+)/;
+    const regExSize = /^(\d)/;
+    // const unitIdMatch = unitName.match(regEx);
+    if  (unitName.match(regExId)){
+        const unitIdMatch = unitName.match(regExId);
+        const unitId = unitIdMatch[1];
+        // const unitSize = unitIdMatch[2];
+        // console.log("unit size: " + unitSize);
+        const { body, statusCode } = await request(BASE_URL + UNIT_URL + '/' + encodeURIComponent(unitId));
         if (statusCode === 404){
             const errorEmbed = new EmbedBuilder()
             .setTitle("Nothing found. Better luck next time!")
