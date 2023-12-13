@@ -33,9 +33,7 @@ async function getSpell( spellName, spellCommandData ){
             return errorEmbed;
         }
         spell  = await body.json();
-    }
-
-    else {
+    } else {
         const { body } = await request(BASE_URL + SPELL_URL + FUZZY_MATCH_URL + encodeURIComponent(spellName));
         var { spells } = await body.json();
         spell = spells[0];

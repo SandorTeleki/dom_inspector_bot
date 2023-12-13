@@ -33,9 +33,7 @@ async function getMerc( mercName, mercCommandData ){
             return errorEmbed;
         }
         merc  = await body.json(); 
-    }
-
-    else {
+    } else {
         const { body } = await request(BASE_URL + MERC_URL + FUZZY_MATCH_URL + encodeURIComponent(mercName));
         var { mercs } = await body.json();
         merc = mercs[0];

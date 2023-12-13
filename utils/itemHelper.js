@@ -35,9 +35,7 @@ async function getItem( itemName, itemCommandData ){
             return errorEmbed;
         }
         item  = await body.json();
-    }
-
-    else {
+    } else {
         const { body } = await request(BASE_URL + ITEM_URL + FUZZY_MATCH_URL + encodeURIComponent(itemName));
         var { items } = await body.json();
         item = items[0];

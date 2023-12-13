@@ -33,9 +33,7 @@ async function getSite( siteName, siteCommandData ){
             return errorEmbed;
         }
         site  = await body.json();
-    }
-
-    else {
+    } else {
         const { body } = await request(BASE_URL + SITE_URL + FUZZY_MATCH_URL + encodeURIComponent(siteName));
         var { sites } = await body.json();
         site = sites[0];

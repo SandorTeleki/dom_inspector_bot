@@ -34,8 +34,7 @@ async function getUnit( unitName, unitCommandData ){
             return errorEmbed;
         }
         unit  = await body.json();
-    }
-    else {
+    } else {
         const { body } = await request(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(unitName));
         var { units } = await body.json();
         unit = units[0];
