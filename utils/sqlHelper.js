@@ -5,27 +5,12 @@ let sql;
 // Connects to DB
 const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE);
 
-async function sqlSelectNote(commandUsed, idUsed, serverId){
+function sqlSelectNote(commandUsed, idUsed, serverId){
     sql = `SELECT class, class_id FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`
     db.get(sql,[commandUsed,idUsed,serverId],(err, row) => {
         if(err) return console.error(err.message);
     console.log(JSON.stringify(row));
-    return row;
 })};
-
-const sqlGetMentorNote = (type, typeId, serverId) => {
-    return new Promise((resolve, reject) => {
-        const sql = `SELECT note, written_by_user FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
-        db.get(sql, [type, typeId, serverId], (err, row) => {
-            if (err) {
-                console.error(err.message);
-                reject(err);
-            } else {
-                resolve(row);
-            }
-        });
-    });
-};
 
 function sqlInsertNote(commandUsed,idUsed,commandName,noteWritten,server,serverId,unixTimestamp,user){
     sql = `INSERT INTO mentor_notes(class,class_id,name,note,guild_name,guild_id,written_time,written_by_user) VALUES (?,?,?,?,?,?,?,?)`
@@ -100,4 +85,4 @@ function sqlDropTables(){
     db.run("DROP TABLE mentor_logs");
 }
 
-module.exports = { sqlSelectNote, sqlGetMentorNote, sqlInsertNote, sqlInsertLog, sqlInsertMentorLog, sqlUpdateNote, sqlBuildTables, sqlDropTables }
+module.exports = { sqlSelectNote, sqlInsertNote, sqlInsertLog, sqlInsertMentorLog, sqlUpdateNote, sqlBuildTables, sqlDropTables }
