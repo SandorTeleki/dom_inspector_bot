@@ -5,7 +5,6 @@ const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { mercAliases } =require('./mercAliases');
 const { similarMatches } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
-const sqlite3 = require('sqlite3').verbose();
 
 async function getMerc( mercName, mercCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -49,24 +48,7 @@ async function getMerc( mercName, mercCommandData ){
     var type = "merc";
     var typeId = merc.id;
 
-    // Initialize sql
-    let sql;
-    // Connects to DB
-    const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE);
-
-    const row = await new Promise((resolve, reject) => {
-        sql = `SELECT note, written_by_user FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`;
-        db.get(sql, [type, typeId, serverId], (err, row) => {
-            if (err) {
-                console.error(err.message);
-                reject(err);
-            } else {
-                resolve(row);
-            }
-        });
-    });
-
-    //const row = await sqlGetMentorNote(type, typeId, serverId);
+    const row = await sqlGetMentorNote(type, typeId, serverId);
 
     // Destructuring the note property from the row object
     const { note: mentorNote, written_by_user: noteAuthor } = row || {};
