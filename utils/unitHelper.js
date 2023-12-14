@@ -20,15 +20,31 @@ async function getUnit( unitName, unitCommandData ){
     //const userId = unitCommandData.author.id;
     //const text = unitCommandData.content;
     //const unixTimestamp = unitCommandData.createdTimestamp;
-
-    if (unitName in unitAliases){ unitName = unitAliases[unitName] };
     var unit;
     var similarMatchesString;
     var footerStrings = ' ';
 
     const regExId = /^(\d+)/;
-    const regExSize = /^.+\s?(\d)/;
-    if  (unitName.match(regExId)){
+    const regExSize = /^.[^0-9]+\s?(\d)/;
+    const regExSplit = /^([a-z]+)\s?(\d)/;
+
+    if (unitName in unitAliases){ unitName = unitAliases[unitName] };
+
+    if (unitName.match(regExSplit)){
+        var edgecase = unitName.match(regExSplit);
+        var text = edgecase[1];
+        var size2 = edgecase[2];
+        if (text in unitAliases){ text = unitAliases[text] };
+        const { body } = await request(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(text));
+        var { units } = await body.json();
+        var sizeMatch = units.filter(function(unit){
+            var unitSize = unit.size;
+            return +unitSize === +size2;
+        })
+        const correctSize = sizeMatch[0];
+        unit = (correctSize ? correctSize : units[0]);
+        similarMatchesString = similarMatches(units);  
+    } else if (unitName.match(regExId)){
         const unitIdMatch = unitName.match(regExId);
         const unitId = unitIdMatch[1];
         const { body, statusCode } = await request(BASE_URL + UNIT_URL + '/' + encodeURIComponent(unitId));
@@ -39,6 +55,7 @@ async function getUnit( unitName, unitCommandData ){
             return errorEmbed;
         }
         unit  = await body.json();
+        console.log(unit);
     } else {
         const regExSizeMatch = unitName.match(regExSize);
         const size = (regExSizeMatch ? regExSizeMatch[1] : undefined);
@@ -57,7 +74,7 @@ async function getUnit( unitName, unitCommandData ){
     var typeId = unit.id;
 
     const row = await sqlGetMentorNote(type, typeId, serverId);
-
+    console.log(row);
     // Destructuring the note property from the row object
     const { note: mentorNote, written_by_user: noteAuthor } = row || {};
 
