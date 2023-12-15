@@ -23,6 +23,7 @@ async function checkId(message, noteWritten, commandUsed, idUsed, serverId, serv
     commandName = commandResult.name;
 
     function checkNoteMatch(message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp) {
+        //Need to refactor to pull sql stuff out into helper file. Will need to return row and possible turn it into an async function/promise
         sql = `SELECT class, class_id FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`
         db.get(sql,[commandUsed,idUsed,serverId],(err, row) => {
             if(err) return console.error(err.message);
