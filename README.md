@@ -1,20 +1,18 @@
 # Discord Dom Inspector Bot, the Abomination of Interspection
 
-A Discord interface to [Larzm's Mod Inspector](https://larzm42.github.io/dom5inspector/) via the [dom5api](https://github.com/gtim/dom5api). Currently available at the Immersion discord server.
+A Discord interface to [Larzm's Mod Inspector](https://larzm42.github.io/dom5inspector/) via the [dom5api](https://github.com/gtim/dom5api). Currently available on several Dominions related Discord servers like: Immersion, Dominions Game Hub, Ruby etc.
 
-Currently running on Discord.js v14 to support new functionality.
+Currently running on Discord.js v14.
 
 ## Plans
-- Disambiguate when there's multiple matches (e.g. `/unit size 6 water elemental` and `/commander LA sauromancer`)
 - Prepare for the release of Dominions 6 (will need to wait for an update to larzm42's dominspector first probably)
 
 **Currently working on**
-- Refactoring mentor notes after beta release
+- Immediate navigation if query returns multiple answers.
 
 **Small ideas / bugs to fix**
-* If multiple items share the exact same name, then output all
 * If a query returns multiple answers (like "longdead"), create a way to immediately navigate to one of the other search results (most likely
-    through a Discord button attached to the Embed)
+    through a Discord button attached to the Embed).
 
 **Potential future plans**
 * Site searcher (e.g. list forest sites that give order)
