@@ -61,7 +61,6 @@ for (const file of eventFiles) {
 	}
 }
 
-
 //Set Bot activity
 client.on("ready", () => {
 	client.user.setActivity(' your questions', { type: 'LISTENING' });
@@ -69,8 +68,6 @@ client.on("ready", () => {
 
 //Bot Login
 client.login(token);
-
-
 
 //#####################################################################################################
 
@@ -303,7 +300,6 @@ async function logEmbedBuilder (data) {
 	await channel.send({embeds: [logEmbed] });
 }
 
-//SQL build/drop tables
+//SQL build/drop tables - if needed, uncomment sqlDropTables to drop all tables (or go into helper function for granular control over table drop)
 sqlBuildTables();
-// If needed, uncomment sqlDropTables to drop all tables (or go into helper function for granular control over table drop)
 //sqlDropTables();
