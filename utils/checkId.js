@@ -2,7 +2,7 @@ const { request } = require('undici');
 const sqlite3 = require('sqlite3').verbose();
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { BASE_URL } = require('./utils');
-const { sqlSelectNote, sqlInsertNote, sqlInsertLog, sqlInsertMentorLog, sqlUpdateNote } = require('./sqlHelper');
+const { sqlSelectNote, sqlGetMentorNote, sqlInsertNote, sqlInsertLog, sqlInsertMentorLog, sqlUpdateNote } = require('./sqlHelper');
 
 // Initialize sql
 let sql;
@@ -61,8 +61,14 @@ async function checkId(message, noteWritten, commandUsed, idUsed, serverId, serv
                     .setStyle(ButtonStyle.Danger)
                     .setCustomId('no-button')
                 const buttonRow = new ActionRowBuilder().addComponents(yesButton, noButton);
+
+                // If there is a note, we grab the existing note and author to show it when you plan to overwrite the note
+                const existingNote = await sqlGetMentorNote(commandUsed, idUsed, serverId);
+                const { note: mentorNote, written_by_user: noteAuthor } = existingNote || {};
             
-                const reply = await message.reply({content: 'A mentor note already exists, are you sure you want to overwrite it?', components: [buttonRow]});
+                const reply = await message.reply({
+                    content: `A mentor note already exists, are you sure you want to overwrite it? \nExisting note: \`${mentorNote}\`. Written by: \`${noteAuthor}\` \nYour note: \`${noteWritten}\``, 
+                    components: [buttonRow]});
             
                 const filter = (i) => i.user.id === message.author.id;
             
