@@ -1,6 +1,7 @@
 module.exports = {
     mentorWhitelist: [
         '522764785696243712', // toldireloaded
+        '819213721565921420', // not-polter
         '576781542370836521', // tim.otej
         '293099185283137536', // .a131a
         '335649144872108034', // insert_something_clever (darkwolf)
