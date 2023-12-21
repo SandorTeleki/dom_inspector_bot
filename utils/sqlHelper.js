@@ -47,9 +47,9 @@ function sqlInsertMentorLog(commandUsed,idUsed,commandName,noteWritten,server,se
     });
 }
 
-function sqlUpdateNote(noteWritten,commandUsed,idUsed,serverId){
-    sql = `UPDATE mentor_notes SET note = ? WHERE class = ? AND class_id = ? AND guild_id = ?`
-    db.run(sql,[noteWritten,commandUsed,idUsed,serverId],(err)=> {
+function sqlUpdateNote(noteWritten,user,commandUsed,idUsed,serverId){
+    sql = `UPDATE mentor_notes SET note = ?, written_by_user = ? WHERE class = ? AND class_id = ? AND guild_id = ?`
+    db.run(sql,[noteWritten,user,commandUsed,idUsed,serverId],(err)=> {
         if(err) return console.error(err.message);
     });
 }

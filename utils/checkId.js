@@ -42,7 +42,7 @@ async function checkId(message, noteWritten, commandUsed, idUsed, serverId, serv
     
             //Since a match was found, we UPDATE the note
             function updateNote(message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp) {
-                sqlUpdateNote(noteWritten,commandUsed,idUsed,serverId);
+                sqlUpdateNote(noteWritten,user,commandUsed,idUsed,serverId);
                 sqlInsertLog(server,serverId,channelName,channelId,user,userId,text,unixTimestamp);
                 sqlInsertMentorLog(commandUsed,idUsed,commandName,noteWritten,server,serverId,unixTimestamp,user);
                 console.log("Note was found, updating note...");
