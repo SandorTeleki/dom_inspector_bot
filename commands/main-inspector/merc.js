@@ -5,7 +5,7 @@ const { EmbedBuilder } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('merc')
-		.setDescription('Replies with information about a merc')
+		.setDescription('Replies with information about a mercenary')
         .addStringOption(option => option.setName('merc_name').setDescription('Enter the name of the mercenary').setRequired(true)),
 
 	async execute(interaction) {
