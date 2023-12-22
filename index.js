@@ -175,7 +175,6 @@ client.on("messageCreate", async (message) => {
 
         await message.channel.send({ embeds: [booliEmbed]});
 	}
-
 	// Note command
 	if (message.content.startsWith(`${prefix}note`)){
 		// Parts of the message we need to use later

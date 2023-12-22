@@ -11,7 +11,7 @@ module.exports = {
         '313651176489091073', // loggy__
         '171755453993189377', // isitaris
         '162799669880160256', // sythewise
-     ],
+    ],
     channelWhiteList : [
         '996378750474256385', // Dom Inspector Bot Test Server -- #best-test
         '1175513268320735322', // Dom Inspector Bot Test Server -- #better-test
