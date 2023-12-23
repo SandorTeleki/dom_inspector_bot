@@ -1,11 +1,12 @@
 function similarMatches(things) {
     if (things.length > 1) {
-        return `Other matches:\n${things.slice(1).map(function(e){
+        const list = things.slice(1).map(function(e){
             const name = e.name;
             const id = e.id;
-            const info = name + ' [ID: ' + id + ']';
+            const info = name + ' [' + id + ']';
             return info;
-        }).join(", ")}`
+        }).join(", ");
+        return `Other matches [ID#]:\n${list}`;
     }
 }
 

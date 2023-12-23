@@ -66,9 +66,9 @@ async function getUnit( unitName, unitCommandData ){
         })
         const correctSize = sizeMatch[0];
         unit = (correctSize ? correctSize : units[0]);
-        similarMatchesString = similarMatches(units);  
+        similarMatchesString = similarMatches(units);
     }; 
-
+    
     var type = "unit";
     var typeId = unit.id;
 
