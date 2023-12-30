@@ -5,7 +5,7 @@ const { Client, Collection, Intents, Events, GatewayIntentBits } = require('disc
 const { token } = require('./config.json');
 const Discord = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
-//const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js'); //Uncomment if you need to use buttons in index.js
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js'); //for buttons
 
 const { getItem } = require('./utils/itemHelper');
 const { getSpell } = require('./utils/spellHelper');
@@ -104,17 +104,54 @@ client.on("messageCreate", async (message) => {
 		let mercName = message.content.slice(6).toLowerCase();
 		var mercCommandData = message;
 		try {
-			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed] = await getMerc(mercName, mercCommandData); 
+			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton] = await getMerc(mercName, mercCommandData);
+			const buttonRow = new ActionRowBuilder().addComponents(mercLeaderButton, mercUnitButton);
 			createLog(message);
 			createLogEmbed(message);
-
-			await message.channel.send({ embeds: [mercEmbed, mercLeaderEmbed, mercTroopEmbed] });
-		}
-		catch {
+	
+			const response = await message.channel.send({ embeds: [mercEmbed], components: [buttonRow] });
+	
+			const filter = (i) => i.user.id === message.author.id;
+	
+			const collector = response.createMessageComponentCollector({
+				componentType: ComponentType.Button,
+				filter,
+				time: 30_000,
+				max: 2
+				});
+	
+			collector.on('collect', (message) => {
+				if (message.customId === 'merc-leader'){
+					mercLeaderButton.setDisabled(true);
+					response.edit({
+						components: [buttonRow]
+					})
+					message.reply({ embeds: [mercLeaderEmbed]});
+	
+				}
+				if (message.customId === 'merc-unit'){
+					mercUnitButton.setDisabled(true);
+					response.edit({
+						components: [buttonRow]
+					})
+					message.reply({ embeds: [mercTroopEmbed]});
+				}
+			});
+	
+			collector.on('end', () => {
+				mercLeaderButton.setDisabled(true);
+				mercUnitButton.setDisabled(true);
+	
+				response.edit({
+					components: [buttonRow]
+				})
+				//console.log('end')
+			})
+		} catch {
 			const errorEmbed = new EmbedBuilder()
             	.setTitle("Nothing found. Better luck next time!")
             	.setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            await message.channel.send({ embeds: [errorEmbed]});
+            await message.reply({ embeds: [errorEmbed]});
 		}
 	};
 	// Site command
@@ -302,3 +339,76 @@ async function logEmbedBuilder (data) {
 //SQL build/drop tables - if needed, uncomment sqlDropTables to drop all tables (or go into helper function for granular control over table drop)
 sqlBuildTables();
 //sqlDropTables();
+
+
+//----------------------TEST--------------------------//
+
+//Create test embed, assign buttons to it, see how it displays
+
+// client.on("messageCreate", async (message) => {
+// 	if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+// 	// Test command
+//   	if (message.content.startsWith(`${prefix}test`)) {
+
+// 		const testConfirm = new ButtonBuilder()
+// 		.setCustomId('confirm')
+// 		.setLabel('Longdead [192]')
+// 		.setStyle(ButtonStyle.Secondary);
+
+// 		const testCancel = new ButtonBuilder()
+// 		.setCustomId('cancel')
+// 		.setLabel('Longdead [193]')
+// 		.setStyle(ButtonStyle.Secondary);
+
+// 		const test1 = new ButtonBuilder()
+// 		.setCustomId('test1')
+// 		.setLabel(' Longdead [194]')
+// 		.setStyle(ButtonStyle.Secondary);
+
+// 		const test2 = new ButtonBuilder()
+// 		.setCustomId('test2')
+// 		.setLabel('Longdead [195]')
+// 		.setStyle(ButtonStyle.Secondary);
+
+// 		const test3 = new ButtonBuilder()
+// 		.setCustomId('test3')
+// 		.setLabel('Longdead [196]')
+// 		.setStyle(ButtonStyle.Secondary);
+
+// 		const test4 = new ButtonBuilder()
+// 		.setCustomId('test4')
+// 		.setLabel('Longdead [2120]')
+// 		.setStyle(ButtonStyle.Secondary);
+
+// 		const test5 = new ButtonBuilder()
+// 		.setCustomId('test5')
+// 		.setLabel('Longdead [2121]')
+// 		.setStyle(ButtonStyle.Secondary);
+
+// 		const test6 = new ButtonBuilder()
+// 		.setCustomId('test6')
+// 		.setLabel('Longdead [2124]')
+// 		.setStyle(ButtonStyle.Secondary);
+
+// 		const test7 = new ButtonBuilder()
+// 		.setCustomId('test7')
+// 		.setLabel('Longdead [2451]')
+// 		.setStyle(ButtonStyle.Secondary);
+
+// 		const test8 = new ButtonBuilder()
+// 		.setCustomId('test8')
+// 		.setLabel('Longdead [3360]')
+// 		.setStyle(ButtonStyle.Secondary);
+
+// 		const row = new ActionRowBuilder()
+// 			.addComponents(testConfirm, testCancel, test1, test2, test3)
+
+// 		const row2 = new ActionRowBuilder()
+// 			.addComponents(test4, test5, test6, test7, test8)
+
+// 		const testEmbed = new EmbedBuilder()
+//             	.setTitle("Testing...")
+//             await message.channel.send({ embeds: [testEmbed], components: [row, row2]});
+// 	}
+// });

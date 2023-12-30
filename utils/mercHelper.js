@@ -5,6 +5,7 @@ const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { mercAliases } =require('./mercAliases');
 const { similarMatches } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js'); //for buttons
 
 async function getMerc( mercName, mercCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -58,10 +59,10 @@ async function getMerc( mercName, mercCommandData ){
     // Construct the mercEmbed after obtaining the mentorNote value
     const mercEmbed = new EmbedBuilder()
         .setImage(BASE_URL + merc.screenshot);
-
     if (similarMatchesString) {
         mercEmbed.setFooter({ text: similarMatchesString });
     }
+
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         mercEmbed.setTitle(`ID: ${merc.id}`);
@@ -72,20 +73,25 @@ async function getMerc( mercName, mercCommandData ){
             ])
         }
     }
+    //Buttons
+    const mercLeaderButton = new ButtonBuilder()
+        .setLabel(`Merc leader: ${merc.bossname}`)
+        .setStyle(ButtonStyle.Secondary)
+        .setCustomId('merc-leader');
 
+    const mercUnitButton = new ButtonBuilder()
+        .setLabel(`Merc units (ID#): ${merc.unit_id}`)
+        .setStyle(ButtonStyle.Secondary)
+        .setCustomId('merc-unit');
 
-    // const mercEmbed = new EmbedBuilder()
-    //     //.setTitle(merc.name)
-    //     // .setDescription('Mentor notes will go here.')
-    //     .setImage(BASE_URL + merc.screenshot)
-    //     if ( similarMatchesString ) {mercEmbed.setFooter({text: similarMatches(mercs)})};
+    //Embeds
     const mercLeaderEmbed = new EmbedBuilder()
         .setImage(BASE_URL+'/units/'+ merc.commander_id+'/screenshot')
-        .setDescription('Name of mercenary group leader: '+ merc.bossname)
+        .setDescription('Name of mercenary group leader: '+ merc.bossname);
     const mercTroopEmbed = new EmbedBuilder()
         .setImage(BASE_URL+'/units/'+ merc.unit_id+'/screenshot')
-        .setDescription('Number of units: '+ merc.nrunits)
-    return [mercEmbed, mercLeaderEmbed, mercTroopEmbed];
+        .setDescription('Number of units: '+ merc.nrunits);
+    return [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton];
 }
 
 module.exports = { getMerc }
