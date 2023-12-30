@@ -145,7 +145,6 @@ client.on("messageCreate", async (message) => {
 				response.edit({
 					components: [buttonRow]
 				})
-				//console.log('end')
 			})
 		} catch {
 			const errorEmbed = new EmbedBuilder()
