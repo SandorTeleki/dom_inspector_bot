@@ -78,6 +78,7 @@ const unitAliases = {
     'la royal guard':'2115',
     'shitty vampire':'405',
     'blood rite vampire':'405',
+    'shedim':'2073',
 }
 
 module.exports = { unitAliases }
