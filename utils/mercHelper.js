@@ -72,7 +72,7 @@ async function getMerc( mercName, mercCommandData ){
                 {name: "ID:", value: `${merc.id}`, inline: true},
             ])
         } else {
-            mercEmbed.setTitle(`ID: ${merc.id}`);
+            mercEmbed.setDescription(`ID: ${merc.id}`)
         }
     }
     //Buttons
