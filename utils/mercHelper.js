@@ -65,12 +65,14 @@ async function getMerc( mercName, mercCommandData ){
 
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
-        mercEmbed.setTitle(`ID: ${merc.id}`);
         if(mentorNote !== undefined){
             mercEmbed.addFields([
                 {name: "Mentor scribble:", value: `||${mentorNote}||`, inline: true},
-                {name: "Written by:", value: noteAuthor, inline: true}
+                {name: "Written by:", value: noteAuthor, inline: true},
+                {name: "ID:", value: `${merc.id}`, inline: true},
             ])
+        } else {
+            mercEmbed.setTitle(`ID: ${merc.id}`);
         }
     }
     //Buttons
@@ -87,10 +89,16 @@ async function getMerc( mercName, mercCommandData ){
     //Embeds
     const mercLeaderEmbed = new EmbedBuilder()
         .setImage(BASE_URL+'/units/'+ merc.commander_id+'/screenshot')
-        .setDescription(`Name of mercenary group leader: ${merc.bossname}.\n(ID: ${merc.commander_id})`);
+        .addFields(
+            {name: 'Name of mercenary group leader:', value: `${merc.bossname}`, inline: true},
+            {name: 'ID:', value: `${merc.commander_id}`, inline: true},
+        );
     const mercTroopEmbed = new EmbedBuilder()
         .setImage(BASE_URL+'/units/'+ merc.unit_id+'/screenshot')
-        .setDescription(`Number of units: ${merc.nrunits}.\n(ID: ${merc.unit_id})`);
+        .addFields(
+            {name:'Number of units:', value: `${merc.nrunits}`, inline: true},
+            {name: 'ID:', value: `${merc.unit_id}`, inline: true},
+        );
     return [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton];
 }
 
