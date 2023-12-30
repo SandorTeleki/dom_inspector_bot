@@ -24,7 +24,7 @@ module.exports = {
 			const collector = response.createMessageComponentCollector({
 				componentType: ComponentType.Button,
 				filter,
-				time: 30_000,
+				time: 15_000,
 				max: 2
 				});
 	
