@@ -3,7 +3,7 @@ const { request } = require('undici');
 const { FUZZY_MATCH_URL, SITE_URL, BASE_URL } = require('./utils');
 const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { siteAliases } = require('./siteAliases');
-const { similarMatches } =require('./similarMatches');
+const { similarMatchesStringify } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 
 async function getSite( siteName, siteCommandData ){
@@ -41,7 +41,7 @@ async function getSite( siteName, siteCommandData ){
         const { body } = await request(BASE_URL + SITE_URL + FUZZY_MATCH_URL + encodeURIComponent(siteName));
         var { sites } = await body.json();
         site = sites[0];
-        similarMatchesString = similarMatches(sites);
+        similarMatchesString = similarMatchesStringify(sites);
     }; 
 
     var type = "site";
@@ -59,7 +59,7 @@ async function getSite( siteName, siteCommandData ){
         .setImage(BASE_URL + site.screenshot);
 
     if (similarMatchesString) {
-        siteEmbed.setFooter({ text: similarMatchesString });
+        siteEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
     }
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
     if (channelWhiteList.some((item)=>{ return item === channelId })) {

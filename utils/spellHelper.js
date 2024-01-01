@@ -3,7 +3,7 @@ const { request } = require('undici');
 const { FUZZY_MATCH_URL, SPELL_URL, BASE_URL } = require('./utils');
 const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { spellAliases } =require('./spellAliases');
-const { similarMatches } =require('./similarMatches');
+const { similarMatchesStringify } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 
 async function getSpell( spellName, spellCommandData ){
@@ -41,7 +41,7 @@ async function getSpell( spellName, spellCommandData ){
         const { body } = await request(BASE_URL + SPELL_URL + FUZZY_MATCH_URL + encodeURIComponent(spellName));
         var { spells } = await body.json();
         spell = spells[0];
-        similarMatchesString = similarMatches(spells);
+        similarMatchesString = similarMatchesStringify(spells);
     }; 
 
     var type = "spell";
@@ -59,7 +59,7 @@ async function getSpell( spellName, spellCommandData ){
         .setImage(BASE_URL + spell.screenshot);
 
     if (similarMatchesString) {
-        spellEmbed.setFooter({ text: similarMatchesString });
+        spellEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
     }
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
     if (channelWhiteList.some((item)=>{ return item === channelId })) {

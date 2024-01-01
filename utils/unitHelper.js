@@ -3,7 +3,7 @@ const { request } = require('undici');
 const { FUZZY_MATCH_URL, UNIT_URL, BASE_URL } = require('./utils');
 const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { unitAliases } =require('./unitAliases');
-const { similarMatches } =require('./similarMatches');
+const { similarMatchesStringify, similarMatchesArray } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 
 async function getUnit( unitName, unitCommandData ){
@@ -43,7 +43,7 @@ async function getUnit( unitName, unitCommandData ){
         })
         const correctSize = sizeMatch[0];
         unit = (correctSize ? correctSize : units[0]);
-        similarMatchesString = similarMatches(units);  
+        similarMatchesString = similarMatchesStringify(units);  
     } else if (unitName.match(regExId)){
         const unitIdMatch = unitName.match(regExId);
         const unitId = unitIdMatch[1];
@@ -66,7 +66,9 @@ async function getUnit( unitName, unitCommandData ){
         })
         const correctSize = sizeMatch[0];
         unit = (correctSize ? correctSize : units[0]);
-        similarMatchesString = similarMatches(units);
+        similarMatchesString = similarMatchesStringify(units);
+        similarMatchesList = similarMatchesArray(units);
+        //console.log(similarMatchesList);
     };
 
     var type = "unit";
@@ -90,7 +92,7 @@ async function getUnit( unitName, unitCommandData ){
     }
 
     if ( similarMatchesString ) {
-        unitEmbed.setFooter({text: footerStrings + similarMatchesString})
+        unitEmbed.setFooter({text: footerStrings + `Other matches [ID#]:\n${similarMatchesString}`})
     }
     else {
         unitEmbed.setFooter({ text: footerStrings });

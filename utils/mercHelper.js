@@ -3,7 +3,7 @@ const { request } = require('undici');
 const { FUZZY_MATCH_URL, MERC_URL, BASE_URL } = require('./utils');
 const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { mercAliases } =require('./mercAliases');
-const { similarMatches } =require('./similarMatches');
+const { similarMatchesStringify } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js'); //for buttons
 
@@ -42,7 +42,7 @@ async function getMerc( mercName, mercCommandData ){
         const { body } = await request(BASE_URL + MERC_URL + FUZZY_MATCH_URL + encodeURIComponent(mercName));
         var { mercs } = await body.json();
         merc = mercs[0];
-        similarMatchesString = similarMatches(mercs);
+        similarMatchesString = similarMatchesStringify(mercs);
     }; 
     //console.log(merc);
 
@@ -60,7 +60,7 @@ async function getMerc( mercName, mercCommandData ){
     const mercEmbed = new EmbedBuilder()
         .setImage(BASE_URL + merc.screenshot);
     if (similarMatchesString) {
-        mercEmbed.setFooter({ text: similarMatchesString });
+        mercEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
     }
 
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild

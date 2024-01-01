@@ -1,13 +1,21 @@
-function similarMatches(things) {
-    if (things.length > 1) {
-        const list = things.slice(1).map(function(e){
+function similarMatchesStringify(matches) {
+    if (matches.length > 1) {
+        const list = matches.slice(1).map(function(e){
             const name = e.name;
             const id = e.id;
             const info = name + ' [' + id + ']';
             return info;
         }).join(", ");
-        return `Other matches [ID#]:\n${list}`;
+        return list;
     }
 }
 
-module.exports = { similarMatches }
+function similarMatchesArray(matches){
+    if(matches.length > 1){
+        const matchesArray = matches.slice(1);
+        console.log(matchesArray);
+        return matchesArray;
+    }
+}
+
+module.exports = { similarMatchesStringify, similarMatchesArray }
