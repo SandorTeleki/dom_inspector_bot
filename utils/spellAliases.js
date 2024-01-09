@@ -81,6 +81,7 @@ const spellAliases = {
     'summon naiad':'contact naiad',
     'average dominions':'army of rats',
     'wod':'wind of death',
+    'lfl':'life for a life',
 }
 
 module.exports = { spellAliases }
