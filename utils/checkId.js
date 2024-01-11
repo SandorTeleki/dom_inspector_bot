@@ -97,7 +97,7 @@ async function checkId(message, noteWritten, commandUsed, idUsed, serverId, serv
                     noButton.setDisabled(true);
             
                     reply.edit({
-                    components: [buttonRow]
+                        components: [buttonRow]
                     })
                 })
             
