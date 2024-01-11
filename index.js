@@ -78,7 +78,6 @@ client.login(token);
 const prefix = "?"; 
 
 client.on("messageCreate", async (message) => {
-	// console.log(`message: ${message}, ${message.id}, ${message.content}`);
 	if (!message.content.startsWith(prefix) ) return;
 	if (message.author.bot && message.author.id !== client.user.id) return;
 
@@ -111,7 +110,6 @@ client.on("messageCreate", async (message) => {
 				const isInListID = listID.some(id => id === interactionCustomID)
 				if (isInListID){
 					const justTheID = interaction.customId.replace(buttonPrefix, "")
-					//console.log(interaction.interaction.components.ActionRow);
 					const [ itemEmbed ] = await getItem( justTheID, interaction ); 
 					createLog(interaction);
 					createLogEmbed(interaction);
@@ -121,10 +119,8 @@ client.on("messageCreate", async (message) => {
 					const buttons = [];
 					for (const actionRow of arrayOfActionRows){
 						const ComponentsRow = actionRow.components;
-						// console.log(ComponentsRow[0].data);
 						for (let a = 0; a < ComponentsRow.length; a++){
 							const current = ComponentsRow[a];
-							// console.log(current.data);
 							if(interactionCustomID === current.data.custom_id || current.data.disabled){
 								const buttonBuilder = new ButtonBuilder()
 									.setCustomId(`${current.data.custom_id}`)
@@ -154,13 +150,10 @@ client.on("messageCreate", async (message) => {
 		});
 
 		collector.on('end', (interaction) => {
-			console.log('Ended...');
-			//const arrayOfActionRows = interaction.first().message.components; // Doesn't work if no buttons are clicked
 			const arrayOfActionRows = buttonsArray;
 			const buttons = [];
 			for (const actionRow of arrayOfActionRows){
 			  const componentsRow = actionRow.components;
-			//   console.log(componentsRow[0].data);
 			  for (let a = 0; a < componentsRow.length; a++){
 				const current = componentsRow[a];
 				buttons.push(
@@ -186,6 +179,7 @@ client.on("messageCreate", async (message) => {
 		let spellName = message.content.slice(7).toLowerCase();
 		var spellCommandData = message;
 		const [spellEmbed, buttons, buttonPrefix ] = await getSpell( spellName, spellCommandData );
+
 		//Logging
 		createLog(message);
 		createLogEmbed(message);
@@ -209,7 +203,6 @@ client.on("messageCreate", async (message) => {
 				const isInListID = listID.some(id => id === interactionCustomID)
 				if (isInListID){
 					const justTheID = interaction.customId.replace(buttonPrefix, "")
-					//console.log(interaction.interaction.components.ActionRow);
 					const [ spellEmbed ] = await getSpell( justTheID, interaction ); 
 					createLog(interaction);
 					createLogEmbed(interaction);
@@ -219,10 +212,8 @@ client.on("messageCreate", async (message) => {
 					const buttons = [];
 					for (const actionRow of arrayOfActionRows){
 						const ComponentsRow = actionRow.components;
-						// console.log(ComponentsRow[0].data);
 						for (let a = 0; a < ComponentsRow.length; a++){
 							const current = ComponentsRow[a];
-							// console.log(current.data);
 							if(interactionCustomID === current.data.custom_id || current.data.disabled){
 								const buttonBuilder = new ButtonBuilder()
 									.setCustomId(`${current.data.custom_id}`)
@@ -252,13 +243,10 @@ client.on("messageCreate", async (message) => {
 		});
 
 		collector.on('end', (interaction) => {
-			console.log('Ended...');
-			//const arrayOfActionRows = interaction.first().message.components; // Doesn't work if no buttons are clicked
 			const arrayOfActionRows = buttonsArray;
 			const buttons = [];
 			for (const actionRow of arrayOfActionRows){
 			  const componentsRow = actionRow.components;
-			//   console.log(componentsRow[0].data);
 			  for (let a = 0; a < componentsRow.length; a++){
 				const current = componentsRow[a];
 				buttons.push(
@@ -289,8 +277,7 @@ client.on("messageCreate", async (message) => {
 			createLog(message);
 			createLogEmbed(message);
 			const response = await message.channel.send({ embeds: [mercEmbed], components: [buttonRow] });
-			
-			// -------> Pull into helper function/file (most likely into mercHelper.js) <--------------- // 
+
 			const filter = (i) => i.user.id === message.author.id;
 	
 			const collector = response.createMessageComponentCollector({
@@ -339,6 +326,7 @@ client.on("messageCreate", async (message) => {
 		const siteName = message.content.slice(6).toLowerCase();
 		var siteCommandData = message;
 		const [siteEmbed, buttons, buttonPrefix ] = await getSite( siteName, siteCommandData );
+		
 		//Logging
 		createLog(message);
 		createLogEmbed(message);
@@ -361,7 +349,6 @@ client.on("messageCreate", async (message) => {
 				const isInListID = listID.some(id => id === interactionCustomID)
 				if (isInListID){
 					const justTheID = interaction.customId.replace(buttonPrefix, "")
-					//console.log(interaction.interaction.components.ActionRow);
 					const [ siteEmbed ] = await getSite( justTheID, interaction ); 
 					createLog(interaction);
 					createLogEmbed(interaction);
@@ -371,10 +358,8 @@ client.on("messageCreate", async (message) => {
 					const buttons = [];
 					for (const actionRow of arrayOfActionRows){
 						const ComponentsRow = actionRow.components;
-						// console.log(ComponentsRow[0].data);
 						for (let a = 0; a < ComponentsRow.length; a++){
 							const current = ComponentsRow[a];
-							// console.log(current.data);
 							if(interactionCustomID === current.data.custom_id || current.data.disabled){
 								const buttonBuilder = new ButtonBuilder()
 									.setCustomId(`${current.data.custom_id}`)
@@ -404,13 +389,10 @@ client.on("messageCreate", async (message) => {
 		});
 
 		collector.on('end', (interaction) => {
-			console.log('Ended...');
-			//const arrayOfActionRows = interaction.first().message.components; // Doesn't work if no buttons are clicked
 			const arrayOfActionRows = buttonsArray;
 			const buttons = [];
 			for (const actionRow of arrayOfActionRows){
 			  const componentsRow = actionRow.components;
-			//   console.log(componentsRow[0].data);
 			  for (let a = 0; a < componentsRow.length; a++){
 				const current = componentsRow[a];
 				buttons.push(
@@ -459,7 +441,6 @@ client.on("messageCreate", async (message) => {
 				const isInListID = listID.some(id => id === interactionCustomID)
 				if (isInListID){
 					const justTheID = interaction.customId.replace(buttonPrefix, "")
-					//console.log(interaction.interaction.components.ActionRow);
 					const [ unitEmbed ] = await getUnit( justTheID, interaction ); 
 					createLog(interaction);
 					createLogEmbed(interaction);
@@ -469,10 +450,8 @@ client.on("messageCreate", async (message) => {
 					const buttons = [];
 					for (const actionRow of arrayOfActionRows){
 						const ComponentsRow = actionRow.components;
-						// console.log(ComponentsRow[0].data);
 						for (let a = 0; a < ComponentsRow.length; a++){
 							const current = ComponentsRow[a];
-							// console.log(current.data);
 							if(interactionCustomID === current.data.custom_id || current.data.disabled){
 								const buttonBuilder = new ButtonBuilder()
 									.setCustomId(`${current.data.custom_id}`)
@@ -502,13 +481,10 @@ client.on("messageCreate", async (message) => {
 		});
 
 		collector.on('end', (interaction) => {
-			console.log('Ended...');
-			//const arrayOfActionRows = interaction.first().message.components; // Doesn't work if no buttons are clicked
 			const arrayOfActionRows = buttonsArray;
 			const buttons = [];
 			for (const actionRow of arrayOfActionRows){
 			  const componentsRow = actionRow.components;
-			//   console.log(componentsRow[0].data);
 			  for (let a = 0; a < componentsRow.length; a++){
 				const current = componentsRow[a];
 				buttons.push(
