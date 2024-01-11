@@ -183,7 +183,7 @@ client.on("messageCreate", async (message) => {
 
 		const collector =  response.createMessageComponentCollector({
 			componentType: ComponentType.Button,
-			time: 8_000, // return it to 30s
+			time: 30_000,
 			max: maxButtonsToClick
 		});
 

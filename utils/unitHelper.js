@@ -1,12 +1,13 @@
 const { EmbedBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { request } = require('undici');
+
 const { FUZZY_MATCH_URL, UNIT_URL, BASE_URL } = require('./utils');
 const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { unitAliases } =require('./unitAliases');
 const { similarMatchesStringify, similarMatchesArray } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 
 async function getUnit( unitName, unitCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -89,7 +90,6 @@ async function getUnit( unitName, unitCommandData ){
             );
         }
     }
-
 
     const type = "unit";
     let typeId = unit.id;

@@ -1,10 +1,13 @@
 const { EmbedBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { request } = require('undici');
+
 const { FUZZY_MATCH_URL, SPELL_URL, BASE_URL } = require('./utils');
 const { mentorWhitelist, channelWhiteList } = require('./whitelist');
-const { spellAliases } =require('./spellAliases');
+const { spellAliases } = require('./spellAliases');
 const { similarMatchesStringify } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
+
 
 async function getSpell( spellName, spellCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)

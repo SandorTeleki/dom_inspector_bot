@@ -24,7 +24,7 @@ module.exports = {
 		
 		const collector =  response.createMessageComponentCollector({
 			componentType: ComponentType.Button,
-			time: 8_000, //change back to 30s
+			time: 30_000,
 			max: maxButtonsToClick
 		});
 
