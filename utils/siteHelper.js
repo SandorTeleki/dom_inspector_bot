@@ -5,7 +5,7 @@ const { request } = require('undici');
 const { FUZZY_MATCH_URL, SITE_URL, BASE_URL } = require('./utils');
 const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { siteAliases } = require('./siteAliases');
-const { similarMatchesStringify } =require('./similarMatches');
+const { similarMatchesStringify, similarMatchesArray } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 
 async function getSite( siteName, siteCommandData ){
@@ -26,6 +26,7 @@ async function getSite( siteName, siteCommandData ){
     if (siteName in siteAliases){ siteName = siteAliases[siteName] };
     var site;
     var similarMatchesString;
+    var similarMatchesList;
     const regExId = /^(\d+)/;
 
     if  (siteName.match(regExId)){
@@ -44,7 +45,24 @@ async function getSite( siteName, siteCommandData ){
         var { sites } = await body.json();
         site = sites[0];
         similarMatchesString = similarMatchesStringify(sites);
+        var similarMatchesList = similarMatchesArray(sites);
     }; 
+
+    // Building buttons from similarMatchesList
+    const buttons = [];
+    const buttonPrefix = "site-";
+    if(similarMatchesList){
+        for (let a = 0; a < similarMatchesList.length; a++){
+            const current = similarMatchesList[a];
+            buttons.push(
+                new ButtonBuilder()
+                    .setCustomId(`${buttonPrefix}${current.id}`)
+                    .setLabel(`${current.name} [${current.id}]`)
+                    .setStyle(ButtonStyle.Secondary)
+                    .setDisabled(false)
+            );
+        }
+    }
 
     var type = "site";
     var typeId = site.id;
@@ -73,7 +91,7 @@ async function getSite( siteName, siteCommandData ){
             ])  
         }
     }
-    return siteEmbed;
+    return [ siteEmbed, buttons, buttonPrefix ];
 }
 
 module.exports = { getSite }
