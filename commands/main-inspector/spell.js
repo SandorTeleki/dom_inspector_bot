@@ -30,49 +30,49 @@ module.exports = {
 
 		collector.on('collect', async (interaction) => {
 			if (interaction.user.id === interactionOG.user.id){
-			const interactionCustomID = interaction.customId;
+				const interactionCustomID = interaction.customId;
 
-			const isInListID = listID.some(id => id === interactionCustomID)
-			if (isInListID){
-				const justTheID = interaction.customId.replace(buttonPrefix, "");
-				const [ spellEmbed ] = await getSpell( justTheID, interaction );
+				const isInListID = listID.some(id => id === interactionCustomID)
+				if (isInListID){
+					const justTheID = interaction.customId.replace(buttonPrefix, "");
+					const [ spellEmbed ] = await getSpell( justTheID, interaction );
 
-				//Logging button click
-				createLog(interaction);
+					//Logging button click
+					createLog(interaction);
 
-				await interaction.reply({embeds: [spellEmbed]});
-				let arrayOfActionRows = interaction.message.components;
-				const buttons = [];
-				for (const actionRow of arrayOfActionRows){
-					const ComponentsRow = actionRow.components;
-					for (let a = 0; a < ComponentsRow.length; a++){
-						const current = ComponentsRow[a];
-						if(interactionCustomID === current.data.custom_id || current.data.disabled){
-							const buttonBuilder = new ButtonBuilder()
-								.setCustomId(`${current.data.custom_id}`)
-								.setLabel(`${current.data.label}`)
-								.setStyle(ButtonStyle.Secondary)
-								.setDisabled(true);
-							buttons.push(buttonBuilder);
-						} else {
-							const buttonBuilder = new ButtonBuilder()
-								.setCustomId(`${current.data.custom_id}`)
-								.setLabel(`${current.data.label}`)
-								.setStyle(ButtonStyle.Secondary)
-								.setDisabled(false);
-							buttons.push(buttonBuilder)
-						};
+					await interaction.reply({embeds: [spellEmbed]});
+					let arrayOfActionRows = interaction.message.components;
+					const buttons = [];
+					for (const actionRow of arrayOfActionRows){
+						const ComponentsRow = actionRow.components;
+						for (let a = 0; a < ComponentsRow.length; a++){
+							const current = ComponentsRow[a];
+							if(interactionCustomID === current.data.custom_id || current.data.disabled){
+								const buttonBuilder = new ButtonBuilder()
+									.setCustomId(`${current.data.custom_id}`)
+									.setLabel(`${current.data.label}`)
+									.setStyle(ButtonStyle.Secondary)
+									.setDisabled(true);
+								buttons.push(buttonBuilder);
+							} else {
+								const buttonBuilder = new ButtonBuilder()
+									.setCustomId(`${current.data.custom_id}`)
+									.setLabel(`${current.data.label}`)
+									.setStyle(ButtonStyle.Secondary)
+									.setDisabled(false);
+								buttons.push(buttonBuilder)
+							};
+						}
 					}
-				}
-				const buttonsArray = buttonWrapper(buttons);
+					const buttonsArray = buttonWrapper(buttons);
 
-				response.edit({
-					components: buttonsArray
-				})
+					response.edit({
+						components: buttonsArray
+					})
+				}
+			} else {
+				interaction.reply({ content: `These buttons aren't for you!`, ephemeral: true });
 			}
-		} else {
-			interaction.reply({ content: `These buttons aren't for you!`, ephemeral: true });
-		}
 		});
 
 		collector.on('end', (interaction) => {
