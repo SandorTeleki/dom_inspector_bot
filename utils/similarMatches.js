@@ -12,8 +12,7 @@ function similarMatchesStringify(matches) {
 
 function similarMatchesArray(matches){
     if(matches.length > 1){
-        const matchesArray = matches.slice(1);
-        console.log(matchesArray);
+        const matchesArray = matches.slice(1, 26);
         return matchesArray;
     }
 }

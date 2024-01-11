@@ -6,6 +6,9 @@ const { unitAliases } =require('./unitAliases');
 const { similarMatchesStringify, similarMatchesArray } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 
+const { buttonWrapper } = require('./buttonWrapper'); // For similarMatches button testing
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+
 async function getUnit( unitName, unitCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
     const channelId = (unitCommandData.type === 0 ? unitCommandData.channelId : unitCommandData.channel.id );
@@ -22,6 +25,7 @@ async function getUnit( unitName, unitCommandData ){
     //const unixTimestamp = unitCommandData.createdTimestamp;
     var unit;
     var similarMatchesString;
+    var similarMatchesList;
     var footerStrings = ' ';
 
     const regExId = /^(\d+)/;
@@ -31,19 +35,20 @@ async function getUnit( unitName, unitCommandData ){
     if (unitName in unitAliases){ unitName = unitAliases[unitName] };
 
     if (unitName.match(regExSplit)){
-        var edgecase = unitName.match(regExSplit);
-        var text = edgecase[1];
-        var size2 = edgecase[2];
+        let edgecase = unitName.match(regExSplit);
+        let text = edgecase[1];
+        let size2 = edgecase[2];
         if (text in unitAliases){ text = unitAliases[text] };
         const { body } = await request(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(text));
-        var { units } = await body.json();
-        var sizeMatch = units.filter(function(unit){
-            var unitSize = unit.size;
+        let { units } = await body.json();
+        let sizeMatch = units.filter(function(unit){
+            let unitSize = unit.size;
             return +unitSize === +size2;
         })
         const correctSize = sizeMatch[0];
         unit = (correctSize ? correctSize : units[0]);
-        similarMatchesString = similarMatchesStringify(units);  
+        similarMatchesString = similarMatchesStringify(units);
+        similarMatchesList = similarMatchesArray(units); // for testing
     } else if (unitName.match(regExId)){
         const unitIdMatch = unitName.match(regExId);
         const unitId = unitIdMatch[1];
@@ -59,27 +64,43 @@ async function getUnit( unitName, unitCommandData ){
         const regExSizeMatch = unitName.match(regExSize);
         const size = (regExSizeMatch ? regExSizeMatch[1] : undefined);
         const { body } = await request(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(unitName));
-        var { units } = await body.json();
-        var sizeMatch = units.filter(function(unit){
-            var unitSize = unit.size;
+        let { units } = await body.json();
+        let sizeMatch = units.filter(function(unit){
+            let unitSize = unit.size;
             return +unitSize === +size;
         })
         const correctSize = sizeMatch[0];
         unit = (correctSize ? correctSize : units[0]);
         similarMatchesString = similarMatchesStringify(units);
-        similarMatchesList = similarMatchesArray(units);
-        //console.log(similarMatchesList);
+        var similarMatchesList = similarMatchesArray(units); // for testing
     };
 
-    var type = "unit";
-    var typeId = unit.id;
+    // Building buttons from similarMatchesList
+    const buttons = [];
+    const buttonPrefix = "unit-";
+    if(similarMatchesList){
+        for (let a = 0; a < similarMatchesList.length; a++){
+            const current = similarMatchesList[a];
+            buttons.push(
+                new ButtonBuilder()
+                    .setCustomId(`${buttonPrefix}${current.id}`)
+                    .setLabel(`${current.name} [${current.id}]`)
+                    .setStyle(ButtonStyle.Secondary)
+                    .setDisabled(false)
+            );
+        }
+    }
+
+
+    const type = "unit";
+    let typeId = unit.id;
 
     const row = await sqlGetMentorNote(type, typeId, serverId);
 
     // Destructuring the note property from the row object
     const { note: mentorNote, written_by_user: noteAuthor } = row || {};
 
-    console.log("mentorNote: " + mentorNote);
+    console.log("Mentor note: " + mentorNote);
 
     // Construct the unitEmbed after obtaining the mentorNote value
     const unitEmbed = new EmbedBuilder()
@@ -107,7 +128,7 @@ async function getUnit( unitName, unitCommandData ){
             ])
         }
     }  
-    return unitEmbed;
+    return [ unitEmbed, buttons, buttonPrefix ];
 }
 
 module.exports = { getUnit }

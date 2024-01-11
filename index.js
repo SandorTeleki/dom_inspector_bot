@@ -17,6 +17,8 @@ const { WRONG_BOT_URL, ALL_BOOLI_URL } = require('./utils/utils');
 const { mentorWhitelist, channelWhiteList } = require('./utils/whitelist');
 const { checkId } = require('./utils/checkId');
 const { sqlInsertLog, sqlBuildTables, sqlDropTables } = require('./utils/sqlHelper');
+const { createLog } = require('./utils/logHelper');
+const { buttonWrapper } = require('./utils/buttonWrapper'); 
 
 const client = new Client({ 
 	intents: [
@@ -77,7 +79,8 @@ const prefix = "?";
 
 client.on("messageCreate", async (message) => {
 	// console.log(`message: ${message}, ${message.id}, ${message.content}`);
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	if (!message.content.startsWith(prefix) ) return;
+	if (message.author.bot && message.author.id !== client.user.id) return;
 
 	// Item command
   	if (message.content.startsWith(`${prefix}item`)) {
@@ -108,15 +111,15 @@ client.on("messageCreate", async (message) => {
 			const buttonRow = new ActionRowBuilder().addComponents(mercLeaderButton, mercUnitButton);
 			createLog(message);
 			createLogEmbed(message);
-	
 			const response = await message.channel.send({ embeds: [mercEmbed], components: [buttonRow] });
-	
+			
+			// -------> Pull into helper function/file (most likely into mercHelper.js) <--------------- // 
 			const filter = (i) => i.user.id === message.author.id;
 	
 			const collector = response.createMessageComponentCollector({
 				componentType: ComponentType.Button,
 				filter,
-				time: 15_000,
+				time: 20_000, 
 				max: 2
 				});
 	
@@ -127,8 +130,8 @@ client.on("messageCreate", async (message) => {
 						components: [buttonRow]
 					})
 					message.reply({ embeds: [mercLeaderEmbed]});
-	
 				}
+
 				if (message.customId === 'merc-unit'){
 					mercUnitButton.setDisabled(true);
 					response.edit({
@@ -167,11 +170,98 @@ client.on("messageCreate", async (message) => {
 	if (message.content.startsWith(`${prefix}unit`)) {
 		let unitName = message.content.slice(6).toLowerCase();
 		var unitCommandData = message;
-		const unitEmbed = await getUnit( unitName, unitCommandData );
+		const [unitEmbed, buttons, buttonPrefix ] = await getUnit( unitName, unitCommandData );
+		//Logging
 		createLog(message);
 		createLogEmbed(message);
 
-        await message.channel.send({ embeds: [unitEmbed] });
+		let maxButtonsToClick = buttons.length;
+		const listID = buttons.map(button => button.data.custom_id);
+		const buttonsArray = buttonWrapper(buttons);
+
+        const response = await message.channel.send({ embeds: [unitEmbed], components: buttonsArray });
+
+		const collector =  response.createMessageComponentCollector({
+			componentType: ComponentType.Button,
+			time: 8_000, // return it to 30s
+			max: maxButtonsToClick
+		});
+
+		collector.on('collect', async (interaction) => {
+			if (interaction.user.id === message.author.id){
+				const interactionCustomID = interaction.customId;
+
+				const isInListID = listID.some(id => id === interactionCustomID)
+				if (isInListID){
+					const justTheID = interaction.customId.replace(buttonPrefix, "")
+					//console.log(interaction.interaction.components.ActionRow);
+					const [ unitEmbed ] = await getUnit( justTheID, interaction ); 
+					createLog(interaction);
+					createLogEmbed(interaction);
+					await interaction.reply({embeds: [unitEmbed]});
+
+					let arrayOfActionRows = interaction.message.components;
+					const buttons = [];
+					for (const actionRow of arrayOfActionRows){
+						const ComponentsRow = actionRow.components;
+						// console.log(ComponentsRow[0].data);
+						for (let a = 0; a < ComponentsRow.length; a++){
+							const current = ComponentsRow[a];
+							// console.log(current.data);
+							if(interactionCustomID === current.data.custom_id || current.data.disabled){
+								const buttonBuilder = new ButtonBuilder()
+									.setCustomId(`${current.data.custom_id}`)
+									.setLabel(`${current.data.label}`)
+									.setStyle(ButtonStyle.Secondary)
+									.setDisabled(true);
+								buttons.push(buttonBuilder);
+							} else {
+								const buttonBuilder = new ButtonBuilder()
+									.setCustomId(`${current.data.custom_id}`)
+									.setLabel(`${current.data.label}`)
+									.setStyle(ButtonStyle.Secondary)
+									.setDisabled(false);
+								buttons.push(buttonBuilder)
+							};
+						}
+					}
+					const buttonsArray = buttonWrapper(buttons);
+
+					response.edit({
+						components: buttonsArray
+					})
+				}
+			} else {
+				interaction.reply({ content: `These buttons aren't for you!`, ephemeral: true });
+			}
+		});
+
+		collector.on('end', (interaction) => {
+			console.log('Ended...');
+			//const arrayOfActionRows = interaction.first().message.components; // Doesn't work if no buttons are clicked
+			const arrayOfActionRows = buttonsArray;
+			const buttons = [];
+			for (const actionRow of arrayOfActionRows){
+			  const componentsRow = actionRow.components;
+			//   console.log(componentsRow[0].data);
+			  for (let a = 0; a < componentsRow.length; a++){
+				const current = componentsRow[a];
+				buttons.push(
+				  new ButtonBuilder()
+						.setCustomId(`${current.data.custom_id}`)
+						.setLabel(`${current.data.label}`)
+						.setStyle(ButtonStyle.Secondary)
+						.setDisabled(true)
+				);
+			}
+			const buttonsArray = buttonWrapper(buttons);
+
+			response.edit({
+				components: buttonsArray
+			})
+			}
+		})
+		
 	};
 	// Help command
 	if (message.content.startsWith(`${prefix}help`)) {
@@ -291,23 +381,7 @@ async function createLogEmbed(data) {
     }
 }
 
-// Logging for prefix commands
-function createLog(message){
-	//Read more: https://old.discordjs.dev/#/docs/discord.js/main/search?query=message
-	// and: https://old.discordjs.dev/#/docs/discord.js/main/class/Message
-	const server = message.guild.name;
-	const serverId = message.guildId;
-	const channelName = message.channel.name;
-	const channelId = message.channelId;
-	const user = message.author.tag;
-	const userId = message.author.id;
-	const text = message.content;
-	const unixTimestamp = message.createdTimestamp;
-
-	sqlInsertLog(server,serverId,channelName,channelId,user,userId,text,unixTimestamp);
-}
-
-//Messages and interactions use different synthax. Message (type = 0) and interaction (type = 2)
+//Messages and interactions use different synthax. Message (type = 0) and interaction (type = 2), button interaction (type = 3)
 async function logEmbedBuilder (data) {
 	const channel = client.channels.cache.get('1165999070272303174');
 	const serverName = (data.type === 0 ? data.guild : data.guild.name );
@@ -316,7 +390,7 @@ async function logEmbedBuilder (data) {
 	const channelId = (data.type === 0 ? data.channelId : data.channel.id );
 	const userName = (data.type === 0 ? data.author.tag : data.user.tag );
 	const userId = (data.type === 0 ? data.author.id : data.user.id );
-	const command = (data.type === 0 ? data.content : data.toString() );
+	if (data.type === 0){ var command = data.content } else if (data.type === 2){ var command = data.toString()} else {var command = data.customId};
 	const createdAt = data.createdAt;
 	const timestamp = data.createdTimestamp;
 
@@ -350,55 +424,60 @@ sqlBuildTables();
 // 	// Test command
 //   	if (message.content.startsWith(`${prefix}test`)) {
 
+// 		const Button = new ButtonBuilder()
+// 			.setCustomId(`unit-3397`)
+// 			.setLabel(`Gygja [3397]`)
+// 			.setStyle(ButtonStyle.Secondary)
+
 // 		const testConfirm = new ButtonBuilder()
-// 		.setCustomId('confirm')
-// 		.setLabel('Longdead [192]')
-// 		.setStyle(ButtonStyle.Secondary);
+// 			.setCustomId('confirm')
+// 			.setLabel('Longdead [192]')
+// 			.setStyle(ButtonStyle.Secondary);
 
 // 		const testCancel = new ButtonBuilder()
-// 		.setCustomId('cancel')
-// 		.setLabel('Longdead [193]')
-// 		.setStyle(ButtonStyle.Secondary);
+// 			.setCustomId('cancel')
+// 			.setLabel('Longdead [193]')
+// 			.setStyle(ButtonStyle.Secondary);
 
 // 		const test1 = new ButtonBuilder()
-// 		.setCustomId('test1')
-// 		.setLabel(' Longdead [194]')
-// 		.setStyle(ButtonStyle.Secondary);
+// 			.setCustomId('test1')
+// 			.setLabel(' Longdead [194]')
+// 			.setStyle(ButtonStyle.Secondary);
 
 // 		const test2 = new ButtonBuilder()
-// 		.setCustomId('test2')
-// 		.setLabel('Longdead [195]')
-// 		.setStyle(ButtonStyle.Secondary);
+// 			.setCustomId('test2')
+// 			.setLabel('Longdead [195]')
+// 			.setStyle(ButtonStyle.Secondary);
 
 // 		const test3 = new ButtonBuilder()
-// 		.setCustomId('test3')
-// 		.setLabel('Longdead [196]')
-// 		.setStyle(ButtonStyle.Secondary);
+// 			.setCustomId('test3')
+// 			.setLabel('Longdead [196]')
+// 			.setStyle(ButtonStyle.Secondary);
 
 // 		const test4 = new ButtonBuilder()
-// 		.setCustomId('test4')
-// 		.setLabel('Longdead [2120]')
-// 		.setStyle(ButtonStyle.Secondary);
+// 			.setCustomId('test4')
+// 			.setLabel('Longdead [2120]')
+// 			.setStyle(ButtonStyle.Secondary);
 
 // 		const test5 = new ButtonBuilder()
-// 		.setCustomId('test5')
-// 		.setLabel('Longdead [2121]')
-// 		.setStyle(ButtonStyle.Secondary);
+// 			.setCustomId('test5')
+// 			.setLabel('Longdead [2121]')
+// 			.setStyle(ButtonStyle.Secondary);
 
 // 		const test6 = new ButtonBuilder()
-// 		.setCustomId('test6')
-// 		.setLabel('Longdead [2124]')
-// 		.setStyle(ButtonStyle.Secondary);
+// 			.setCustomId('test6')
+// 			.setLabel('Longdead [2124]')
+// 			.setStyle(ButtonStyle.Secondary);
 
 // 		const test7 = new ButtonBuilder()
-// 		.setCustomId('test7')
-// 		.setLabel('Longdead [2451]')
-// 		.setStyle(ButtonStyle.Secondary);
+// 			.setCustomId('test7')
+// 			.setLabel('Longdead [2451]')
+// 			.setStyle(ButtonStyle.Secondary);
 
 // 		const test8 = new ButtonBuilder()
-// 		.setCustomId('test8')
-// 		.setLabel('Longdead [3360]')
-// 		.setStyle(ButtonStyle.Secondary);
+// 			.setCustomId('test8')
+// 			.setLabel('Longdead [3360]')
+// 			.setStyle(ButtonStyle.Secondary);
 
 // 		const row = new ActionRowBuilder()
 // 			.addComponents(testConfirm, testCancel, test1, test2, test3)
@@ -406,8 +485,38 @@ sqlBuildTables();
 // 		const row2 = new ActionRowBuilder()
 // 			.addComponents(test4, test5, test6, test7, test8)
 
+// 		const rowTest = new ActionRowBuilder()
+// 			.addComponents(Button)
+// 		console.log(test8);
+// 		console.log(row);
+// 		console.log(row2);
+// 		console.log(rowTest);
+
+// 		//Push all three rows into an array (like we have atm from buttonWrapper), and test that...
+
 // 		const testEmbed = new EmbedBuilder()
 //             	.setTitle("Testing...")
-//             await message.channel.send({ embeds: [testEmbed], components: [row, row2]});
+
+
+//         const response = await message.channel.send({ embeds: [testEmbed], components: [row, row2]});
+// 		//const response = await message.channel.send({ embeds: [testEmbed], components: [row, row2, rowTest]});
+
+
+// 		const filter = (i) => i.user.id === message.author.id;
+		
+// 		const collector =  response.createMessageComponentCollector({
+// 			componentType: ComponentType.Button,
+// 			filter,
+// 			time: 15_000,
+// 			max: 3
+// 			});
+
+// 		collector.on('collect', async (message) => {
+// 			if (message.customId === 'confirm'){
+// 				console.log(message);
+// 				testConfirm.setDisabled(true);
+// 				message.reply('yo');
+// 			}
+// 		});
 // 	}
 // });
