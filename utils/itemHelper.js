@@ -5,7 +5,7 @@ const { request } = require('undici');
 const { FUZZY_MATCH_URL, ITEM_URL, BASE_URL } = require('./utils');
 const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { itemAliases } = require('./itemAliases');
-const { similarMatchesStringify } =require('./similarMatches');
+const { similarMatchesStringify, similarMatchesArray } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 
 async function getItem( itemName, itemCommandData ){
@@ -26,7 +26,8 @@ async function getItem( itemName, itemCommandData ){
 
     if (itemName in itemAliases){ itemName = itemAliases[itemName] };
     var item;
-    var similarMatchesString;    
+    var similarMatchesString;
+    var similarMatchesList;
     const regExId = /^(\d+)/;
 
     if  (itemName.match(regExId)){
@@ -46,7 +47,24 @@ async function getItem( itemName, itemCommandData ){
         var { items } = await body.json();
         item = items[0];
         similarMatchesString = similarMatchesStringify(items);
+        var similarMatchesList = similarMatchesArray(items);
     };
+
+    // Building buttons from similarMatchesList
+    const buttons = [];
+    const buttonPrefix = "item-";
+    if(similarMatchesList){
+        for (let a = 0; a < similarMatchesList.length; a++){
+            const current = similarMatchesList[a];
+            buttons.push(
+                new ButtonBuilder()
+                    .setCustomId(`${buttonPrefix}${current.id}`)
+                    .setLabel(`${current.name} [${current.id}]`)
+                    .setStyle(ButtonStyle.Secondary)
+                    .setDisabled(false)
+            );
+        }
+    }
 
     var type = "item";
     var typeId = item.id;
@@ -75,7 +93,7 @@ async function getItem( itemName, itemCommandData ){
             ])
         }
     }
-    return itemEmbed;
+    return [ itemEmbed, buttons, buttonPrefix ];
 }
 
 module.exports = { getItem }

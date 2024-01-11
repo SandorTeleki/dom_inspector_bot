@@ -86,11 +86,99 @@ client.on("messageCreate", async (message) => {
   	if (message.content.startsWith(`${prefix}item`)) {
 		let itemName = message.content.slice(6).toLowerCase();
 		var itemCommandData = message;
-		const itemEmbed = await getItem( itemName, itemCommandData );
+		const [itemEmbed, buttons, buttonPrefix ] = await getItem( itemName, itemCommandData );
+
+		//Logging
 		createLog(message);
 		createLogEmbed(message);
 
-		await message.channel.send({ embeds: [itemEmbed] });
+		let maxButtonsToClick = buttons.length;
+		const listID = buttons.map(button => button.data.custom_id);
+		const buttonsArray = buttonWrapper(buttons);
+
+        const response = await message.channel.send({ embeds: [itemEmbed], components: buttonsArray });
+
+		const collector =  response.createMessageComponentCollector({
+			componentType: ComponentType.Button,
+			time: 30_000,
+			max: maxButtonsToClick
+		});
+
+		collector.on('collect', async (interaction) => {
+			if (interaction.user.id === message.author.id){
+				const interactionCustomID = interaction.customId;
+
+				const isInListID = listID.some(id => id === interactionCustomID)
+				if (isInListID){
+					const justTheID = interaction.customId.replace(buttonPrefix, "")
+					//console.log(interaction.interaction.components.ActionRow);
+					const [ itemEmbed ] = await getItem( justTheID, interaction ); 
+					createLog(interaction);
+					createLogEmbed(interaction);
+					await interaction.reply({embeds: [itemEmbed]});
+
+					let arrayOfActionRows = interaction.message.components;
+					const buttons = [];
+					for (const actionRow of arrayOfActionRows){
+						const ComponentsRow = actionRow.components;
+						// console.log(ComponentsRow[0].data);
+						for (let a = 0; a < ComponentsRow.length; a++){
+							const current = ComponentsRow[a];
+							// console.log(current.data);
+							if(interactionCustomID === current.data.custom_id || current.data.disabled){
+								const buttonBuilder = new ButtonBuilder()
+									.setCustomId(`${current.data.custom_id}`)
+									.setLabel(`${current.data.label}`)
+									.setStyle(ButtonStyle.Secondary)
+									.setDisabled(true);
+								buttons.push(buttonBuilder);
+							} else {
+								const buttonBuilder = new ButtonBuilder()
+									.setCustomId(`${current.data.custom_id}`)
+									.setLabel(`${current.data.label}`)
+									.setStyle(ButtonStyle.Secondary)
+									.setDisabled(false);
+								buttons.push(buttonBuilder)
+							};
+						}
+					}
+					const buttonsArray = buttonWrapper(buttons);
+
+					response.edit({
+						components: buttonsArray
+					})
+				}
+			} else {
+				interaction.reply({ content: `These buttons aren't for you!`, ephemeral: true });
+			}
+		});
+
+		collector.on('end', (interaction) => {
+			console.log('Ended...');
+			//const arrayOfActionRows = interaction.first().message.components; // Doesn't work if no buttons are clicked
+			const arrayOfActionRows = buttonsArray;
+			const buttons = [];
+			for (const actionRow of arrayOfActionRows){
+			  const componentsRow = actionRow.components;
+			//   console.log(componentsRow[0].data);
+			  for (let a = 0; a < componentsRow.length; a++){
+				const current = componentsRow[a];
+				buttons.push(
+				  new ButtonBuilder()
+						.setCustomId(`${current.data.custom_id}`)
+						.setLabel(`${current.data.label}`)
+						.setStyle(ButtonStyle.Secondary)
+						.setDisabled(true)
+				);
+			}
+			const buttonsArray = buttonWrapper(buttons);
+
+			response.edit({
+				components: buttonsArray
+			})
+			}
+		})
+
 	};
 
 	// Spell command
@@ -347,6 +435,7 @@ client.on("messageCreate", async (message) => {
 		let unitName = message.content.slice(6).toLowerCase();
 		var unitCommandData = message;
 		const [unitEmbed, buttons, buttonPrefix ] = await getUnit( unitName, unitCommandData );
+		
 		//Logging
 		createLog(message);
 		createLogEmbed(message);
