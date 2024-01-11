@@ -92,16 +92,105 @@ client.on("messageCreate", async (message) => {
 
 		await message.channel.send({ embeds: [itemEmbed] });
 	};
+
 	// Spell command
 	if (message.content.startsWith(`${prefix}spell`)) {
 		let spellName = message.content.slice(7).toLowerCase();
 		var spellCommandData = message;
-		const spellEmbed = await getSpell( spellName, spellCommandData );
+		const [spellEmbed, buttons, buttonPrefix ] = await getSpell( spellName, spellCommandData );
+		//Logging
 		createLog(message);
 		createLogEmbed(message);
 
-        await message.channel.send({ embeds: [spellEmbed] });
+		let maxButtonsToClick = buttons.length;
+		const listID = buttons.map(button => button.data.custom_id);
+		const buttonsArray = buttonWrapper(buttons);
+
+        const response = await message.channel.send({ embeds: [spellEmbed], components: buttonsArray });
+
+		const collector =  response.createMessageComponentCollector({
+			componentType: ComponentType.Button,
+			time: 30_000,
+			max: maxButtonsToClick
+		});
+
+		collector.on('collect', async (interaction) => {
+			if (interaction.user.id === message.author.id){
+				const interactionCustomID = interaction.customId;
+
+				const isInListID = listID.some(id => id === interactionCustomID)
+				if (isInListID){
+					const justTheID = interaction.customId.replace(buttonPrefix, "")
+					//console.log(interaction.interaction.components.ActionRow);
+					const [ spellEmbed ] = await getSpell( justTheID, interaction ); 
+					createLog(interaction);
+					createLogEmbed(interaction);
+					await interaction.reply({embeds: [spellEmbed]});
+
+					let arrayOfActionRows = interaction.message.components;
+					const buttons = [];
+					for (const actionRow of arrayOfActionRows){
+						const ComponentsRow = actionRow.components;
+						// console.log(ComponentsRow[0].data);
+						for (let a = 0; a < ComponentsRow.length; a++){
+							const current = ComponentsRow[a];
+							// console.log(current.data);
+							if(interactionCustomID === current.data.custom_id || current.data.disabled){
+								const buttonBuilder = new ButtonBuilder()
+									.setCustomId(`${current.data.custom_id}`)
+									.setLabel(`${current.data.label}`)
+									.setStyle(ButtonStyle.Secondary)
+									.setDisabled(true);
+								buttons.push(buttonBuilder);
+							} else {
+								const buttonBuilder = new ButtonBuilder()
+									.setCustomId(`${current.data.custom_id}`)
+									.setLabel(`${current.data.label}`)
+									.setStyle(ButtonStyle.Secondary)
+									.setDisabled(false);
+								buttons.push(buttonBuilder)
+							};
+						}
+					}
+					const buttonsArray = buttonWrapper(buttons);
+
+					response.edit({
+						components: buttonsArray
+					})
+				}
+			} else {
+				interaction.reply({ content: `These buttons aren't for you!`, ephemeral: true });
+			}
+		});
+
+		collector.on('end', (interaction) => {
+			console.log('Ended...');
+			//const arrayOfActionRows = interaction.first().message.components; // Doesn't work if no buttons are clicked
+			const arrayOfActionRows = buttonsArray;
+			const buttons = [];
+			for (const actionRow of arrayOfActionRows){
+			  const componentsRow = actionRow.components;
+			//   console.log(componentsRow[0].data);
+			  for (let a = 0; a < componentsRow.length; a++){
+				const current = componentsRow[a];
+				buttons.push(
+				  new ButtonBuilder()
+						.setCustomId(`${current.data.custom_id}`)
+						.setLabel(`${current.data.label}`)
+						.setStyle(ButtonStyle.Secondary)
+						.setDisabled(true)
+				);
+			}
+			const buttonsArray = buttonWrapper(buttons);
+
+			response.edit({
+				components: buttonsArray
+			})
+			}
+		})
+
 	};
+
 	// Merc command
 	if (message.content.startsWith(`${prefix}merc`)) {
 		let mercName = message.content.slice(6).toLowerCase();
@@ -156,6 +245,7 @@ client.on("messageCreate", async (message) => {
             await message.reply({ embeds: [errorEmbed]});
 		}
 	};
+
 	// Site command
 	if (message.content.startsWith(`${prefix}site`)) {
 		const siteName = message.content.slice(6).toLowerCase();
@@ -349,6 +439,7 @@ client.on("messageCreate", async (message) => {
 		})
 		
 	};
+
 	// Help command
 	if (message.content.startsWith(`${prefix}help`)) {
 		createLog(message);
@@ -356,6 +447,7 @@ client.on("messageCreate", async (message) => {
 
 		await message.channel.send({ embeds: [getHelpEmbed()] });
 	}	
+
 	// Undone command
 	if (message.content.startsWith(`${prefix}undone`)){
 		const undoneEmbed = new EmbedBuilder()
@@ -366,6 +458,7 @@ client.on("messageCreate", async (message) => {
 
         await message.channel.send({ embeds: [undoneEmbed]});
 	}
+
 	// Timer command
 	if (message.content.startsWith(`${prefix}timer`)){
 		const timerEmbed = new EmbedBuilder()
@@ -376,6 +469,7 @@ client.on("messageCreate", async (message) => {
 
         await message.channel.send({ embeds: [timerEmbed]});
 	}
+
 	// Booli command
 	if (message.content.startsWith(`${prefix}booli`)){
 		var randomBooli = ALL_BOOLI_URL[Math.floor(Math.random() * ALL_BOOLI_URL.length)];
@@ -387,6 +481,7 @@ client.on("messageCreate", async (message) => {
 
         await message.channel.send({ embeds: [booliEmbed]});
 	}
+
 	// Note command
 	if (message.content.startsWith(`${prefix}note`)){
 		// Parts of the message we need to use later

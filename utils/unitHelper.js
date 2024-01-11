@@ -4,8 +4,8 @@ const { request } = require('undici');
 
 const { FUZZY_MATCH_URL, UNIT_URL, BASE_URL } = require('./utils');
 const { mentorWhitelist, channelWhiteList } = require('./whitelist');
-const { unitAliases } =require('./unitAliases');
-const { similarMatchesStringify, similarMatchesArray } =require('./similarMatches');
+const { unitAliases } = require('./unitAliases');
+const { similarMatchesStringify, similarMatchesArray } = require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 
 

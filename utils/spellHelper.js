@@ -5,7 +5,7 @@ const { request } = require('undici');
 const { FUZZY_MATCH_URL, SPELL_URL, BASE_URL } = require('./utils');
 const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { spellAliases } = require('./spellAliases');
-const { similarMatchesStringify } =require('./similarMatches');
+const { similarMatchesStringify, similarMatchesArray } = require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 
 
@@ -27,6 +27,7 @@ async function getSpell( spellName, spellCommandData ){
     if (spellName in spellAliases){ spellName = spellAliases[spellName] };
     var spell;
     var similarMatchesString;
+    var similarMatchesList;
     const regExId = /^(\d+)/;
 
     if  (spellName.match(regExId)){
@@ -45,7 +46,24 @@ async function getSpell( spellName, spellCommandData ){
         var { spells } = await body.json();
         spell = spells[0];
         similarMatchesString = similarMatchesStringify(spells);
+        var similarMatchesList = similarMatchesArray(spells);
     }; 
+    
+    // Building buttons from similarMatchesList
+    const buttons = [];
+    const buttonPrefix = "unit-";
+    if(similarMatchesList){
+        for (let a = 0; a < similarMatchesList.length; a++){
+            const current = similarMatchesList[a];
+            buttons.push(
+                new ButtonBuilder()
+                    .setCustomId(`${buttonPrefix}${current.id}`)
+                    .setLabel(`${current.name} [${current.id}]`)
+                    .setStyle(ButtonStyle.Secondary)
+                    .setDisabled(false)
+            );
+        }
+    }
 
     var type = "spell";
     var typeId = spell.id;
@@ -74,7 +92,7 @@ async function getSpell( spellName, spellCommandData ){
             ])        
         }
     }
-    return spellEmbed;
+    return [ spellEmbed, buttons, buttonPrefix ];    
 }
 
 module.exports = { getSpell }
