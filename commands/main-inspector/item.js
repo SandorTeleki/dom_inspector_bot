@@ -34,8 +34,9 @@ module.exports = {
 
 			const isInListID = listID.some(id => id === interactionCustomID)
 			if (isInListID){
-				const justTheID = interaction.customId.replace(buttonPrefix, "")
-				const [ itemEmbed ] = await getItem( justTheID, interaction ); 
+				const justTheID = interaction.customId.replace(buttonPrefix, "");
+				const [ itemEmbed ] = await getItem( justTheID, interaction );
+
 				//Logging button click
 				createLog(interaction);
 
@@ -75,7 +76,6 @@ module.exports = {
 		});
 
 		collector.on('end', (interaction) => {
-			//const arrayOfActionRows = interaction.first().message.components;
 			const arrayOfActionRows = buttonsArray;
 			const buttons = [];
 			for (const actionRow of arrayOfActionRows){

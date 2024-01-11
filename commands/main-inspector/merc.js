@@ -1,8 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { getMerc } = require('../../utils/mercHelper');
 const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 
+const { getMerc } = require('../../utils/mercHelper');
+const { createLog } = require('../../utils/logHelper');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -26,7 +27,7 @@ module.exports = {
 				filter,
 				time: 15_000,
 				max: 2
-				});
+			});
 	
 			collector.on('collect', (interaction) => {
 				if (interaction.customId === 'merc-leader'){
@@ -37,6 +38,7 @@ module.exports = {
 					interaction.reply({ embeds: [mercLeaderEmbed]});
 	
 				}
+				
 				if (interaction.customId === 'merc-unit'){
 					mercUnitButton.setDisabled(true);
 					response.edit({
