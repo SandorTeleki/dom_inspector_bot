@@ -6,7 +6,6 @@ const { unitAliases } =require('./unitAliases');
 const { similarMatchesStringify, similarMatchesArray } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 
-const { buttonWrapper } = require('./buttonWrapper'); // For similarMatches button testing
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 
 async function getUnit( unitName, unitCommandData ){
@@ -48,7 +47,7 @@ async function getUnit( unitName, unitCommandData ){
         const correctSize = sizeMatch[0];
         unit = (correctSize ? correctSize : units[0]);
         similarMatchesString = similarMatchesStringify(units);
-        similarMatchesList = similarMatchesArray(units); // for testing
+        similarMatchesList = similarMatchesArray(units);
     } else if (unitName.match(regExId)){
         const unitIdMatch = unitName.match(regExId);
         const unitId = unitIdMatch[1];
@@ -72,7 +71,7 @@ async function getUnit( unitName, unitCommandData ){
         const correctSize = sizeMatch[0];
         unit = (correctSize ? correctSize : units[0]);
         similarMatchesString = similarMatchesStringify(units);
-        var similarMatchesList = similarMatchesArray(units); // for testing
+        var similarMatchesList = similarMatchesArray(units);
     };
 
     // Building buttons from similarMatchesList
