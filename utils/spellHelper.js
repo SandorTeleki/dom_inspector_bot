@@ -51,7 +51,7 @@ async function getSpell( spellName, spellCommandData ){
     
     // Building buttons from similarMatchesList
     const buttons = [];
-    const buttonPrefix = "unit-";
+    const buttonPrefix = "spell-";
     if(similarMatchesList){
         for (let a = 0; a < similarMatchesList.length; a++){
             const current = similarMatchesList[a];
