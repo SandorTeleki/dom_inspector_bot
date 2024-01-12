@@ -5,7 +5,7 @@ const { request } = require('undici');
 const { FUZZY_MATCH_URL, UNIT_URL, BASE_URL } = require('./utils');
 const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { unitAliases } = require('./unitAliases');
-const { similarMatchesStringify, similarMatchesArray } = require('./similarMatches');
+const { similarMatchesStringify, similarMatchesStringifyNoSlice, similarMatchesArray } = require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 
 
@@ -33,7 +33,7 @@ async function getUnit( unitName, unitCommandData ){
     const regExSplit = /^([a-z]+)\s?(\d)/;
 
     if (unitName in unitAliases){ unitName = unitAliases[unitName] };
-
+    //Running for size filtering (w/ fuzzy match) for aliased stuff
     if (unitName.match(regExSplit)){
         let edgecase = unitName.match(regExSplit);
         let text = edgecase[1];
@@ -46,9 +46,23 @@ async function getUnit( unitName, unitCommandData ){
             return +unitSize === +size2;
         })
         const correctSize = sizeMatch[0];
-        unit = (correctSize ? correctSize : units[0]);
-        similarMatchesString = similarMatchesStringify(units);
-        similarMatchesList = similarMatchesArray(units);
+        //If there is a correct size, remove correct size from array
+        if (correctSize) {
+            var unit = correctSize;
+            const index = units.indexOf(correctSize);
+            if (index > -1){
+                units.splice(index, 1);
+            }
+            var similarMatchesString = similarMatchesStringifyNoSlice(units);
+            var similarMatchesList = units;
+        //If there is no correct size, then just remove first value from array
+        } else {
+            var unit = units[0];
+            var similarMatchesString = similarMatchesStringify(units);
+            var similarMatchesList = similarMatchesArray(units);
+        }
+
+    //Running it for ID
     } else if (unitName.match(regExId)){
         const unitIdMatch = unitName.match(regExId);
         const unitId = unitIdMatch[1];
@@ -60,6 +74,7 @@ async function getUnit( unitName, unitCommandData ){
             return errorEmbed;
         }
         unit  = await body.json();
+    //Running for everything else (w/ Fuzzy match)
     } else {
         const regExSizeMatch = unitName.match(regExSize);
         const size = (regExSizeMatch ? regExSizeMatch[1] : undefined);
@@ -70,9 +85,21 @@ async function getUnit( unitName, unitCommandData ){
             return +unitSize === +size;
         })
         const correctSize = sizeMatch[0];
-        unit = (correctSize ? correctSize : units[0]);
-        similarMatchesString = similarMatchesStringify(units);
-        var similarMatchesList = similarMatchesArray(units);
+        //If there is a correct size, remove correct size from array
+        if (correctSize) {
+            var unit = correctSize;
+            const index = units.indexOf(correctSize);
+            if (index > -1){
+                units.splice(index, 1);
+            }
+            var similarMatchesString = similarMatchesStringifyNoSlice(units);
+            var similarMatchesList = units;
+        //If there is no correct size, then just remove first value from array
+        } else {
+            var unit = units[0];
+            var similarMatchesString = similarMatchesStringify(units);
+            var similarMatchesList = similarMatchesArray(units);
+        }
     };
 
     // Building buttons from similarMatchesList
@@ -113,8 +140,7 @@ async function getUnit( unitName, unitCommandData ){
 
     if ( similarMatchesString ) {
         unitEmbed.setFooter({text: footerStrings + `Other matches [ID#]:\n${similarMatchesString}`})
-    }
-    else {
+    } else {
         unitEmbed.setFooter({ text: footerStrings });
     };
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
