@@ -11,40 +11,41 @@ module.exports = {
 		.setDescription('Replies with information about a mercenary')
         .addStringOption(option => option.setName('merc_name').setDescription('Enter the name of the mercenary').setRequired(true)),
 
-	async execute(interaction) {
-		let mercName = interaction.options.getString('merc_name');
-		var mercCommandData = interaction;
+	async execute(interactionOG) {
+		let mercName = interactionOG.options.getString('merc_name');
+		var mercCommandData = interactionOG;
 		try {
 			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton] = await getMerc(mercName, mercCommandData);
 			const buttonRow = new ActionRowBuilder().addComponents(mercLeaderButton, mercUnitButton);
 	
-			const response = await interaction.reply({ embeds: [mercEmbed], components: [buttonRow] });
-	
-			const filter = (i) => i.user.id === interaction.user.id;
-	
+			const response = await interactionOG.reply({ embeds: [mercEmbed], components: [buttonRow] });
+		
 			const collector = response.createMessageComponentCollector({
 				componentType: ComponentType.Button,
-				filter,
 				time: 15_000,
 				max: 2
 			});
 	
 			collector.on('collect', (interaction) => {
-				if (interaction.customId === 'merc-leader'){
-					mercLeaderButton.setDisabled(true);
-					response.edit({
-						components: [buttonRow]
-					})
-					interaction.reply({ embeds: [mercLeaderEmbed]});
-	
-				}
-				
-				if (interaction.customId === 'merc-unit'){
-					mercUnitButton.setDisabled(true);
-					response.edit({
-						components: [buttonRow]
-					})
-					interaction.reply({ embeds: [mercTroopEmbed]});
+				if (interaction.user.id === interactionOG.user.id){
+					if (interaction.customId === 'merc-leader'){
+						mercLeaderButton.setDisabled(true);
+						response.edit({
+							components: [buttonRow]
+						})
+						interaction.reply({ embeds: [mercLeaderEmbed]});
+		
+					}
+
+					if (interaction.customId === 'merc-unit'){
+						mercUnitButton.setDisabled(true);
+						response.edit({
+							components: [buttonRow]
+						})
+						interaction.reply({ embeds: [mercTroopEmbed]});
+					}
+				} else {
+					interaction.reply({ content: `These buttons aren't for you!`, ephemeral: true });
 				}
 			});
 	

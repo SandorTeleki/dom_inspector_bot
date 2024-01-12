@@ -91,7 +91,6 @@ client.on("messageCreate", async (message) => {
 		createLog(message);
 		createLogEmbed(message);
 
-		let maxButtonsToClick = buttons.length;
 		const listID = buttons.map(button => button.data.custom_id);
 		const buttonsArray = buttonWrapper(buttons);
 
@@ -99,8 +98,7 @@ client.on("messageCreate", async (message) => {
 
 		const collector =  response.createMessageComponentCollector({
 			componentType: ComponentType.Button,
-			time: 30_000,
-			max: maxButtonsToClick
+			time: 30_000, //removed max as buttons get disabled as is
 		});
 
 		collector.on('collect', async (interaction) => {
@@ -184,7 +182,6 @@ client.on("messageCreate", async (message) => {
 		createLog(message);
 		createLogEmbed(message);
 
-		let maxButtonsToClick = buttons.length;
 		const listID = buttons.map(button => button.data.custom_id);
 		const buttonsArray = buttonWrapper(buttons);
 
@@ -192,8 +189,7 @@ client.on("messageCreate", async (message) => {
 
 		const collector =  response.createMessageComponentCollector({
 			componentType: ComponentType.Button,
-			time: 30_000,
-			max: maxButtonsToClick
+			time: 30_000, //removed max as buttons get disabled as is
 		});
 
 		collector.on('collect', async (interaction) => {
@@ -277,34 +273,34 @@ client.on("messageCreate", async (message) => {
 			createLog(message);
 			createLogEmbed(message);
 			const response = await message.channel.send({ embeds: [mercEmbed], components: [buttonRow] });
-
-			const filter = (i) => i.user.id === message.author.id;
 	
 			const collector = response.createMessageComponentCollector({
 				componentType: ComponentType.Button,
-				filter,
-				time: 20_000, 
-				max: 2
+				time: 20_000 // removed 'max' to avoid issues if non-author tries clicking the button
 				});
 	
-			collector.on('collect', (message) => {
-				if (message.customId === 'merc-leader'){
-					mercLeaderButton.setDisabled(true);
-					response.edit({
-						components: [buttonRow]
-					})
-					message.reply({ embeds: [mercLeaderEmbed]});
-				}
+			collector.on('collect', (interaction) => {
+				if (interaction.user.id === message.author.id){
+					if (interaction.customId === 'merc-leader'){
+						mercLeaderButton.setDisabled(true);
+						response.edit({
+							components: [buttonRow]
+						})
+						interaction.reply({ embeds: [mercLeaderEmbed]});
+					}
 
-				if (message.customId === 'merc-unit'){
-					mercUnitButton.setDisabled(true);
-					response.edit({
-						components: [buttonRow]
-					})
-					message.reply({ embeds: [mercTroopEmbed]});
+					if (interaction.customId === 'merc-unit'){
+						mercUnitButton.setDisabled(true);
+						response.edit({
+							components: [buttonRow]
+						})
+						interaction.reply({ embeds: [mercTroopEmbed]});
+					}
+				} else {
+					interaction.reply({ content: `These buttons aren't for you!`, ephemeral: true });
 				}
 			});
-	
+
 			collector.on('end', () => {
 				mercLeaderButton.setDisabled(true);
 				mercUnitButton.setDisabled(true);
@@ -330,7 +326,6 @@ client.on("messageCreate", async (message) => {
 		//Logging
 		createLog(message);
 		createLogEmbed(message);
-		let maxButtonsToClick = buttons.length;
 		const listID = buttons.map(button => button.data.custom_id);
 		const buttonsArray = buttonWrapper(buttons);
 
@@ -338,8 +333,7 @@ client.on("messageCreate", async (message) => {
 
 		const collector =  response.createMessageComponentCollector({
 			componentType: ComponentType.Button,
-			time: 30_000,
-			max: maxButtonsToClick
+			time: 30_000, //removed max as buttons get disabled as is
 		});
 
 		collector.on('collect', async (interaction) => {
@@ -422,7 +416,6 @@ client.on("messageCreate", async (message) => {
 		createLog(message);
 		createLogEmbed(message);
 
-		let maxButtonsToClick = buttons.length;
 		const listID = buttons.map(button => button.data.custom_id);
 		const buttonsArray = buttonWrapper(buttons);
 
@@ -430,8 +423,7 @@ client.on("messageCreate", async (message) => {
 
 		const collector =  response.createMessageComponentCollector({
 			componentType: ComponentType.Button,
-			time: 30_000,
-			max: maxButtonsToClick
+			time: 30_000, //removed max as buttons get disabled as is
 		});
 
 		collector.on('collect', async (interaction) => {
