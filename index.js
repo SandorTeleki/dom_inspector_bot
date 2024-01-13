@@ -269,6 +269,7 @@ client.on("messageCreate", async (message) => {
 		var mercCommandData = message;
 		try {
 			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton] = await getMerc(mercName, mercCommandData);
+			//Can try adding similarMatches - concat the buttonRow with buttonsArray and pass it as one? 
 			const buttonRow = new ActionRowBuilder().addComponents(mercLeaderButton, mercUnitButton);
 			createLog(message);
 			createLogEmbed(message);
@@ -647,114 +648,8 @@ async function logEmbedBuilder (data) {
 	await channel.send({embeds: [logEmbed] });
 }
 
-//SQL build/drop tables - if needed, uncomment sqlDropTables to drop all tables (or go into helper function for granular control over table drop)
+//SQL build/drop tables 
+//If needed, uncomment sqlDropTables to drop all tables (or go into helper function [sqlHelper.js] for granular control over table drop)
+
 sqlBuildTables();
 //sqlDropTables();
-
-
-//----------------------TEST--------------------------//
-
-//Create test embed, assign buttons to it, see how it displays
-
-// client.on("messageCreate", async (message) => {
-// 	if (!message.content.startsWith(prefix) || message.author.bot) return;
-
-// 	// Test command
-//   	if (message.content.startsWith(`${prefix}test`)) {
-
-// 		const Button = new ButtonBuilder()
-// 			.setCustomId(`unit-3397`)
-// 			.setLabel(`Gygja [3397]`)
-// 			.setStyle(ButtonStyle.Secondary)
-
-// 		const testConfirm = new ButtonBuilder()
-// 			.setCustomId('confirm')
-// 			.setLabel('Longdead [192]')
-// 			.setStyle(ButtonStyle.Secondary);
-
-// 		const testCancel = new ButtonBuilder()
-// 			.setCustomId('cancel')
-// 			.setLabel('Longdead [193]')
-// 			.setStyle(ButtonStyle.Secondary);
-
-// 		const test1 = new ButtonBuilder()
-// 			.setCustomId('test1')
-// 			.setLabel(' Longdead [194]')
-// 			.setStyle(ButtonStyle.Secondary);
-
-// 		const test2 = new ButtonBuilder()
-// 			.setCustomId('test2')
-// 			.setLabel('Longdead [195]')
-// 			.setStyle(ButtonStyle.Secondary);
-
-// 		const test3 = new ButtonBuilder()
-// 			.setCustomId('test3')
-// 			.setLabel('Longdead [196]')
-// 			.setStyle(ButtonStyle.Secondary);
-
-// 		const test4 = new ButtonBuilder()
-// 			.setCustomId('test4')
-// 			.setLabel('Longdead [2120]')
-// 			.setStyle(ButtonStyle.Secondary);
-
-// 		const test5 = new ButtonBuilder()
-// 			.setCustomId('test5')
-// 			.setLabel('Longdead [2121]')
-// 			.setStyle(ButtonStyle.Secondary);
-
-// 		const test6 = new ButtonBuilder()
-// 			.setCustomId('test6')
-// 			.setLabel('Longdead [2124]')
-// 			.setStyle(ButtonStyle.Secondary);
-
-// 		const test7 = new ButtonBuilder()
-// 			.setCustomId('test7')
-// 			.setLabel('Longdead [2451]')
-// 			.setStyle(ButtonStyle.Secondary);
-
-// 		const test8 = new ButtonBuilder()
-// 			.setCustomId('test8')
-// 			.setLabel('Longdead [3360]')
-// 			.setStyle(ButtonStyle.Secondary);
-
-// 		const row = new ActionRowBuilder()
-// 			.addComponents(testConfirm, testCancel, test1, test2, test3)
-
-// 		const row2 = new ActionRowBuilder()
-// 			.addComponents(test4, test5, test6, test7, test8)
-
-// 		const rowTest = new ActionRowBuilder()
-// 			.addComponents(Button)
-// 		console.log(test8);
-// 		console.log(row);
-// 		console.log(row2);
-// 		console.log(rowTest);
-
-// 		//Push all three rows into an array (like we have atm from buttonWrapper), and test that...
-
-// 		const testEmbed = new EmbedBuilder()
-//             	.setTitle("Testing...")
-
-
-//         const response = await message.channel.send({ embeds: [testEmbed], components: [row, row2]});
-// 		//const response = await message.channel.send({ embeds: [testEmbed], components: [row, row2, rowTest]});
-
-
-// 		const filter = (i) => i.user.id === message.author.id;
-		
-// 		const collector =  response.createMessageComponentCollector({
-// 			componentType: ComponentType.Button,
-// 			filter,
-// 			time: 15_000,
-// 			max: 3
-// 			});
-
-// 		collector.on('collect', async (message) => {
-// 			if (message.customId === 'confirm'){
-// 				console.log(message);
-// 				testConfirm.setDisabled(true);
-// 				message.reply('yo');
-// 			}
-// 		});
-// 	}
-// });
