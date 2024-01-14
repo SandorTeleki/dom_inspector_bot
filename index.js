@@ -19,6 +19,7 @@ const { checkId } = require('./utils/checkId');
 const { sqlInsertLog, sqlBuildTables, sqlDropTables } = require('./utils/sqlHelper');
 const { createLog } = require('./utils/logHelper');
 const { buttonWrapper } = require('./utils/buttonWrapper'); 
+const { getRandomNumber } = require('./utils/randomNumber');
 
 const client = new Client({ 
 	intents: [
@@ -538,6 +539,32 @@ client.on("messageCreate", async (message) => {
 		createLogEmbed(message);
 
         await message.channel.send({ embeds: [booliEmbed]});
+	}
+
+	// Random number command
+	if (message.content.startsWith(`${prefix}random`)){
+		let randomNumber = message.content.slice(8);
+		const maxRandomNumber = 999;
+		const minRandomNumber = 1;
+		const regEx = /^(\d+)/;
+		const randomMatch = randomNumber.match(regEx);
+		// Error handling if random syntax is incorrect
+		if (randomMatch === null) {
+			message.reply(`Syntax error. Please only input integers between \`${minRandomNumber}\` and \`${maxRandomNumber}\`.`);
+			return;
+		} else if (randomNumber > maxRandomNumber) {
+			message.reply(`Syntax error. Please only input integers between \`${minRandomNumber}\` and \`${maxRandomNumber}\`.\nYour number was \`${randomNumber - maxRandomNumber}\` above the max.`);
+			return;
+		} else if (randomNumber < minRandomNumber) {
+			message.reply(`Syntax error. Please only input integers between \`${minRandomNumber}\` and \`${maxRandomNumber}\`.\nYour number was \`${Math.abs(minRandomNumber - randomNumber)}\` below the min.`);
+			return;
+		}
+		const numberUsed = randomMatch[1];
+		//possibly make a slash command of this as well
+		const response = getRandomNumber(numberUsed);
+		message.channel.send(`Your random number is: \`${response}\` out of \`${numberUsed}\`.`);
+		createLog(message);
+		createLogEmbed(message);
 	}
 
 	// Note command
