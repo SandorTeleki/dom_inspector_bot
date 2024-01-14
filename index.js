@@ -560,7 +560,7 @@ client.on("messageCreate", async (message) => {
 			return;
 		}
 		const numberUsed = randomMatch[1];
-		//possibly make a slash command of this as well
+		//Possibly make a slash command of this as well
 		const response = getRandomNumber(numberUsed);
 		message.channel.send(`Your random number is: \`${response}\` out of \`${numberUsed}\`.`);
 		createLog(message);
