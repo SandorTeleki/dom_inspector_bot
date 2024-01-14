@@ -9,8 +9,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('item')
 		.setDescription('Replies with information about an item')
-        .addStringOption(option => option.setName('item_name')
-		.setDescription('Enter the name of the item').setRequired(true)),
+        .addStringOption(option => option.setName('item_name').setDescription('Enter the name of the item').setRequired(true)),
 
 	async execute(interactionOG) {
         let itemName = interactionOG.options.getString('item_name');

@@ -9,8 +9,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('spell')
 		.setDescription('Replies with information about a spell')
-        .addStringOption(option => option.setName('spell_name')
-		.setDescription('Enter the name of the spell').setRequired(true)),
+        .addStringOption(option => option.setName('spell_name').setDescription('Enter the name of the spell').setRequired(true)),
 
 	async execute(interactionOG) {
         let spellName = interactionOG.options.getString('spell_name');
