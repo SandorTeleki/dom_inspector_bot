@@ -8,11 +8,10 @@ Currently running on Discord.js v14.
 - Prepare for the release of Dominions 6 (will need to wait for an update to larzm42's dominspector first probably)
 
 **Currently working on**
-- Multiple mentor note slots
+- Multiple mentor note slots.
 
 **Small ideas / bugs to fix**
-* If a query returns multiple answers (like "longdead"), create a way to immediately navigate to one of the other search results (most likely
-    through a Discord button attached to the Embed).
+* Currently none identified.
 
 **Potential future plans**
 * Site searcher (e.g. list forest sites that give order)
