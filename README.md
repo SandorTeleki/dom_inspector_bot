@@ -4,16 +4,16 @@ A Discord interface to [Larzm's Mod Inspector](https://larzm42.github.io/dom5ins
 
 Currently running on Discord.js v14.
 
-## Plans
+## Plans:
 - Prepare for the release of Dominions 6 (will need to wait for an update to larzm42's dominspector first probably)
 
-**Currently working on**
+**Currently working on:**
 - Multiple mentor note slots.
 
-**Small ideas / bugs to fix**
+**Small ideas / bugs to fix:**
 * Currently none identified.
 
-**Potential future plans**
+**Potential future plans:**
 * Site searcher (e.g. list forest sites that give order)
 * Item searcher (e.g. list +MR items, max const4)
 * Mod support, e.g. `/spell DE fuel the fire` (color-code embed)
@@ -21,7 +21,7 @@ Currently running on Discord.js v14.
 * Enable "more + show keys" in screenshots somehow, maybe with emoji-react?
 * Moving away from inspector screenshots to information in the embed itself
 
-## Hosting own version of the bot 
+## Hosting own version of the bot:
 * Create a discord bot through the [Discord Developer Portal](https://discord.com/developers/docs/intro)
 * Remember to grab the bot token.
 * Clone the github repoistory of the Dom_Inspector_Bot and save it locally.
