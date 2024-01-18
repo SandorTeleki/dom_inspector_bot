@@ -7,7 +7,7 @@ Currently running on Discord.js v14.
 ## Sample commands and returns
 
 | Base Command | User Input | Response | Note |
-| ---------------------- | ------- | ------------------------- |
+| ------- | ------- | ------------------------- | ------------------------------ |
 | ?unit | 145 | Embed with Hirdman | The bot can search for units based on their ID, no similar matches shown in this case as the search is specific |
 | ?unit | water elemental | Embed with size 6 water elemental | Since there are other units with similar names, the bot will shown them in the embed footer and provide clickable buttons to search for the similar matches with a single click |
 | ?unit | wele | Embed with size 6 water elemental | The bot has a list of commonly used aliases. Aliases also can return similar matches, like in this case |
