@@ -8,12 +8,30 @@ Currently running on Discord.js v14.
 
 ## Sample commands and Bot responses:
 
+### Unit:
+
 | Base Command | User Input | Response | Note |
 | ------- | ------- | ------------------------- | ------------------------------ |
 | ?unit | 145 | Embed with Hirdman | The bot can search for units based on their ID, no similar matches shown in this case as the search is specific. |
 | ?unit | water elemental | Embed with size 6 water elemental | Since there are other units with similar names, the bot will shown them in the embed footer and provide clickable buttons to search for the similar matches with a single click. |
 | ?unit | wele | Embed with size 6 water elemental | The bot has a list of commonly used aliases. Aliases also can return similar matches, like in this case. |
 | ?unit | wele 4 | Embed with size 4 water elemental | The bot has basic size filtering. Provide unit name and then the size. If a unit with such a size exists, that will be provided in the embed. Bot will also provide similar matches (usually units with similar/same name but different size) in the embed footer and clickable buttons. |
+
+### Spell:
+
+| Base Command | User Input | Response | Note |
+| ------- | ------- | ------------------------- | ------------------------------ |
+| ?spell | 151 | Embed with Banishment spell | The bot can search for units based on their ID, no similar matches shown in this case as the search is specific. |
+| ?spell | fire | Embed with Heavenly Fire | Since there are other spells with similar names, the bot will shown them in the embed footer and provide clickable buttons to search for the similar matches with a single click. |
+| ?spell | l4l | Embed with Life for Life | The bot has a list of commonly used aliases. Aliases also can return similar matches (not in this case). |
+
+### Site:
+
+### Item:
+
+### Merc (mercenary):
+
+
 
 ## Plans:
 - Prepare for the release of Dominions 6 (will need to wait for an update to larzm42's dominspector first probably)
