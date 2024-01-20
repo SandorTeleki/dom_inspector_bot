@@ -27,6 +27,12 @@ Currently running on Discord.js v14.
 
 ### Site:
 
+| Base Command | User Input | Response | Note |
+| ------- | ------- | ------------------------- | ------------------------------ |
+| ?site | 151 | Embed with The Swamps of Ur | The bot can search for units based on their ID, no similar matches shown in this case as the search is specific. |
+| ?site | fire | Embed with Fountain of Fire | Since there are other units with similar names, the bot will shown them in the embed footer and provide clickable buttons to search for the similar matches with a single click. |
+| ?site | best | Embed with Lava Lake | The bot has a list of commonly used aliases. Aliases also can return similar matches (not in this case). Since sites are rarely searched, this is the only alias and it was added as a joke. |
+
 ### Item:
 
 ### Merc (mercenary):
