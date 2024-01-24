@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js'); //for buttons
+const { ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js'); //for buttons
 
 const { getSpell } = require('../../utils/spellHelper');
 const { buttonWrapper } = require('../../utils/buttonWrapper');
