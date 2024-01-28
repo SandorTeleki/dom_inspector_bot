@@ -7,7 +7,7 @@ Currently running on Discord.js v14.
 -----
 
 ## Plans:
-- Prepare for the release of Dominions 6 (will need to wait for an update to larzm42's dominspector first probably)
+- Prepare for the release of Dominions 6 (will need to wait for an update to larzm42's dominspector and dom6api first)
 
 ## Currently working on:
 - Multiple mentor note slots.
