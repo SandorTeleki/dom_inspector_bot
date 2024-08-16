@@ -126,7 +126,7 @@ async function getUnit( unitName, unitCommandData ){
     // Destructuring the note property from the row object
     const { note: mentorNote, written_by_user: noteAuthor } = row || {};
 
-    console.log("Mentor note: " + mentorNote);
+    //console.log("Mentor note: " + mentorNote);
 
     // Construct the unitEmbed after obtaining the mentorNote value
     const unitEmbed = new EmbedBuilder()

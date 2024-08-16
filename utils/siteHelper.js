@@ -72,7 +72,7 @@ async function getSite( siteName, siteCommandData ){
     // Destructuring the note property from the row object
     const { note: mentorNote, written_by_user: noteAuthor } = row || {};
 
-    console.log("mentorNote: " + mentorNote);
+    //console.log("mentorNote: " + mentorNote);
 
     // Construct the siteEmbed after obtaining the mentorNote value
     const siteEmbed = new EmbedBuilder()

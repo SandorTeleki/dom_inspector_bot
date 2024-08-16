@@ -73,7 +73,7 @@ async function getSpell( spellName, spellCommandData ){
     // Destructuring the note property from the row object
     const { note: mentorNote, written_by_user: noteAuthor } = row || {};
 
-    console.log("mentorNote: " + mentorNote);
+    //console.log("mentorNote: " + mentorNote);
 
     // Construct the spellEmbed after obtaining the mentorNote value
     const spellEmbed = new EmbedBuilder()

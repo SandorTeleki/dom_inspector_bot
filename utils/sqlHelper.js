@@ -9,7 +9,7 @@ function sqlSelectNote(commandUsed, idUsed, serverId){
     sql = `SELECT class, class_id FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`
     db.get(sql,[commandUsed,idUsed,serverId],(err, row) => {
         if(err) return console.error(err.message);
-    console.log(JSON.stringify(row));
+    //console.log(JSON.stringify(row));
 })};
 
 const sqlGetMentorNote = (type, typeId, serverId) => {

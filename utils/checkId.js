@@ -27,14 +27,14 @@ async function checkId(message, noteWritten, commandUsed, idUsed, serverId, serv
         sql = `SELECT class, class_id FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`
         db.get(sql,[commandUsed,idUsed,serverId],(err, row) => {
             if(err) return console.error(err.message);
-        console.log(JSON.stringify(row));
+        //console.log(JSON.stringify(row));
             
             // If no match was found, we INSERT the new note
             if (row === undefined){ 			
                 sqlInsertNote(commandUsed,idUsed,commandName,noteWritten,server,serverId,unixTimestamp,user);
                 sqlInsertLog(server,serverId,channelName,channelId,user,userId,text,unixTimestamp);
                 sqlInsertMentorLog(commandUsed,idUsed,commandName,noteWritten,server,serverId,unixTimestamp,user);
-                console.log('Nothing found, inserting new note...');
+                //console.log('Nothing found, inserting new note...');
                 message.reply("Note was added!");
                 // Gotta return so we don't UPDATE the just INSERT-ed note right away
                 return;
@@ -45,7 +45,7 @@ async function checkId(message, noteWritten, commandUsed, idUsed, serverId, serv
                 sqlUpdateNote(noteWritten,user,commandUsed,idUsed,serverId);
                 sqlInsertLog(server,serverId,channelName,channelId,user,userId,text,unixTimestamp);
                 sqlInsertMentorLog(commandUsed,idUsed,commandName,noteWritten,server,serverId,unixTimestamp,user);
-                console.log("Note was found, updating note...");
+                //console.log("Note was found, updating note...");
                 //message.reply("Note was updated!");
             }
 
