@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('discord.js');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { ActionRowBuilder, ComponentType } = require('discord.js');
 
 const { getMerc } = require('../../utils/mercHelper');
 const { createLog } = require('../../utils/logHelper');
@@ -34,7 +34,7 @@ module.exports = {
 							components: [buttonRow]
 						})
 						interaction.reply({ embeds: [mercLeaderEmbed]});
-		
+						createLog(interaction);
 					}
 
 					if (interaction.customId === 'merc-unit'){
@@ -43,6 +43,7 @@ module.exports = {
 							components: [buttonRow]
 						})
 						interaction.reply({ embeds: [mercTroopEmbed]});
+						createLog(interaction);
 					}
 				} else {
 					interaction.reply({ content: `These buttons aren't for you!`, ephemeral: true });
