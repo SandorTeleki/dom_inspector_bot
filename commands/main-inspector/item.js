@@ -36,8 +36,6 @@ module.exports = {
 				if (isInListID){
 					const justTheID = interaction.customId.replace(buttonPrefix, "");
 					const [ itemEmbed ] = await getItem( justTheID, interaction );
-
-					//Logging button click
 					createLog(interaction);
 
 					await interaction.reply({embeds: [itemEmbed]});

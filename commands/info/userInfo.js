@@ -12,5 +12,3 @@ module.exports = {
 		\nYou joined on: ${interaction.member.joinedAt}`);
 	},
 };
-
-//Added more info from v14 (username and joinedAt)
