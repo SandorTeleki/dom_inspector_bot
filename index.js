@@ -3,7 +3,6 @@ const path = require('node:path');
 require('discord-reply'); //Before discord.client
 const { Client, Collection, Intents, Events, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
-const Discord = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js'); //for buttons
 

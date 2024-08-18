@@ -1,6 +1,3 @@
-const { EmbedBuilder, Message } = require('discord.js');
-const { Client, Collection, Intents, Events, GatewayIntentBits } = require('discord.js');
-
 const { sqlInsertLog } = require('./sqlHelper');
 
 // Creates log for SQL
