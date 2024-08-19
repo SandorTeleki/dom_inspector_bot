@@ -12,7 +12,12 @@ const { getMerc } = require('./utils/mercHelper');
 const { getSite } = require('./utils/siteHelper');
 const { getUnit } = require('./utils/unitHelper');
 const { getHelpEmbed } = require('./utils/helpEmbed');
-const { WRONG_BOT_URL, ALL_BOOLI_URL, minRandomNumber, maxRandomNumber } = require('./utils/utils');
+const { 
+	WRONG_BOT_URL,
+	ALL_BOOLI_URL,
+	noteLengthLimitMin,
+	noteLengthLimitMax 
+} = require('./utils/utils');
 const { mentorWhitelist, channelWhiteList } = require('./utils/whitelist');
 const { checkId } = require('./utils/checkId');
 const { sqlBuildTables, sqlDropTables } = require('./utils/sqlHelper');
@@ -564,10 +569,6 @@ client.on("messageCreate", async (message) => {
 		const userId = message.author.id;
 		const text = message.content;
 		const unixTimestamp = message.createdTimestamp;
-
-		// Note length related constants
-		const noteLengthLimitMin = 3;
-		const noteLengthLimitMax = 250;
 
 		//Check user permission to use the ?note command 
 		if (mentorWhitelist.every((item)=>{ return item !== userId })){
