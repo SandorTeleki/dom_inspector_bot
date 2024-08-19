@@ -12,7 +12,7 @@ const { getMerc } = require('./utils/mercHelper');
 const { getSite } = require('./utils/siteHelper');
 const { getUnit } = require('./utils/unitHelper');
 const { getHelpEmbed } = require('./utils/helpEmbed');
-const { WRONG_BOT_URL, ALL_BOOLI_URL } = require('./utils/utils');
+const { WRONG_BOT_URL, ALL_BOOLI_URL, minRandomNumber, maxRandomNumber } = require('./utils/utils');
 const { mentorWhitelist, channelWhiteList } = require('./utils/whitelist');
 const { checkId } = require('./utils/checkId');
 const { sqlBuildTables, sqlDropTables } = require('./utils/sqlHelper');
@@ -543,25 +543,12 @@ client.on("messageCreate", async (message) => {
 	// Random number command
 	if (message.content.startsWith(`${prefix}random`)){
 		let randomNumber = message.content.slice(8);
-		const maxRandomNumber = 999;
-		const minRandomNumber = 1;
-		const regEx = /^(\d+)/;
-		const randomMatch = randomNumber.match(regEx);
-		// Error handling if random syntax is incorrect
-		if (randomMatch === null) {
-			message.reply(`Syntax error. Please only input integers between \`${minRandomNumber}\` and \`${maxRandomNumber}\`.`);
-			return;
-		} else if (randomNumber > maxRandomNumber) {
-			message.reply(`Syntax error. Please only input integers between \`${minRandomNumber}\` and \`${maxRandomNumber}\`.\nYour number was \`${randomNumber - maxRandomNumber}\` above the max.`);
-			return;
-		} else if (randomNumber < minRandomNumber) {
-			message.reply(`Syntax error. Please only input integers between \`${minRandomNumber}\` and \`${maxRandomNumber}\`.\nYour number was \`${Math.abs(minRandomNumber - randomNumber)}\` below the min.`);
-			return;
+		const response = getRandomNumber(randomNumber);
+		if(isNaN(response)) {
+			message.channel.send(response);
+		} else {
+			message.channel.send(`Your random number is: \`${response}\` out of \`${randomNumber}\`.`)
 		}
-		const numberUsed = randomMatch[1];
-		//Possibly make a slash command of this as well
-		const response = getRandomNumber(numberUsed);
-		message.channel.send(`Your random number is: \`${response}\` out of \`${numberUsed}\`.`);
 		createLog(message);
 		createLogEmbed(message);
 	}

@@ -17,5 +17,7 @@ module.exports = {
         'https://cdn.discordapp.com/attachments/987276632538615868/1085964383663956018/BooliPreen.png',
         'https://cdn.discordapp.com/attachments/987276632538615868/1085964383949164545/BooliUnamused.png',
      ],
+    minRandomNumber: 1,
+    maxRandomNumber: 999,
 };
 
