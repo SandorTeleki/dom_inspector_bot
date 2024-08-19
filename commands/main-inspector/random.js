@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
 const { getRandomNumber } = require('../../utils/randomNumber');
+const { minRandomNumber, maxRandomNumber } = require('../../utils/utils')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -9,8 +10,6 @@ module.exports = {
         .addStringOption(option => option.setName('random_number').setDescription('Enter the upper limit of your random number').setRequired(true)),
 	async execute(interaction) {
         let randomNumber = interaction.options.getString('random_number');
-        const maxRandomNumber = 999;
-		const minRandomNumber = 1;
 		const regEx = /^(\d+)/;
 		const randomMatch = randomNumber.match(regEx);
 		// Error handling if random syntax is incorrect
