@@ -1,4 +1,5 @@
 const { Events } = require('discord.js');
+
 const { sqlInsertLog } = require('../utils/sqlHelper');
 
 module.exports = {
