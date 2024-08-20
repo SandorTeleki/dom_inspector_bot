@@ -76,6 +76,10 @@ client.on("ready", () => {
 //Bot Login
 client.login(token);
 
+process.on('unhandledRejection', error => {
+	console.error('Unhandled promise rejection:;', error);
+});
+
 //#####################################################################################################
 
 //Prefix commands list (might need some refactoring)
