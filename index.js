@@ -93,7 +93,7 @@ client.on("messageCreate", async (message) => {
 	// Item command
   	if (message.content.startsWith(`${prefix}item`)) {
 		let itemName = message.content.slice(6).toLowerCase();
-		var itemCommandData = message;
+		let itemCommandData = message;
 		const [itemEmbed, buttons, buttonPrefix ] = await getItem( itemName, itemCommandData );
 
 		//Logging
@@ -184,7 +184,7 @@ client.on("messageCreate", async (message) => {
 	// Spell command
 	if (message.content.startsWith(`${prefix}spell`)) {
 		let spellName = message.content.slice(7).toLowerCase();
-		var spellCommandData = message;
+		let spellCommandData = message;
 		const [spellEmbed, buttons, buttonPrefix ] = await getSpell( spellName, spellCommandData );
 
 		//Logging
@@ -275,7 +275,7 @@ client.on("messageCreate", async (message) => {
 	// Merc command
 	if (message.content.startsWith(`${prefix}merc`)) {
 		let mercName = message.content.slice(6).toLowerCase();
-		var mercCommandData = message;
+		let mercCommandData = message;
 		try {
 			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton] = await getMerc(mercName, mercCommandData);
 			//Can try adding similarMatches - concat the buttonRow with buttonsArray and pass it as one? 
@@ -330,7 +330,7 @@ client.on("messageCreate", async (message) => {
 	// Site command
 	if (message.content.startsWith(`${prefix}site`)) {
 		const siteName = message.content.slice(6).toLowerCase();
-		var siteCommandData = message;
+		let siteCommandData = message;
 		const [siteEmbed, buttons, buttonPrefix ] = await getSite( siteName, siteCommandData );
 		
 		//Logging
@@ -419,7 +419,7 @@ client.on("messageCreate", async (message) => {
 	// Unit command
 	if (message.content.startsWith(`${prefix}unit`)) {
 		let unitName = message.content.slice(6).toLowerCase();
-		var unitCommandData = message;
+		let unitCommandData = message;
 		const [unitEmbed, buttons, buttonPrefix ] = await getUnit( unitName, unitCommandData );
 		
 		//Logging
@@ -539,7 +539,7 @@ client.on("messageCreate", async (message) => {
 
 	// Booli command
 	if (message.content.startsWith(`${prefix}booli`)){
-		var randomBooli = ALL_BOOLI_URL[Math.floor(Math.random() * ALL_BOOLI_URL.length)];
+		let randomBooli = ALL_BOOLI_URL[Math.floor(Math.random() * ALL_BOOLI_URL.length)];
 		const booliEmbed = new EmbedBuilder()
             	.setTitle("Do your turn!")
             	.setImage(randomBooli);
@@ -640,6 +640,7 @@ async function createLogEmbed(data) {
 
 //Messages and interactions use different synthax. Message (type = 0) and interaction (type = 2), button interaction (type = 3)
 async function logEmbedBuilder (data) {
+	let command
 	const channel = client.channels.cache.get('1165999070272303174');
 	const serverName = (data.type === 0 ? data.guild : data.guild.name );
 	const serverId = (data.type === 0 ? data.guildId : data.guild.id );
@@ -647,7 +648,7 @@ async function logEmbedBuilder (data) {
 	const channelId = (data.type === 0 ? data.channelId : data.channel.id );
 	const userName = (data.type === 0 ? data.author.tag : data.user.tag );
 	const userId = (data.type === 0 ? data.author.id : data.user.id );
-	if (data.type === 0){ var command = data.content } else if (data.type === 2){ var command = data.toString()} else {var command = data.customId};
+	if (data.type === 0){  command = data.content } else if (data.type === 2){  command = data.toString()} else { command = data.customId};
 	const createdAt = data.createdAt;
 	const timestamp = data.createdTimestamp;
 
