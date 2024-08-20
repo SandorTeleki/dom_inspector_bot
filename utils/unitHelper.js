@@ -1,5 +1,4 @@
 const { EmbedBuilder } = require('discord.js');
-const { ButtonBuilder, ButtonStyle } = require('discord.js');
 const { request } = require('undici');
 
 const { FUZZY_MATCH_URL, UNIT_URL, BASE_URL } = require('./utils');
