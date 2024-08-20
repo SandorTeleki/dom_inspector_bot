@@ -1,11 +1,13 @@
 const { EmbedBuilder } = require('discord.js');
 
+const { prefix } = require('./utils');
+
 function getHelpEmbed(){
 	return new EmbedBuilder()
 		.setTitle('Dom_Inspector_Bot help')
 		.setDescription('The Dom_Inspector_Bot provides you info on items, spells, units, sites and mercenaries.')
 		.addFields(
-			{ name :  "```/item {item_name} ```", value: 'Search for item by name.'},
+			{ name : '```/item {item_name} ```', value: 'Search for item by name.'},
 			{ name : '```/spell {spell_name}```', value: 'Search for spell by name.'},
 			{ name : '```/merc {merc_name}```', value: 'Search for mercenaries by mercenary group name (not leader name).'},
 			{ name : '```/site {site_name}```', value: 'Search for sites by name.'},
