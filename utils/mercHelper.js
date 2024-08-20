@@ -24,8 +24,8 @@ async function getMerc( mercName, mercCommandData ){
     // const unixTimestamp = mercCommandData.createdTimestamp;
 
     if (mercName in mercAliases){ mercName = mercAliases[mercName] };
-    var merc;
-    var similarMatchesString;
+    let merc;
+    let similarMatchesString;
     const regExId = /^(\d+)/;
 
     if  (mercName.match(regExId)){
@@ -41,14 +41,14 @@ async function getMerc( mercName, mercCommandData ){
         merc  = await body.json(); 
     } else {
         const { body } = await request(BASE_URL + MERC_URL + FUZZY_MATCH_URL + encodeURIComponent(mercName));
-        var { mercs } = await body.json();
+        let { mercs } = await body.json();
         merc = mercs[0];
         similarMatchesString = similarMatchesStringify(mercs);
     }; 
     //console.log(merc);
 
-    var type = "merc";
-    var typeId = merc.id;
+    let type = "merc";
+    let typeId = merc.id;
 
     const row = await sqlGetMentorNote(type, typeId, serverId);
 
