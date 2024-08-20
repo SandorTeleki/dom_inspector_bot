@@ -12,11 +12,12 @@ const { getMerc } = require('./utils/mercHelper');
 const { getSite } = require('./utils/siteHelper');
 const { getUnit } = require('./utils/unitHelper');
 const { getHelpEmbed } = require('./utils/helpEmbed');
-const { 
+const {
+	prefix,
+	noteLengthLimitMin,
+	noteLengthLimitMax,
 	WRONG_BOT_URL,
 	ALL_BOOLI_URL,
-	noteLengthLimitMin,
-	noteLengthLimitMax 
 } = require('./utils/utils');
 const { mentorWhitelist, channelWhiteList } = require('./utils/whitelist');
 const { checkId } = require('./utils/checkId');
@@ -81,10 +82,6 @@ process.on('unhandledRejection', error => {
 });
 
 //#####################################################################################################
-
-//Prefix commands list (might need some refactoring)
-//Prefix symbol "?" be changed to other symbol if needed -> will need to update help command if so
-const prefix = "?"; 
 
 client.on("messageCreate", async (message) => {
 	if (!message.content.startsWith(prefix) ) return;

@@ -13,7 +13,7 @@ function getHelpEmbed(){
 			{ name : '```/site {site_name}```', value: 'Search for sites by name.'},
 			{ name : '```/unit {unit_name}```', value: 'Search for units (sacreds, indies, summons, commanders etc.) by name.'},
 			{ name : '```/random {random_number}```', value: 'Returns random number between 1 and the number you provide.'},
-			{ name : '```?{command}```', value: 'All slash commands can be used with "?" prefix as well, e.g. "?item frost brand"'},
+			{ name : `\`\`\`${prefix}command\`\`\``, value: `All slash commands can be used with "${prefix}" prefix as well, e.g. "${prefix}item frost brand"`},
 			{ name : 'Tricks', value: 'Typos in names are fine, we\'ll do our best to understand you. Common aliases, like gss and FV for Greatsword of Sharpness and Foul Vapors, are understood. You can also supply the in-game ID instead of the name'},
 			{ name : 'Scribbles', value: 'Notes/scribbles are currently in beta testing. An announcement will be made once they are fully released. Guilds/servers will be able to opt-in to have them.'},
 			{ name : 'Feedback', value: 'Feedback, suggestions, and bug reports are welcome on [GitHub](https://github.com/SandorTeleki/dom_inspector_bot), through DMs or through Discord pings.'},
