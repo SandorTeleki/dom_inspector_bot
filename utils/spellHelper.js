@@ -7,7 +7,7 @@ const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { spellAliases } = require('./spellAliases');
 const { similarMatchesStringify, similarMatchesArray } = require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
-
+const { buttonCreator } = require('./buttonCreator');
 
 async function getSpell( spellName, spellCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -50,19 +50,10 @@ async function getSpell( spellName, spellCommandData ){
     }; 
     
     // Building buttons from similarMatchesList
-    const buttons = [];
+    let buttons = [];
     const buttonPrefix = "spell-";
     if(similarMatchesList){
-        for (let a = 0; a < similarMatchesList.length; a++){
-            const current = similarMatchesList[a];
-            buttons.push(
-                new ButtonBuilder()
-                    .setCustomId(`${buttonPrefix}${current.id}`)
-                    .setLabel(`${current.name} [${current.id}]`)
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(false)
-            );
-        }
+        buttons = buttonCreator(similarMatchesList, buttonPrefix);
     }
 
     var type = "spell";
