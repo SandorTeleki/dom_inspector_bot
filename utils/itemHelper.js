@@ -25,9 +25,9 @@ async function getItem( itemName, itemCommandData ){
 
 
     if (itemName in itemAliases){ itemName = itemAliases[itemName] };
-    var item;
-    var similarMatchesString;
-    var similarMatchesList;
+    let item;
+    let similarMatchesString;
+    let similarMatchesList;
     const regExId = /^(\d+)/;
 
     if  (itemName.match(regExId)){
@@ -44,10 +44,10 @@ async function getItem( itemName, itemCommandData ){
         item  = await body.json();
     } else {
         const { body } = await request(BASE_URL + ITEM_URL + FUZZY_MATCH_URL + encodeURIComponent(itemName));
-        var { items } = await body.json();
+        let { items } = await body.json();
         item = items[0];
         similarMatchesString = similarMatchesStringify(items);
-        var similarMatchesList = similarMatchesArray(items);
+        similarMatchesList = similarMatchesArray(items);
     };
 
     // Building buttons from similarMatchesList
@@ -57,8 +57,8 @@ async function getItem( itemName, itemCommandData ){
         buttons = buttonCreator(similarMatchesList, buttonPrefix);
     }
 
-    var type = "item";
-    var typeId = item.id;
+    let type = "item";
+    let typeId = item.id;
 
     const row = await sqlGetMentorNote(type, typeId, serverId);
 
