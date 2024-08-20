@@ -9,7 +9,7 @@ let sql;
 // Connects to DB
 const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE);
 
-var commandResult;
+let commandResult;
 
 async function checkId(message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp) {
     const { statusCode, body } = await request(BASE_URL + '/' + commandUsed + 's/' + idUsed);
