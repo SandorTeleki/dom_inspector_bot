@@ -13,7 +13,7 @@ module.exports = {
 
 	async execute(interactionOG) {
         let unitName = interactionOG.options.getString('unit_name');
-		var unitCommandData = interactionOG;
+		let unitCommandData = interactionOG;
 
 		const [unitEmbed, buttons, buttonPrefix ] = await getUnit( unitName, unitCommandData );
 		let maxButtonsToClick = buttons.length;

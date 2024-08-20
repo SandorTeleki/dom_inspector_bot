@@ -13,7 +13,7 @@ module.exports = {
 
 	async execute(interactionOG) {
         let spellName = interactionOG.options.getString('spell_name');
-		var spellCommandData = interactionOG;
+		let spellCommandData = interactionOG;
 
 		const [spellEmbed, buttons, buttonPrefix ] = await getSpell( spellName, spellCommandData );
 		let maxButtonsToClick = buttons.length;

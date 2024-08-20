@@ -13,7 +13,7 @@ module.exports = {
 
 	async execute(interactionOG) {
 		let mercName = interactionOG.options.getString('merc_name');
-		var mercCommandData = interactionOG;
+		let mercCommandData = interactionOG;
 		try {
 			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton] = await getMerc(mercName, mercCommandData);
 			const buttonRow = new ActionRowBuilder().addComponents(mercLeaderButton, mercUnitButton);

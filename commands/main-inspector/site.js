@@ -13,7 +13,7 @@ module.exports = {
 
 	async execute(interactionOG) {
         const siteName = interactionOG.options.getString('site_name');
-		var siteCommandData = interactionOG;
+		let siteCommandData = interactionOG;
 
 		const [siteEmbed, buttons, buttonPrefix ] = await getSite( siteName, siteCommandData );
 		let maxButtonsToClick = buttons.length;
