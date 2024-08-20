@@ -22,10 +22,10 @@ async function getUnit( unitName, unitCommandData ){
     //const userId = unitCommandData.author.id;
     //const text = unitCommandData.content;
     //const unixTimestamp = unitCommandData.createdTimestamp;
-    var unit;
-    var similarMatchesString;
-    var similarMatchesList;
-    var footerStrings = ' ';
+    let unit;
+    let similarMatchesString;
+    let similarMatchesList;
+    let footerStrings = ' ';
 
     const regExId = /^(\d+)/;
     const regExSize = /^.[^0-9]+\s?(\d)/;
@@ -47,18 +47,18 @@ async function getUnit( unitName, unitCommandData ){
         const correctSize = sizeMatch[0];
         //If there is a correct size, remove correct size from array
         if (correctSize) {
-            var unit = correctSize;
+            unit = correctSize;
             const index = units.indexOf(correctSize);
             if (index > -1){
                 units.splice(index, 1);
             }
-            var similarMatchesString = similarMatchesStringifyNoSlice(units);
-            var similarMatchesList = units;
+            similarMatchesString = similarMatchesStringifyNoSlice(units);
+            similarMatchesList = units;
         //If there is no correct size, then just remove first value from array
         } else {
-            var unit = units[0];
-            var similarMatchesString = similarMatchesStringify(units);
-            var similarMatchesList = similarMatchesArray(units);
+            unit = units[0];
+            similarMatchesString = similarMatchesStringify(units);
+            similarMatchesList = similarMatchesArray(units);
         }
 
     //Running it for ID
@@ -86,18 +86,18 @@ async function getUnit( unitName, unitCommandData ){
         const correctSize = sizeMatch[0];
         //If there is a correct size, remove correct size from array
         if (correctSize) {
-            var unit = correctSize;
+            unit = correctSize;
             const index = units.indexOf(correctSize);
             if (index > -1){
                 units.splice(index, 1);
             }
-            var similarMatchesString = similarMatchesStringifyNoSlice(units);
-            var similarMatchesList = units;
+            similarMatchesString = similarMatchesStringifyNoSlice(units);
+            similarMatchesList = units;
         //If there is no correct size, then just remove first value from array
         } else {
-            var unit = units[0];
-            var similarMatchesString = similarMatchesStringify(units);
-            var similarMatchesList = similarMatchesArray(units);
+            unit = units[0];
+            similarMatchesString = similarMatchesStringify(units);
+            similarMatchesList = similarMatchesArray(units);
         }
     };
 
