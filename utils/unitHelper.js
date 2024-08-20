@@ -7,7 +7,7 @@ const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { unitAliases } = require('./unitAliases');
 const { similarMatchesStringify, similarMatchesStringifyNoSlice, similarMatchesArray } = require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
-
+const { buttonCreator } = require('./buttonCreator');
 
 async function getUnit( unitName, unitCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -103,19 +103,10 @@ async function getUnit( unitName, unitCommandData ){
     };
 
     // Building buttons from similarMatchesList
-    const buttons = [];
+    let buttons = [];
     const buttonPrefix = "unit-";
     if(similarMatchesList){
-        for (let a = 0; a < similarMatchesList.length; a++){
-            const current = similarMatchesList[a];
-            buttons.push(
-                new ButtonBuilder()
-                    .setCustomId(`${buttonPrefix}${current.id}`)
-                    .setLabel(`${current.name} [${current.id}]`)
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(false)
-            );
-        }
+        buttons = buttonCreator(similarMatchesList, buttonPrefix);
     }
 
     const type = "unit";
