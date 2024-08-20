@@ -24,9 +24,9 @@ async function getSite( siteName, siteCommandData ){
     // const unixTimestamp = siteCommandData.createdTimestamp;
     
     if (siteName in siteAliases){ siteName = siteAliases[siteName] };
-    var site;
-    var similarMatchesString;
-    var similarMatchesList;
+    let site;
+    let similarMatchesString;
+    let similarMatchesList;
     const regExId = /^(\d+)/;
 
     if  (siteName.match(regExId)){
@@ -42,10 +42,10 @@ async function getSite( siteName, siteCommandData ){
         site  = await body.json();
     } else {
         const { body } = await request(BASE_URL + SITE_URL + FUZZY_MATCH_URL + encodeURIComponent(siteName));
-        var { sites } = await body.json();
+        let { sites } = await body.json();
         site = sites[0];
         similarMatchesString = similarMatchesStringify(sites);
-        var similarMatchesList = similarMatchesArray(sites);
+        similarMatchesList = similarMatchesArray(sites);
     }; 
 
     // Building buttons from similarMatchesList
@@ -55,8 +55,8 @@ async function getSite( siteName, siteCommandData ){
         buttons = buttonCreator(similarMatchesList, buttonPrefix);
     }
 
-    var type = "site";
-    var typeId = site.id;
+    let type = "site";
+    let typeId = site.id;
 
     const row = await sqlGetMentorNote(type, typeId, serverId);
 
