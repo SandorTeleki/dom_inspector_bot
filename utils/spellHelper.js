@@ -24,9 +24,9 @@ async function getSpell( spellName, spellCommandData ){
     // const unixTimestamp = spellCommandData.createdTimestamp;
 
     if (spellName in spellAliases){ spellName = spellAliases[spellName] };
-    var spell;
-    var similarMatchesString;
-    var similarMatchesList;
+    let spell;
+    let similarMatchesString;
+    let similarMatchesList;
     const regExId = /^(\d+)/;
 
     if  (spellName.match(regExId)){
@@ -42,10 +42,10 @@ async function getSpell( spellName, spellCommandData ){
         spell  = await body.json();
     } else {
         const { body } = await request(BASE_URL + SPELL_URL + FUZZY_MATCH_URL + encodeURIComponent(spellName));
-        var { spells } = await body.json();
+        let { spells } = await body.json();
         spell = spells[0];
         similarMatchesString = similarMatchesStringify(spells);
-        var similarMatchesList = similarMatchesArray(spells);
+        similarMatchesList = similarMatchesArray(spells);
     }; 
     
     // Building buttons from similarMatchesList
@@ -55,8 +55,8 @@ async function getSpell( spellName, spellCommandData ){
         buttons = buttonCreator(similarMatchesList, buttonPrefix);
     }
 
-    var type = "spell";
-    var typeId = spell.id;
+    let type = "spell";
+    let typeId = spell.id;
 
     const row = await sqlGetMentorNote(type, typeId, serverId);
 
