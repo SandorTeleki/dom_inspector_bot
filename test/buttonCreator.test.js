@@ -1,5 +1,5 @@
 //no max, so test it with nothing, 1, 5, 100
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { buttonCreator } from '../utils/buttonCreator';
 
 describe('Test button creator functionality', () => {
