@@ -57,7 +57,6 @@ function sqlUpdateNote(noteWritten,user,commandUsed,idUsed,serverId){
 function sqlBuildTables(){
     // Create table to store usage logs
     sql = `CREATE TABLE IF NOT EXISTS logs (
-        id INTEGER PRIMARY KEY,
         server_name TEXT,
         server_id INTEGER,
         channel_name TEXT,
@@ -80,7 +79,7 @@ function sqlBuildTables(){
         written_by_user TEXT)`;
     db.run(sql);
 
-    // Cretea table to store mentor note logs
+    // Create table to store mentor note logs
     sql = `CREATE TABLE IF NOT EXISTS mentor_logs (
         class TEXT,
         class_id INTEGER,
