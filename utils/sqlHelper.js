@@ -14,7 +14,8 @@ function sqlSelectNote(commandUsed, idUsed, serverId){
         } else {
             resolve(row);
         }
-})};
+    })
+};
 
 const sqlGetMentorNote = (type, typeId, serverId) => {
     return new Promise((resolve, reject) => {
