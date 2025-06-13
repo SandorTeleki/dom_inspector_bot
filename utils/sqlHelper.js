@@ -5,6 +5,7 @@ let sql;
 // Connects to DB
 const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE);
 
+// This function is to be used when refactoring checkId function
 function sqlSelectNote(commandUsed, idUsed, serverId){
     sql = `SELECT class, class_id FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`
     db.get(sql,[commandUsed,idUsed,serverId],(err, row) => {

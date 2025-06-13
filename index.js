@@ -588,7 +588,7 @@ client.on("messageCreate", async (message) => {
 		}
 		
 		//Split the note into matching groups using regex to make error checking and logging easier
-		const regEx = /^(item|spell|unit|site|merc)\s(\d+)\s(.*)/i;
+		const regEx = /^(item|spell|unit|site|merc)\s(\d+)\s(.*)/i; // change it to either (\d[1-4]:(0-4)) OR make a separate matching group for slot
 		const note = message.content.slice(6);
 		const noteMatch = note.match(regEx);
 		// Error handling if note syntax is incorrect

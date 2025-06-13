@@ -10,6 +10,8 @@ let sql;
 const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE);
 
 let commandResult;
+// Create a new file (folder?) - 'noteHandler.js' - tie to it the varoius functions we need:
+// check length, check ID, check match, check slot etc.
 
 async function checkId(message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp) {
     const { statusCode, body } = await request(BASE_URL + '/' + commandUsed + 's/' + idUsed);
