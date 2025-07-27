@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 require('discord-reply'); //Before discord.client
-const { Client, Collection, Intents, Events, GatewayIntentBits } = require('discord.js');
+const { ActivityType, Client, Collection, Intents, Events, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
 const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js'); //for buttons
@@ -71,7 +71,16 @@ for (const file of eventFiles) {
 
 //Set Bot activity
 client.on("ready", () => {
-	client.user.setActivity(' your questions', { type: 'LISTENING' });
+	client.user.setPresence({
+        status: 'online',
+        activities: [
+            {
+                name: 'your questions',
+                type: ActivityType.Listening,
+                state: 'your questions'
+            }
+        ]
+    });
 });
 
 //Bot Login
