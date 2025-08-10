@@ -54,8 +54,13 @@ async function getSite( siteName, siteCommandData ){
     // Building buttons from similarMatchesList
     let buttons = [];
     const buttonPrefix = "site-";
-    if (similarMatchesList){
-        buttons = buttonCreator(similarMatchesList, buttonPrefix);
+
+    if (similarMatchesString && similarMatchesString.length < 2048) {
+        spellEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
+    } else {
+        const errorEmbed = new EmbedBuilder()
+            .setTitle("Too many matches to display. Try narrowing your search!")
+        return [errorEmbed, [], ""];
     }
 
     let type = "site";

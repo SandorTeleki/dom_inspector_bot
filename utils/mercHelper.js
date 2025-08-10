@@ -63,8 +63,13 @@ async function getMerc( mercName, mercCommandData ){
     // Construct the mercEmbed after obtaining the mentorNote value
     const mercEmbed = new EmbedBuilder()
         .setImage(BASE_URL + merc.screenshot);
-    if (similarMatchesString) {
+
+    if (similarMatchesString && similarMatchesString.length < 2048) {
         mercEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
+    } else {
+        const errorEmbed = new EmbedBuilder()
+            .setTitle("Too many matches to display. Try narrowing your search!")
+        return [errorEmbed, [], ""];
     }
 
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild

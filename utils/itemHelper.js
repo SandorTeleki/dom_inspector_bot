@@ -73,9 +73,14 @@ async function getItem( itemName, itemCommandData ){
     const itemEmbed = new EmbedBuilder()
         .setImage(BASE_URL + item.screenshot);
 
-    if (similarMatchesString) {
+    if (similarMatchesString && similarMatchesString.length < 2048) {
         itemEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
+    } else {
+        const errorEmbed = new EmbedBuilder()
+            .setTitle("Too many matches to display. Try narrowing your search!")
+        return [errorEmbed, [], ""];
     }
+
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         itemEmbed.setTitle(`ID: ${item.id}`);
@@ -86,12 +91,9 @@ async function getItem( itemName, itemCommandData ){
             ])
         }
     }
-    if (buttons.length > 0){
-        return [ itemEmbed, buttons, buttonPrefix ];
-    }
-    else {
-        return itemEmbed
-    }
+    
+    return [ itemEmbed, buttons, buttonPrefix ];
+ 
 }
 
 module.exports = { getItem }

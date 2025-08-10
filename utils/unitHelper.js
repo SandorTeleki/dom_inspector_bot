@@ -131,11 +131,16 @@ async function getUnit( unitName, unitCommandData ){
         }
     }
 
-    if ( similarMatchesString ) {
+    if (similarMatchesString && similarMatchesString.length < 2048) {
         unitEmbed.setFooter({text: footerStrings + `Other matches [ID#]:\n${similarMatchesString}`})
-    } else {
+    } else if (footerStrings.length > 1) {
         unitEmbed.setFooter({ text: footerStrings });
-    };
+    } else {
+        const errorEmbed = new EmbedBuilder()
+            .setTitle("Too many matches to display. Try narrowing your search!")
+        return [errorEmbed, [], ""];
+    }
+    ;
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         unitEmbed.setTitle(`ID: ${unit.id}`);

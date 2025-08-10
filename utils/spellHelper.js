@@ -72,9 +72,14 @@ async function getSpell( spellName, spellCommandData ){
     const spellEmbed = new EmbedBuilder()
         .setImage(BASE_URL + spell.screenshot);
 
-    if (similarMatchesString) {
+    if (similarMatchesString && similarMatchesString.length < 2048) {
         spellEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
+    } else {
+        const errorEmbed = new EmbedBuilder()
+            .setTitle("Too many matches to display. Try narrowing your search!")
+        return [errorEmbed, [], ""];
     }
+
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         spellEmbed.setTitle(`ID: ${spell.id}`);
