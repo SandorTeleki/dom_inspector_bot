@@ -23,11 +23,14 @@ async function getSpell( spellName, spellCommandData ){
     // const text = spellCommandData.content;
     // const unixTimestamp = spellCommandData.createdTimestamp;
 
-    if (spellName in spellAliases){ spellName = spellAliases[spellName] };
     let spell;
     let similarMatchesString;
     let similarMatchesList;
     const regExId = /^(\d+)/;
+
+    if (spellName in spellAliases){
+        spellName = spellAliases[spellName];
+    };
 
     if  (spellName.match(regExId)){
         const spellIdMatch = spellName.match(regExId);
@@ -35,9 +38,9 @@ async function getSpell( spellName, spellCommandData ){
         const { body, statusCode } = await request(BASE_URL + SPELL_URL + '/' + encodeURIComponent(spellId));
         if (statusCode === 404){
             const errorEmbed = new EmbedBuilder()
-            .setTitle("Nothing found. Better luck next time!")
-            .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return errorEmbed;
+                .setTitle("Nothing found. Better luck next time!")
+                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+            return [errorEmbed, [], ""];
         }
         spell  = await body.json();
     } else {

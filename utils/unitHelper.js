@@ -34,7 +34,7 @@ async function getUnit( unitName, unitCommandData ){
     if (unitName in unitAliases){
         unitName = unitAliases[unitName];
     };
-    
+
     //Running for size filtering (w/ fuzzy match) for aliased stuff
     if (unitName.match(regExSplit)){
         let edgecase = unitName.match(regExSplit);
@@ -73,7 +73,7 @@ async function getUnit( unitName, unitCommandData ){
             const errorEmbed = new EmbedBuilder()
                 .setTitle("Nothing found. Better luck next time!")
                 .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return errorEmbed;
+            return [errorEmbed, [], ""];
         }
         unit  = await body.json();
     //Running for everything else (w/ Fuzzy match)

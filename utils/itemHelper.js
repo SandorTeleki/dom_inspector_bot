@@ -41,7 +41,7 @@ async function getItem( itemName, itemCommandData ){
             const errorEmbed = new EmbedBuilder()
                 .setTitle("Nothing found. Better luck next time!")
                 .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return errorEmbed;
+            return [errorEmbed, [], ""];
         }
         item  = await body.json();
     } else {
@@ -86,7 +86,12 @@ async function getItem( itemName, itemCommandData ){
             ])
         }
     }
-    return [ itemEmbed, buttons, buttonPrefix ];
+    if (buttons.length > 0){
+        return [ itemEmbed, buttons, buttonPrefix ];
+    }
+    else {
+        return itemEmbed
+    }
 }
 
 module.exports = { getItem }

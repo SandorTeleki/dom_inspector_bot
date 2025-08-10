@@ -38,9 +38,9 @@ async function getSite( siteName, siteCommandData ){
         const { body, statusCode } = await request(BASE_URL + SITE_URL + '/' + encodeURIComponent(siteId));
         if (statusCode === 404){
             const errorEmbed = new EmbedBuilder()
-            .setTitle("Nothing found. Better luck next time!")
-            .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return errorEmbed;
+                .setTitle("Nothing found. Better luck next time!")
+                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+            return [errorEmbed, [], ""];
         }
         site  = await body.json();
     } else {

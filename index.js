@@ -329,7 +329,7 @@ client.on("messageCreate", async (message) => {
 			const errorEmbed = new EmbedBuilder()
             	.setTitle("Nothing found. Better luck next time!")
             	.setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            await message.reply({ embeds: [errorEmbed]});
+            await message.channel.send({ embeds: [errorEmbed]});
 		}
 	};
 

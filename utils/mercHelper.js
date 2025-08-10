@@ -37,9 +37,9 @@ async function getMerc( mercName, mercCommandData ){
         const { body, statusCode } = await request(BASE_URL + MERC_URL + '/' + encodeURIComponent(mercId));
         if (statusCode === 404){
             const errorEmbed = new EmbedBuilder()
-            .setTitle("Nothing found. Better luck next time!")
-            .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return errorEmbed;
+                .setTitle("Nothing found. Better luck next time!")
+                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+            return [errorEmbed, [], ""];
         }
         merc  = await body.json(); 
     } else {
