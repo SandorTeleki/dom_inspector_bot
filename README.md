@@ -28,7 +28,7 @@ Currently running on Discord.js v14.
 - Remember to grab the bot token.
 - Clone the github repoistory of the Dom_Inspector_Bot and save it locally.
 - Create an config.json file to hold the "clientID", "guildID" and "token" for the bot if you plan to host it on a single server. 
-- If you plan to have your version of the bot on multiple servers, you won't need a clientID or guildID in your config.json file, you will only need your bot token.
+- If you plan to have your version of the bot on multiple servers, you won't need a guildID in your config.json file.
 - If you plan to publish your version of the bot to github, remember to include your token containing file in the .gitignore list.
 - Run `npm install` to install dependencies.
 - Push your slash commands with `node deploy-commands.js` to the servers.

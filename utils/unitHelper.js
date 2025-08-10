@@ -31,7 +31,10 @@ async function getUnit( unitName, unitCommandData ){
     const regExSize = /^.[^0-9]+\s?(\d)/;
     const regExSplit = /^([a-z]+)\s?(\d)/;
 
-    if (unitName in unitAliases){ unitName = unitAliases[unitName] };
+    if (unitName in unitAliases){
+        unitName = unitAliases[unitName];
+    };
+    
     //Running for size filtering (w/ fuzzy match) for aliased stuff
     if (unitName.match(regExSplit)){
         let edgecase = unitName.match(regExSplit);
@@ -68,8 +71,8 @@ async function getUnit( unitName, unitCommandData ){
         const { body, statusCode } = await request(BASE_URL + UNIT_URL + '/' + encodeURIComponent(unitId));
         if (statusCode === 404){
             const errorEmbed = new EmbedBuilder()
-            .setTitle("Nothing found. Better luck next time!")
-            .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+                .setTitle("Nothing found. Better luck next time!")
+                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
             return errorEmbed;
         }
         unit  = await body.json();
@@ -104,7 +107,7 @@ async function getUnit( unitName, unitCommandData ){
     // Building buttons from similarMatchesList
     let buttons = [];
     const buttonPrefix = "unit-";
-    if(similarMatchesList){
+    if (similarMatchesList){
         buttons = buttonCreator(similarMatchesList, buttonPrefix);
     }
 

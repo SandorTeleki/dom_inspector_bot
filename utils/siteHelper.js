@@ -23,11 +23,14 @@ async function getSite( siteName, siteCommandData ){
     // const text = siteCommandData.content;
     // const unixTimestamp = siteCommandData.createdTimestamp;
     
-    if (siteName in siteAliases){ siteName = siteAliases[siteName] };
     let site;
     let similarMatchesString;
     let similarMatchesList;
     const regExId = /^(\d+)/;
+
+    if (siteName in siteAliases){ 
+        siteName = siteAliases[siteName];
+    };
 
     if  (siteName.match(regExId)){
         const siteIdMatch = siteName.match(regExId);
@@ -51,7 +54,7 @@ async function getSite( siteName, siteCommandData ){
     // Building buttons from similarMatchesList
     let buttons = [];
     const buttonPrefix = "site-";
-    if(similarMatchesList){
+    if (similarMatchesList){
         buttons = buttonCreator(similarMatchesList, buttonPrefix);
     }
 

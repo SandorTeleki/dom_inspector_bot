@@ -23,12 +23,14 @@ async function getItem( itemName, itemCommandData ){
     // const text = itemCommandData.content;
     // const unixTimestamp = itemCommandData.createdTimestamp;
 
-
-    if (itemName in itemAliases){ itemName = itemAliases[itemName] };
     let item;
     let similarMatchesString;
     let similarMatchesList;
     const regExId = /^(\d+)/;
+
+    if (itemName in itemAliases){ 
+        itemName = itemAliases[itemName] 
+    };
 
     if  (itemName.match(regExId)){
         const itemIdMatch = itemName.match(regExId);
@@ -37,8 +39,8 @@ async function getItem( itemName, itemCommandData ){
         //console.log('statusCode', statusCode); //Check status code, if needed for debugging
         if (statusCode === 404){
             const errorEmbed = new EmbedBuilder()
-            .setTitle("Nothing found. Better luck next time!")
-            .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+                .setTitle("Nothing found. Better luck next time!")
+                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
             return errorEmbed;
         }
         item  = await body.json();
@@ -53,7 +55,7 @@ async function getItem( itemName, itemCommandData ){
     // Building buttons from similarMatchesList
     let buttons = [];
     const buttonPrefix = "item-";
-    if(similarMatchesList){
+    if (similarMatchesList){
         buttons = buttonCreator(similarMatchesList, buttonPrefix);
     }
 

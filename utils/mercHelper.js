@@ -23,10 +23,13 @@ async function getMerc( mercName, mercCommandData ){
     // const text = mercCommandData.content;
     // const unixTimestamp = mercCommandData.createdTimestamp;
 
-    if (mercName in mercAliases){ mercName = mercAliases[mercName] };
     let merc;
     let similarMatchesString;
     const regExId = /^(\d+)/;
+
+    if (mercName in mercAliases){
+        mercName = mercAliases[mercName];
+    };
 
     if  (mercName.match(regExId)){
         const mercIdMatch = mercName.match(regExId);
