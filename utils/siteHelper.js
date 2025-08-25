@@ -55,8 +55,12 @@ async function getSite( siteName, siteCommandData ){
     let buttons = [];
     const buttonPrefix = "site-";
 
+    // Construct the siteEmbed after obtaining the mentorNote value
+    const siteEmbed = new EmbedBuilder()
+        .setImage(BASE_URL + site.screenshot);
+
     if (similarMatchesString && similarMatchesString.length < 2048) {
-        spellEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
+        siteEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
     } else if (similarMatchesString && similarMatchesString.length >= 2048) {
         const errorEmbed = new EmbedBuilder()
             .setTitle("Too many matches to display. Try narrowing your search!")
@@ -72,10 +76,6 @@ async function getSite( siteName, siteCommandData ){
     const { note: mentorNote, written_by_user: noteAuthor } = row || {};
 
     //console.log("mentorNote: " + mentorNote);
-
-    // Construct the siteEmbed after obtaining the mentorNote value
-    const siteEmbed = new EmbedBuilder()
-        .setImage(BASE_URL + site.screenshot);
 
     if (similarMatchesString) {
         siteEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
