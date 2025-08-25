@@ -74,7 +74,7 @@ async function getSpell( spellName, spellCommandData ){
 
     if (similarMatchesString && similarMatchesString.length < 2048) {
         spellEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
-    } else {
+    } else if (similarMatchesString && similarMatchesString.length >= 2048) {
         const errorEmbed = new EmbedBuilder()
             .setTitle("Too many matches to display. Try narrowing your search!")
         return [errorEmbed, [], ""];

@@ -135,7 +135,7 @@ async function getUnit( unitName, unitCommandData ){
         unitEmbed.setFooter({text: footerStrings + `Other matches [ID#]:\n${similarMatchesString}`})
     } else if (footerStrings.length > 1) {
         unitEmbed.setFooter({ text: footerStrings });
-    } else {
+    } else if (similarMatchesString && similarMatchesString.length >= 2048) {
         const errorEmbed = new EmbedBuilder()
             .setTitle("Too many matches to display. Try narrowing your search!")
         return [errorEmbed, [], ""];

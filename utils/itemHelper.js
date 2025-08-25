@@ -73,9 +73,10 @@ async function getItem( itemName, itemCommandData ){
     const itemEmbed = new EmbedBuilder()
         .setImage(BASE_URL + item.screenshot);
 
+
     if (similarMatchesString && similarMatchesString.length < 2048) {
         itemEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
-    } else {
+    } else if (similarMatchesString && similarMatchesString.length >= 2048) {
         const errorEmbed = new EmbedBuilder()
             .setTitle("Too many matches to display. Try narrowing your search!")
         return [errorEmbed, [], ""];
