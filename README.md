@@ -2,12 +2,13 @@
 
 A Discord interface to [Larzm's Mod Inspector](https://larzm42.github.io/dom5inspector/) via the [dom5api](https://github.com/gtim/dom5api). Currently available on several Dominions related Discord servers like: Immersion, Dominions Game Hub, Ruby, Nexus etc.
 
-Currently running on Discord.js v14.
-
 -----
 
+## Motivation:
+The idea for the bot arose from wanting a quick and easy way to query Larzm's Mod Inspector while having a discussion on Discord without having to go to the website. Particularly important when you are on a mobile device.
+
 ## Plans:
-- Prepare for the release of Dominions 6 (will need to wait for an update to larzm42's dominspector and dom6api first)
+- Implement support for Dominions 6.
 
 ## Currently working on:
 - Multiple mentor note slots.
@@ -23,7 +24,7 @@ Currently running on Discord.js v14.
 - Enable "more + show keys" in screenshots somehow, maybe with emoji-react?
 - Moving away from inspector screenshots to information in the embed itself
 
-## Hosting own version of the bot:
+## Quick Start (or, I want to host my own version of the bot):
 - Create a discord bot through the [Discord Developer Portal](https://discord.com/developers/docs/intro)
 - Remember to grab the bot token.
 - Clone the github repoistory of the Dom_Inspector_Bot and save it locally.
@@ -36,7 +37,7 @@ Currently running on Discord.js v14.
 
 -----
 
-## Sample commands and bot responses:
+## Usage (sample commands and bot responses):
 
 ### Unit:
 
@@ -78,3 +79,6 @@ Currently running on Discord.js v14.
 | ?merc | 1 | Embed with Dante's Stingers | The bot can search for units based on their ID. No similar matches are shown in this case as the search is specific. The bot will return two buttons (one for merc commander and one for merc units) that can be clicked to show further information tied to the specific mercenary |
 | ?merc | a | Embed with Quickspears | Since there are other items with similar names, the bot will shown them in the embed footer, due to merc embed coming with two buttons, there are no separate buttons for similar matches. If it ever becomes a requested feature, it will be added |
 | ?merc | hannibal | Embed with Elephant Corps | The bot has a list of commonly used aliases. Aliases also can return similar matches (not in this case). |
+
+## Contributing:
+- Raising issues and opening PRs are more than welcome! Feel free to head to the bots main development discord server to ask questions about how you can contribute: [Discord Server](https://discord.gg/GXgFXjXAaC).
