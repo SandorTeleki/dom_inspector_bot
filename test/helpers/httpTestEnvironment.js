@@ -1,8 +1,13 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import { createRequire } from 'module';
+import { fileURLToPath } from 'url';
 import sqlite3 from 'sqlite3';
 import { MockAgent, setGlobalDispatcher, getGlobalDispatcher } from 'undici';
+
+const require = createRequire(import.meta.url);
+const fetchScreenshotPath = require.resolve('../../utils/fetchScreenshot.js');
 
 const API_ORIGIN = 'http://localhost:8002';
 
@@ -10,11 +15,24 @@ let tmpDir;
 let mockAgent;
 let previousDispatcher;
 
+function stubFetchScreenshot() {
+    require.cache[fetchScreenshotPath] = {
+        id: fetchScreenshotPath,
+        filename: fetchScreenshotPath,
+        loaded: true,
+        exports: {
+            fetchScreenshot: async () => null,
+        },
+    };
+}
+
 export function getMockAgent() {
     return mockAgent;
 }
 
 export async function initHelperTestEnvironment() {
+    stubFetchScreenshot();
+
     tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dom-bot-test-'));
     process.chdir(tmpDir);
 
