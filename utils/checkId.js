@@ -1,13 +1,16 @@
 const { request } = require('undici');
+const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { BASE_URL } = require('./utils');
 const { sqlSelectNote, sqlGetMentorNote, sqlInsertNote, sqlInsertLog, sqlInsertMentorLog, sqlUpdateNote } = require('./sqlHelper');
 
+const DB_PATH = path.join(__dirname, '..', 'logs.db');
+
 // Initialize sql
 let sql;
 // Connects to DB
-const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE);
+const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE);
 
 let commandResult;
 // Create a new file (folder?) - 'noteHandler.js' - tie to it the varoius functions we need:

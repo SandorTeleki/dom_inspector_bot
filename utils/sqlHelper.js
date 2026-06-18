@@ -1,9 +1,12 @@
+const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
+
+const DB_PATH = path.join(__dirname, '..', 'logs.db');
 
 // Initialize sql
 let sql;
-// Connects to DB
-const db = new sqlite3.Database("./logs.db", sqlite3.OPEN_READWRITE);
+// Connects to DB (path is relative to project root, not process cwd)
+const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE);
 
 // This function is to be used when refactoring checkId function
 function sqlSelectNote(commandUsed, idUsed, serverId){

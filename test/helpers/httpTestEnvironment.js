@@ -2,18 +2,18 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { createRequire } from 'module';
-import { fileURLToPath } from 'url';
-import sqlite3 from 'sqlite3';
 import { MockAgent, setGlobalDispatcher, getGlobalDispatcher } from 'undici';
 
 const require = createRequire(import.meta.url);
 const fetchScreenshotPath = require.resolve('../../utils/fetchScreenshot.js');
+const sqlHelperPath = require.resolve('../../utils/sqlHelper.js');
 
 const API_ORIGIN = 'http://localhost:8002';
 
 let tmpDir;
 let mockAgent;
 let previousDispatcher;
+let originalCwd;
 
 function stubFetchScreenshot() {
     require.cache[fetchScreenshotPath] = {
@@ -26,40 +26,35 @@ function stubFetchScreenshot() {
     };
 }
 
+function stubSqlHelper() {
+    require.cache[sqlHelperPath] = {
+        id: sqlHelperPath,
+        filename: sqlHelperPath,
+        loaded: true,
+        exports: {
+            sqlGetMentorNote: async () => undefined,
+            sqlSelectNote: () => {},
+            sqlInsertNote: () => {},
+            sqlInsertLog: () => {},
+            sqlInsertMentorLog: () => {},
+            sqlUpdateNote: () => {},
+            sqlBuildTables: () => {},
+            sqlDropTables: () => {},
+        },
+    };
+}
+
 export function getMockAgent() {
     return mockAgent;
 }
 
 export async function initHelperTestEnvironment() {
     stubFetchScreenshot();
+    stubSqlHelper();
 
+    originalCwd = process.cwd();
     tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dom-bot-test-'));
     process.chdir(tmpDir);
-
-    await new Promise((resolve, reject) => {
-        const db = new sqlite3.Database('./logs.db');
-        db.exec(
-            `CREATE TABLE IF NOT EXISTS mentor_notes (
-                class TEXT,
-                class_id INTEGER,
-                name TEXT,
-                note TEXT,
-                guild_name TEXT,
-                guild_id INTEGER,
-                written_time INTEGER,
-                written_by_user TEXT
-            )`,
-            (err) => {
-                db.close((closeErr) => {
-                    if (err || closeErr) {
-                        reject(err || closeErr);
-                    } else {
-                        resolve();
-                    }
-                });
-            }
-        );
-    });
 
     previousDispatcher = getGlobalDispatcher();
     mockAgent = new MockAgent();
@@ -73,6 +68,9 @@ export async function teardownHelperTestEnvironment() {
     }
     if (mockAgent) {
         await mockAgent.close();
+    }
+    if (originalCwd) {
+        process.chdir(originalCwd);
     }
     if (tmpDir) {
         fs.rmSync(tmpDir, { recursive: true, force: true });
