@@ -14,13 +14,13 @@ const { getUnit } = require('./utils/helpers/unitHelper');
 const { getHelpEmbed } = require('./utils/helpEmbed');
 const {
 	prefix,
-	noteLengthLimitMin,
-	noteLengthLimitMax,
+	// noteLengthLimitMin,
+	// noteLengthLimitMax,
 	WRONG_BOT_URL,
 	ALL_BOOLI_URL,
 } = require('./utils/utils');
-const { mentorWhitelist, channelWhiteList } = require('./utils/whitelist');
-const { checkId } = require('./utils/checkId');
+// const { mentorWhitelist, channelWhiteList } = require('./utils/whitelist');
+// const { checkId } = require('./utils/checkId');
 const { sqlBuildTables, sqlDropTables } = require('./utils/sqlHelper');
 const { createLog } = require('./utils/logHelper');
 const { buttonWrapper } = require('./utils/buttonWrapper'); 
@@ -568,6 +568,7 @@ client.on("messageCreate", async (message) => {
 		createLogEmbed(message);
 	}
 
+	/*
 	// Note command
 	if (message.content.startsWith(`${prefix}note`)){
 		// Parts of the message we need to use later
@@ -625,6 +626,7 @@ client.on("messageCreate", async (message) => {
 		//Checking if ID exists
 		checkId( message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp); 
 	}
+	*/
 });
 
 // Logs slash command interaction - (also sends an embed with all the information to a prespecified Discord channel)

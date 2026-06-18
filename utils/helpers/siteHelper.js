@@ -2,17 +2,17 @@ const { EmbedBuilder } = require('discord.js');
 const { request } = require('undici');
 
 const { FUZZY_MATCH_URL, SITE_URL, BASE_URL } = require('../utils');
-const { mentorWhitelist, channelWhiteList } = require('../whitelist');
+// const { mentorWhitelist, channelWhiteList } = require('../whitelist');
 const { siteAliases } = require('../aliases/siteAliases');
 const { similarMatchesStringify, similarMatchesArray } =require('../similarMatches');
-const { sqlGetMentorNote } = require('../sqlHelper');
+// const { sqlGetMentorNote } = require('../sqlHelper');
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
 
 async function getSite( siteName, siteCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
-    const channelId = (siteCommandData.type === 0 ? siteCommandData.channelId : siteCommandData.channel.id );
-    const serverId = (siteCommandData.type === 0 ? siteCommandData.guildId : siteCommandData.guild.id );
+    // const channelId = (siteCommandData.type === 0 ? siteCommandData.channelId : siteCommandData.channel.id );
+    // const serverId = (siteCommandData.type === 0 ? siteCommandData.guildId : siteCommandData.guild.id );
     
     //----Other useful parts of the message/interaction----//
     // const server = siteCommandData.guild.name;
@@ -79,25 +79,25 @@ async function getSite( siteName, siteCommandData ){
         return [errorEmbed, [], "", []];
     }
 
-    let type = "site";
-    let typeId = site.id;
-
-    const row = await sqlGetMentorNote(type, typeId, serverId);
-
-    // Destructuring the note property from the row object
-    const { note: mentorNote, written_by_user: noteAuthor } = row || {};
-    //console.log("mentorNote: " + mentorNote);
-
-    // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
-    if (channelWhiteList.some((item)=>{ return item === channelId })) {
-        siteEmbed.setTitle(`ID: ${site.id}`);
-        if(mentorNote !== undefined){
-            siteEmbed.addFields([
-                {name: "Mentor scribble:", value: `||${mentorNote}||`, inline: true},
-                {name: "Written by:", value: noteAuthor, inline: true}
-            ])  
-        }
-    }
+    // let type = "site";
+    // let typeId = site.id;
+    //
+    // const row = await sqlGetMentorNote(type, typeId, serverId);
+    //
+    // // Destructuring the note property from the row object
+    // const { note: mentorNote, written_by_user: noteAuthor } = row || {};
+    // //console.log("mentorNote: " + mentorNote);
+    //
+    // // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
+    // if (channelWhiteList.some((item)=>{ return item === channelId })) {
+    //     siteEmbed.setTitle(`ID: ${site.id}`);
+    //     if(mentorNote !== undefined){
+    //         siteEmbed.addFields([
+    //             {name: "Mentor scribble:", value: `||${mentorNote}||`, inline: true},
+    //             {name: "Written by:", value: noteAuthor, inline: true}
+    //         ])  
+    //     }
+    // }
     const files = attachment ? [attachment] : [];
     return [ siteEmbed, buttons, buttonPrefix, files ];
 }

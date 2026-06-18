@@ -2,17 +2,17 @@ const { EmbedBuilder } = require('discord.js');
 const { request } = require('undici');
 
 const { FUZZY_MATCH_URL, SPELL_URL, BASE_URL } = require('../utils');
-const { mentorWhitelist, channelWhiteList } = require('../whitelist');
+// const { mentorWhitelist, channelWhiteList } = require('../whitelist');
 const { spellAliases } = require('../aliases/spellAliases');
 const { similarMatchesStringify, similarMatchesArray } = require('../similarMatches');
-const { sqlGetMentorNote } = require('../sqlHelper');
+// const { sqlGetMentorNote } = require('../sqlHelper');
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
 
 async function getSpell( spellName, spellCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
-    const channelId = (spellCommandData.type === 0 ? spellCommandData.channelId : spellCommandData.channel.id );
-    const serverId = (spellCommandData.type === 0 ? spellCommandData.guildId : spellCommandData.guild.id );
+    // const channelId = (spellCommandData.type === 0 ? spellCommandData.channelId : spellCommandData.channel.id );
+    // const serverId = (spellCommandData.type === 0 ? spellCommandData.guildId : spellCommandData.guild.id );
     
     //----Other useful parts of the message/interaction----//
     // const server = spellCommandData.guild.name;
@@ -66,15 +66,15 @@ async function getSpell( spellName, spellCommandData ){
         buttons = buttonCreator(similarMatchesList, buttonPrefix);
     }
 
-    let type = "spell";
-    let typeId = spell.id;
-
-    const row = await sqlGetMentorNote(type, typeId, serverId);
-
-    // Destructuring the note property from the row object
-    const { note: mentorNote, written_by_user: noteAuthor } = row || {};
-
-    //console.log("mentorNote: " + mentorNote);
+    // let type = "spell";
+    // let typeId = spell.id;
+    //
+    // const row = await sqlGetMentorNote(type, typeId, serverId);
+    //
+    // // Destructuring the note property from the row object
+    // const { note: mentorNote, written_by_user: noteAuthor } = row || {};
+    //
+    // //console.log("mentorNote: " + mentorNote);
 
     // Fetch the screenshot as a file attachment so Discord can display it in the embed
     const screenshotFilename = `spell_${spell.id}.png`;
@@ -93,15 +93,15 @@ async function getSpell( spellName, spellCommandData ){
     }
 
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
-    if (channelWhiteList.some((item)=>{ return item === channelId })) {
-        spellEmbed.setTitle(`ID: ${spell.id}`);
-        if(mentorNote !== undefined){
-            spellEmbed.addFields([
-                {name: "Mentor scribble:", value: `||${mentorNote}||`, inline: true},
-                {name: "Written by:", value: noteAuthor, inline: true}
-            ])        
-        }
-    }
+    // if (channelWhiteList.some((item)=>{ return item === channelId })) {
+    //     spellEmbed.setTitle(`ID: ${spell.id}`);
+    //     if(mentorNote !== undefined){
+    //         spellEmbed.addFields([
+    //             {name: "Mentor scribble:", value: `||${mentorNote}||`, inline: true},
+    //             {name: "Written by:", value: noteAuthor, inline: true}
+    //         ])        
+    //     }
+    // }
     const files = attachment ? [attachment] : [];
     return [ spellEmbed, buttons, buttonPrefix, files ];    
 }

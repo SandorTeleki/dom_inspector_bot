@@ -9,6 +9,7 @@ let sql;
 const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE);
 
 // This function is to be used when refactoring checkId function
+/*
 function sqlSelectNote(commandUsed, idUsed, serverId){
     sql = `SELECT class, class_id FROM mentor_notes WHERE class = ? AND class_id = ? AND guild_id = ?`
     db.get(sql,[commandUsed,idUsed,serverId],(err, row) => {
@@ -42,13 +43,6 @@ function sqlInsertNote(commandUsed,idUsed,commandName,noteWritten,server,serverI
     });
 }
 
-function sqlInsertLog(server,serverId,channelName,channelId,user,userId,text,unixTimestamp){
-    sql = `INSERT INTO logs(server_name,server_id,channel_name,channel_id,user_name,user_id,chat_command,unix_timestamp) VALUES (?,?,?,?,?,?,?,?)`
-    db.run(sql,[server,serverId,channelName,channelId,user,userId,text,unixTimestamp],(err) => {
-        if(err) return console.error(err.message);
-    });
-}
-
 function sqlInsertMentorLog(commandUsed,idUsed,commandName,noteWritten,server,serverId,unixTimestamp,user){
     sql = `INSERT INTO mentor_logs(class,class_id,name,note,guild_name,guild_id,written_time,written_by_user) VALUES (?,?,?,?,?,?,?,?)`
     db.run(sql,[commandUsed,idUsed,commandName,noteWritten,server,serverId,unixTimestamp,user],(err) => {
@@ -59,6 +53,14 @@ function sqlInsertMentorLog(commandUsed,idUsed,commandName,noteWritten,server,se
 function sqlUpdateNote(noteWritten,user,commandUsed,idUsed,serverId){
     sql = `UPDATE mentor_notes SET note = ?, written_by_user = ? WHERE class = ? AND class_id = ? AND guild_id = ?`
     db.run(sql,[noteWritten,user,commandUsed,idUsed,serverId],(err)=> {
+        if(err) return console.error(err.message);
+    });
+}
+*/
+
+function sqlInsertLog(server,serverId,channelName,channelId,user,userId,text,unixTimestamp){
+    sql = `INSERT INTO logs(server_name,server_id,channel_name,channel_id,user_name,user_id,chat_command,unix_timestamp) VALUES (?,?,?,?,?,?,?,?)`
+    db.run(sql,[server,serverId,channelName,channelId,user,userId,text,unixTimestamp],(err) => {
         if(err) return console.error(err.message);
     });
 }
@@ -77,6 +79,7 @@ function sqlBuildTables(){
     db.run(sql);
 
     // Create table to store mentor notes
+    /*
     sql = `CREATE TABLE IF NOT EXISTS mentor_notes (
         class TEXT,
         class_id INTEGER,
@@ -99,12 +102,22 @@ function sqlBuildTables(){
         written_time INTEGER,
         written_by_user TEXT)`;
     db.run(sql);
+    */
 }
 
 function sqlDropTables(){
     db.run("DROP TABLE logs");
-    db.run("DROP TABLE mentor_notes");
-    db.run("DROP TABLE mentor_logs");
+    // db.run("DROP TABLE mentor_notes");
+    // db.run("DROP TABLE mentor_logs");
 }
 
-module.exports = { sqlSelectNote, sqlGetMentorNote, sqlInsertNote, sqlInsertLog, sqlInsertMentorLog, sqlUpdateNote, sqlBuildTables, sqlDropTables }
+module.exports = {
+    // sqlSelectNote,
+    // sqlGetMentorNote,
+    // sqlInsertNote,
+    sqlInsertLog,
+    // sqlInsertMentorLog,
+    // sqlUpdateNote,
+    sqlBuildTables,
+    sqlDropTables,
+}

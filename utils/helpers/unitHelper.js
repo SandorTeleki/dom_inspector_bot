@@ -2,17 +2,17 @@ const { EmbedBuilder } = require('discord.js');
 const { request } = require('undici');
 
 const { FUZZY_MATCH_URL, UNIT_URL, BASE_URL } = require('../utils');
-const { mentorWhitelist, channelWhiteList } = require('../whitelist');
+// const { mentorWhitelist, channelWhiteList } = require('../whitelist');
 const { unitAliases } = require('../aliases/unitAliases');
 const { similarMatchesStringify, similarMatchesStringifyNoSlice, similarMatchesArray } = require('../similarMatches');
-const { sqlGetMentorNote } = require('../sqlHelper');
+// const { sqlGetMentorNote } = require('../sqlHelper');
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
 
 async function getUnit( unitName, unitCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
-    const channelId = (unitCommandData.type === 0 ? unitCommandData.channelId : unitCommandData.channel.id );
-    const serverId = (unitCommandData.type === 0 ? unitCommandData.guildId : unitCommandData.guild.id );
+    // const channelId = (unitCommandData.type === 0 ? unitCommandData.channelId : unitCommandData.channel.id );
+    // const serverId = (unitCommandData.type === 0 ? unitCommandData.guildId : unitCommandData.guild.id );
     
     //----Other useful parts of the message/interaction----//
     //const server = unitCommandData.guild.name;
@@ -119,15 +119,15 @@ async function getUnit( unitName, unitCommandData ){
         buttons = buttonCreator(similarMatchesList, buttonPrefix);
     }
 
-    const type = "unit";
-    let typeId = unit.id;
-
-    const row = await sqlGetMentorNote(type, typeId, serverId);
-
-    // Destructuring the note property from the row object
-    const { note: mentorNote, written_by_user: noteAuthor } = row || {};
-
-    //console.log("Mentor note: " + mentorNote);
+    // const type = "unit";
+    // let typeId = unit.id;
+    //
+    // const row = await sqlGetMentorNote(type, typeId, serverId);
+    //
+    // // Destructuring the note property from the row object
+    // const { note: mentorNote, written_by_user: noteAuthor } = row || {};
+    //
+    // //console.log("Mentor note: " + mentorNote);
 
     // Fetch the screenshot as a file attachment so Discord can display it in the embed
     const screenshotFilename = `unit_${unit.id}.png`;
@@ -154,15 +154,15 @@ async function getUnit( unitName, unitCommandData ){
     }
     ;
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
-    if (channelWhiteList.some((item)=>{ return item === channelId })) {
-        unitEmbed.setTitle(`ID: ${unit.id}`);
-        if(mentorNote !== undefined){
-            unitEmbed.addFields([
-                {name: "Mentor scribble:", value: `||${mentorNote}||`, inline: true},
-                {name: "Written by:", value: noteAuthor, inline: true}
-            ])
-        }
-    }  
+    // if (channelWhiteList.some((item)=>{ return item === channelId })) {
+    //     unitEmbed.setTitle(`ID: ${unit.id}`);
+    //     if(mentorNote !== undefined){
+    //         unitEmbed.addFields([
+    //             {name: "Mentor scribble:", value: `||${mentorNote}||`, inline: true},
+    //             {name: "Written by:", value: noteAuthor, inline: true}
+    //         ])
+    //     }
+    // }  
     const files = attachment ? [attachment] : [];
     return [ unitEmbed, buttons, buttonPrefix, files ];
 }

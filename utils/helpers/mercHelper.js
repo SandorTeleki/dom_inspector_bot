@@ -3,16 +3,16 @@ const { ButtonBuilder, ButtonStyle } = require('discord.js');
 const { request } = require('undici');
 
 const { FUZZY_MATCH_URL, MERC_URL, BASE_URL } = require('../utils');
-const { mentorWhitelist, channelWhiteList } = require('../whitelist');
+// const { mentorWhitelist, channelWhiteList } = require('../whitelist');
 const { mercAliases } =require('../aliases/mercAliases');
 const { similarMatchesStringify } =require('../similarMatches');
-const { sqlGetMentorNote } = require('../sqlHelper');
+// const { sqlGetMentorNote } = require('../sqlHelper');
 const { fetchScreenshot } = require('../fetchScreenshot');
 
 async function getMerc( mercName, mercCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
-    const channelId = (mercCommandData.type === 0 ? mercCommandData.channelId : mercCommandData.channel.id );
-    const serverId = (mercCommandData.type === 0 ? mercCommandData.guildId : mercCommandData.guild.id );
+    // const channelId = (mercCommandData.type === 0 ? mercCommandData.channelId : mercCommandData.channel.id );
+    // const serverId = (mercCommandData.type === 0 ? mercCommandData.guildId : mercCommandData.guild.id );
     
     //----Other useful parts of the message/interaction----//
     // const server = mercCommandData.guild.name;
@@ -58,17 +58,17 @@ async function getMerc( mercName, mercCommandData ){
     }; 
     //console.log(merc);
 
-    let type = "merc";
-    let typeId = merc.id;
-
-    const row = await sqlGetMentorNote(type, typeId, serverId);
-
-    // Destructuring the note property from the row object
-    const { note: mentorNote, written_by_user: noteAuthor } = row || {};
-
-    //console.log("mentorNote: " + mentorNote);
-
-    // Construct the mercEmbed after obtaining the mentorNote value
+    // let type = "merc";
+    // let typeId = merc.id;
+    //
+    // const row = await sqlGetMentorNote(type, typeId, serverId);
+    //
+    // // Destructuring the note property from the row object
+    // const { note: mentorNote, written_by_user: noteAuthor } = row || {};
+    //
+    // //console.log("mentorNote: " + mentorNote);
+    //
+    // // Construct the mercEmbed after obtaining the mentorNote value
     const mercFilename = `merc_${merc.id}.png`;
     const mercAttachment = await fetchScreenshot(merc.image, mercFilename);
 
@@ -84,17 +84,17 @@ async function getMerc( mercName, mercCommandData ){
     }
 
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
-    if (channelWhiteList.some((item)=>{ return item === channelId })) {
-        if(mentorNote !== undefined){
-            mercEmbed.addFields([
-                {name: "Mentor scribble:", value: `||${mentorNote}||`, inline: true},
-                {name: "Written by:", value: noteAuthor, inline: true},
-                {name: "ID:", value: `${merc.id}`, inline: true},
-            ])
-        } else {
-            mercEmbed.setTitle(`ID: ${merc.id}`)
-        }
-    }
+    // if (channelWhiteList.some((item)=>{ return item === channelId })) {
+    //     if(mentorNote !== undefined){
+    //         mercEmbed.addFields([
+    //             {name: "Mentor scribble:", value: `||${mentorNote}||`, inline: true},
+    //             {name: "Written by:", value: noteAuthor, inline: true},
+    //             {name: "ID:", value: `${merc.id}`, inline: true},
+    //         ])
+    //     } else {
+    //         mercEmbed.setTitle(`ID: ${merc.id}`)
+    //     }
+    // }
     //Buttons
     const mercLeaderButton = new ButtonBuilder()
         .setLabel(`Merc leader: ${merc.bossname} (ID: ${merc.com})`)
