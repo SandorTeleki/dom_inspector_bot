@@ -2,12 +2,12 @@ const { EmbedBuilder } = require('discord.js');
 const { ButtonBuilder, ButtonStyle } = require('discord.js');
 const { request } = require('undici');
 
-const { FUZZY_MATCH_URL, MERC_URL, BASE_URL } = require('./utils');
-const { mentorWhitelist, channelWhiteList } = require('./whitelist');
-const { mercAliases } =require('./mercAliases');
-const { similarMatchesStringify } =require('./similarMatches');
-const { sqlGetMentorNote } = require('./sqlHelper');
-const { fetchScreenshot } = require('./fetchScreenshot');
+const { FUZZY_MATCH_URL, MERC_URL, BASE_URL } = require('../utils');
+const { mentorWhitelist, channelWhiteList } = require('../whitelist');
+const { mercAliases } =require('../aliases/mercAliases');
+const { similarMatchesStringify } =require('../similarMatches');
+const { sqlGetMentorNote } = require('../sqlHelper');
+const { fetchScreenshot } = require('../fetchScreenshot');
 
 async function getMerc( mercName, mercCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)

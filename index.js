@@ -6,11 +6,11 @@ const { token } = require('./config.json');
 const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js'); //for buttons
 
-const { getItem } = require('./utils/itemHelper');
-const { getSpell } = require('./utils/spellHelper');
-const { getMerc } = require('./utils/mercHelper');
-const { getSite } = require('./utils/siteHelper');
-const { getUnit } = require('./utils/unitHelper');
+const { getItem } = require('./utils/helpers/itemHelper');
+const { getSpell } = require('./utils/helpers/spellHelper');
+const { getMerc } = require('./utils/helpers/mercHelper');
+const { getSite } = require('./utils/helpers/siteHelper');
+const { getUnit } = require('./utils/helpers/unitHelper');
 const { getHelpEmbed } = require('./utils/helpEmbed');
 const {
 	prefix,

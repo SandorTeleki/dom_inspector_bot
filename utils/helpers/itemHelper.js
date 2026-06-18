@@ -1,13 +1,13 @@
 const { EmbedBuilder } = require('discord.js');
 const { request } = require('undici');
 
-const { FUZZY_MATCH_URL, ITEM_URL, BASE_URL } = require('./utils');
-const { mentorWhitelist, channelWhiteList } = require('./whitelist');
-const { itemAliases } = require('./itemAliases');
-const { similarMatchesStringify, similarMatchesArray } =require('./similarMatches');
-const { sqlGetMentorNote } = require('./sqlHelper');
-const { buttonCreator } = require('./buttonCreator');
-const { fetchScreenshot } = require('./fetchScreenshot');
+const { FUZZY_MATCH_URL, ITEM_URL, BASE_URL } = require('../utils');
+const { mentorWhitelist, channelWhiteList } = require('../whitelist');
+const { itemAliases } = require('../aliases/itemAliases');
+const { similarMatchesStringify, similarMatchesArray } =require('../similarMatches');
+const { sqlGetMentorNote } = require('../sqlHelper');
+const { buttonCreator } = require('../buttonCreator');
+const { fetchScreenshot } = require('../fetchScreenshot');
 
 async function getItem( itemName, itemCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)

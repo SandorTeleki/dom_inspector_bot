@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ComponentType } = require('discord.js');
 
-const { getMerc } = require('../../utils/mercHelper');
+const { getMerc } = require('../../utils/helpers/mercHelper');
 const { createLog } = require('../../utils/logHelper');
 
 module.exports = {
