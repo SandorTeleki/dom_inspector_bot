@@ -7,6 +7,7 @@ const { unitAliases } = require('./unitAliases');
 const { similarMatchesStringify, similarMatchesStringifyNoSlice, similarMatchesArray } = require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 const { buttonCreator } = require('./buttonCreator');
+const { fetchScreenshot } = require('./fetchScreenshot');
 
 async function getUnit( unitName, unitCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -73,9 +74,16 @@ async function getUnit( unitName, unitCommandData ){
             const errorEmbed = new EmbedBuilder()
                 .setTitle("Nothing found. Better luck next time!")
                 .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], ""];
+            return [errorEmbed, [], "", []];
         }
         unit  = await body.json();
+        if (unit.units) unit = unit.units[0];
+        if (!unit) {
+            const errorEmbed = new EmbedBuilder()
+                .setTitle("Nothing found. Better luck next time!")
+                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+            return [errorEmbed, [], "", []];
+        }
     //Running for everything else (w/ Fuzzy match)
     } else {
         const regExSizeMatch = unitName.match(regExSize);
@@ -121,9 +129,13 @@ async function getUnit( unitName, unitCommandData ){
 
     //console.log("Mentor note: " + mentorNote);
 
+    // Fetch the screenshot as a file attachment so Discord can display it in the embed
+    const screenshotFilename = `unit_${unit.id}.png`;
+    const attachment = await fetchScreenshot(unit.image, screenshotFilename);
+
     // Construct the unitEmbed after obtaining the mentorNote value
     const unitEmbed = new EmbedBuilder()
-        .setImage(BASE_URL + unit.screenshot);
+        .setImage(attachment ? `attachment://${screenshotFilename}` : null);
 
     if (unit.randompaths !== undefined){
         for ( const randompath of unit.randompaths ) {
@@ -138,7 +150,7 @@ async function getUnit( unitName, unitCommandData ){
     } else if (similarMatchesString && similarMatchesString.length >= 2048) {
         const errorEmbed = new EmbedBuilder()
             .setTitle("Too many matches to display. Try narrowing your search!")
-        return [errorEmbed, [], ""];
+        return [errorEmbed, [], "", []];
     }
     ;
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
@@ -151,7 +163,8 @@ async function getUnit( unitName, unitCommandData ){
             ])
         }
     }  
-    return [ unitEmbed, buttons, buttonPrefix ];
+    const files = attachment ? [attachment] : [];
+    return [ unitEmbed, buttons, buttonPrefix, files ];
 }
 
 module.exports = { getUnit }

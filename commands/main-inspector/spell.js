@@ -15,12 +15,12 @@ module.exports = {
         let spellName = interactionOG.options.getString('spell_name');
 		let spellCommandData = interactionOG;
 
-		const [spellEmbed, buttons, buttonPrefix ] = await getSpell( spellName, spellCommandData );
+		const [spellEmbed, buttons, buttonPrefix, files ] = await getSpell( spellName, spellCommandData );
 		let maxButtonsToClick = buttons.length;
 		const listID = buttons.map(button => button.data.custom_id);
 		const buttonsArray = buttonWrapper(buttons);
 
-        const response = await interactionOG.reply({ embeds: [spellEmbed], components: buttonsArray });
+        const response = await interactionOG.reply({ embeds: [spellEmbed], components: buttonsArray, files });
 		
 		const collector =  response.createMessageComponentCollector({
 			componentType: ComponentType.Button,
@@ -35,10 +35,10 @@ module.exports = {
 				const isInListID = listID.some(id => id === interactionCustomID)
 				if (isInListID){
 					const justTheID = interaction.customId.replace(buttonPrefix, "");
-					const [ spellEmbed ] = await getSpell( justTheID, interaction );
+					const [ spellEmbed, , , spellFiles ] = await getSpell( justTheID, interaction );
 					createLog(interaction);
 
-					await interaction.reply({embeds: [spellEmbed]});
+					await interaction.reply({embeds: [spellEmbed], files: spellFiles});
 					let arrayOfActionRows = interaction.message.components;
 					const buttons = [];
 					for (const actionRow of arrayOfActionRows){

@@ -7,6 +7,7 @@ const { itemAliases } = require('./itemAliases');
 const { similarMatchesStringify, similarMatchesArray } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 const { buttonCreator } = require('./buttonCreator');
+const { fetchScreenshot } = require('./fetchScreenshot');
 
 async function getItem( itemName, itemCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -41,9 +42,16 @@ async function getItem( itemName, itemCommandData ){
             const errorEmbed = new EmbedBuilder()
                 .setTitle("Nothing found. Better luck next time!")
                 .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], ""];
+            return [errorEmbed, [], "", []];
         }
         item  = await body.json();
+        if (item.items) item = item.items[0];
+        if (!item) {
+            const errorEmbed = new EmbedBuilder()
+                .setTitle("Nothing found. Better luck next time!")
+                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+            return [errorEmbed, [], "", []];
+        }
     } else {
         const { body } = await request(BASE_URL + ITEM_URL + FUZZY_MATCH_URL + encodeURIComponent(itemName));
         let { items } = await body.json();
@@ -69,9 +77,13 @@ async function getItem( itemName, itemCommandData ){
 
     //console.log("mentorNote: " + mentorNote);
 
+    // Fetch the screenshot as a file attachment so Discord can display it in the embed
+    const screenshotFilename = `item_${item.id}.png`;
+    const attachment = await fetchScreenshot(item.image, screenshotFilename);
+
     // Construct the itemEmbed after obtaining the mentorNote value
     const itemEmbed = new EmbedBuilder()
-        .setImage(BASE_URL + item.screenshot);
+        .setImage(attachment ? `attachment://${screenshotFilename}` : null);
 
 
     if (similarMatchesString && similarMatchesString.length < 2048) {
@@ -79,7 +91,7 @@ async function getItem( itemName, itemCommandData ){
     } else if (similarMatchesString && similarMatchesString.length >= 2048) {
         const errorEmbed = new EmbedBuilder()
             .setTitle("Too many matches to display. Try narrowing your search!")
-        return [errorEmbed, [], ""];
+        return [errorEmbed, [], "", []];
     }
 
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
@@ -93,7 +105,8 @@ async function getItem( itemName, itemCommandData ){
         }
     }
     
-    return [ itemEmbed, buttons, buttonPrefix ];
+    const files = attachment ? [attachment] : [];
+    return [ itemEmbed, buttons, buttonPrefix, files ];
  
 }
 

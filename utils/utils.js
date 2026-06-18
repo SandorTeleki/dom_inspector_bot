@@ -5,7 +5,7 @@ module.exports = {
     minRandomNumber: 1,
     maxRandomNumber: 999,
 
-    BASE_URL: 'https://dom5api.illwiki.com',
+    BASE_URL: 'http://localhost:8002',
     ITEM_URL: '/items',
     SPELL_URL: '/spells',
     MERC_URL: '/mercs',

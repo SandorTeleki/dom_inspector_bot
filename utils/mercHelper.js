@@ -7,6 +7,7 @@ const { mentorWhitelist, channelWhiteList } = require('./whitelist');
 const { mercAliases } =require('./mercAliases');
 const { similarMatchesStringify } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
+const { fetchScreenshot } = require('./fetchScreenshot');
 
 async function getMerc( mercName, mercCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -39,9 +40,16 @@ async function getMerc( mercName, mercCommandData ){
             const errorEmbed = new EmbedBuilder()
                 .setTitle("Nothing found. Better luck next time!")
                 .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], ""];
+            return [errorEmbed, [], "", []];
         }
-        merc  = await body.json(); 
+        merc  = await body.json();
+        if (merc.mercs) merc = merc.mercs[0];
+        if (!merc) {
+            const errorEmbed = new EmbedBuilder()
+                .setTitle("Nothing found. Better luck next time!")
+                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+            return [errorEmbed, [], "", []];
+        }
     } else {
         const { body } = await request(BASE_URL + MERC_URL + FUZZY_MATCH_URL + encodeURIComponent(mercName));
         let { mercs } = await body.json();
@@ -61,15 +69,18 @@ async function getMerc( mercName, mercCommandData ){
     //console.log("mentorNote: " + mentorNote);
 
     // Construct the mercEmbed after obtaining the mentorNote value
+    const mercFilename = `merc_${merc.id}.png`;
+    const mercAttachment = await fetchScreenshot(merc.image, mercFilename);
+
     const mercEmbed = new EmbedBuilder()
-        .setImage(BASE_URL + merc.screenshot);
+        .setImage(mercAttachment ? `attachment://${mercFilename}` : null);
 
     if (similarMatchesString && similarMatchesString.length < 2048) {
         mercEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
     } else {
         const errorEmbed = new EmbedBuilder()
             .setTitle("Too many matches to display. Try narrowing your search!")
-        return [errorEmbed, [], ""];
+        return [errorEmbed, [], "", []];
     }
 
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
@@ -96,19 +107,27 @@ async function getMerc( mercName, mercCommandData ){
         .setCustomId('merc-unit');
 
     //Embeds
+    const leaderFilename = `merc_leader_${merc.commander_id}.png`;
+    const leaderAttachment = await fetchScreenshot(`/units/${merc.commander_id}/screenshot`, leaderFilename);
+
+    const troopFilename = `merc_troop_${merc.unit_id}.png`;
+    const troopAttachment = await fetchScreenshot(`/units/${merc.unit_id}/screenshot`, troopFilename);
+
     const mercLeaderEmbed = new EmbedBuilder()
-        .setImage(BASE_URL+'/units/'+ merc.commander_id+'/screenshot')
+        .setImage(leaderAttachment ? `attachment://${leaderFilename}` : null)
         .addFields(
             {name: 'Name of mercenary group leader:', value: `${merc.bossname}`, inline: true},
             {name: 'ID:', value: `${merc.commander_id}`, inline: true},
         );
     const mercTroopEmbed = new EmbedBuilder()
-        .setImage(BASE_URL+'/units/'+ merc.unit_id+'/screenshot')
+        .setImage(troopAttachment ? `attachment://${troopFilename}` : null)
         .addFields(
             {name:'Number of units:', value: `${merc.nrunits}`, inline: true},
             {name: 'ID:', value: `${merc.unit_id}`, inline: true},
         );
-    return [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton];
+
+    const files = [mercAttachment, leaderAttachment, troopAttachment].filter(Boolean);
+    return [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton, files];
 }
 
 module.exports = { getMerc }

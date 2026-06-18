@@ -7,6 +7,7 @@ const { spellAliases } = require('./spellAliases');
 const { similarMatchesStringify, similarMatchesArray } = require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 const { buttonCreator } = require('./buttonCreator');
+const { fetchScreenshot } = require('./fetchScreenshot');
 
 async function getSpell( spellName, spellCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -40,9 +41,16 @@ async function getSpell( spellName, spellCommandData ){
             const errorEmbed = new EmbedBuilder()
                 .setTitle("Nothing found. Better luck next time!")
                 .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], ""];
+            return [errorEmbed, [], "", []];
         }
         spell  = await body.json();
+        if (spell.spells) spell = spell.spells[0];
+        if (!spell) {
+            const errorEmbed = new EmbedBuilder()
+                .setTitle("Nothing found. Better luck next time!")
+                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+            return [errorEmbed, [], "", []];
+        }
     } else {
         const { body } = await request(BASE_URL + SPELL_URL + FUZZY_MATCH_URL + encodeURIComponent(spellName));
         let { spells } = await body.json();
@@ -68,16 +76,20 @@ async function getSpell( spellName, spellCommandData ){
 
     //console.log("mentorNote: " + mentorNote);
 
+    // Fetch the screenshot as a file attachment so Discord can display it in the embed
+    const screenshotFilename = `spell_${spell.id}.png`;
+    const attachment = await fetchScreenshot(spell.image, screenshotFilename);
+
     // Construct the spellEmbed after obtaining the mentorNote value
     const spellEmbed = new EmbedBuilder()
-        .setImage(BASE_URL + spell.screenshot);
+        .setImage(attachment ? `attachment://${screenshotFilename}` : null);
 
     if (similarMatchesString && similarMatchesString.length < 2048) {
         spellEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
     } else if (similarMatchesString && similarMatchesString.length >= 2048) {
         const errorEmbed = new EmbedBuilder()
             .setTitle("Too many matches to display. Try narrowing your search!")
-        return [errorEmbed, [], ""];
+        return [errorEmbed, [], "", []];
     }
 
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
@@ -90,7 +102,8 @@ async function getSpell( spellName, spellCommandData ){
             ])        
         }
     }
-    return [ spellEmbed, buttons, buttonPrefix ];    
+    const files = attachment ? [attachment] : [];
+    return [ spellEmbed, buttons, buttonPrefix, files ];    
 }
 
 module.exports = { getSpell }

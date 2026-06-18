@@ -7,6 +7,7 @@ const { siteAliases } = require('./siteAliases');
 const { similarMatchesStringify, similarMatchesArray } =require('./similarMatches');
 const { sqlGetMentorNote } = require('./sqlHelper');
 const { buttonCreator } = require('./buttonCreator');
+const { fetchScreenshot } = require('./fetchScreenshot');
 
 async function getSite( siteName, siteCommandData ){
     //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -40,9 +41,16 @@ async function getSite( siteName, siteCommandData ){
             const errorEmbed = new EmbedBuilder()
                 .setTitle("Nothing found. Better luck next time!")
                 .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], ""];
+            return [errorEmbed, [], "", []];
         }
         site  = await body.json();
+        if (site.sites) site = site.sites[0];
+        if (!site) {
+            const errorEmbed = new EmbedBuilder()
+                .setTitle("Nothing found. Better luck next time!")
+                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
+            return [errorEmbed, [], "", []];
+        }
     } else {
         const { body } = await request(BASE_URL + SITE_URL + FUZZY_MATCH_URL + encodeURIComponent(siteName));
         let { sites } = await body.json();
@@ -55,16 +63,20 @@ async function getSite( siteName, siteCommandData ){
     let buttons = [];
     const buttonPrefix = "site-";
 
+    // Fetch the screenshot as a file attachment so Discord can display it in the embed
+    const screenshotFilename = `site_${site.id}.png`;
+    const attachment = await fetchScreenshot(site.image, screenshotFilename);
+
     // Construct the siteEmbed after obtaining the mentorNote value
     const siteEmbed = new EmbedBuilder()
-        .setImage(BASE_URL + site.screenshot);
+        .setImage(attachment ? `attachment://${screenshotFilename}` : null);
 
     if (similarMatchesString && similarMatchesString.length < 2048) {
         siteEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
     } else if (similarMatchesString && similarMatchesString.length >= 2048) {
         const errorEmbed = new EmbedBuilder()
             .setTitle("Too many matches to display. Try narrowing your search!")
-        return [errorEmbed, [], ""];
+        return [errorEmbed, [], "", []];
     }
 
     let type = "site";
@@ -90,7 +102,8 @@ async function getSite( siteName, siteCommandData ){
             ])  
         }
     }
-    return [ siteEmbed, buttons, buttonPrefix ];
+    const files = attachment ? [attachment] : [];
+    return [ siteEmbed, buttons, buttonPrefix, files ];
 }
 
 module.exports = { getSite }

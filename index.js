@@ -100,7 +100,7 @@ client.on("messageCreate", async (message) => {
   	if (message.content.startsWith(`${prefix}item`)) {
 		let itemName = message.content.slice(6).toLowerCase();
 		let itemCommandData = message;
-		const [itemEmbed, buttons, buttonPrefix ] = await getItem( itemName, itemCommandData );
+		const [itemEmbed, buttons, buttonPrefix, files ] = await getItem( itemName, itemCommandData );
 
 		//Logging
 		createLog(message);
@@ -109,7 +109,7 @@ client.on("messageCreate", async (message) => {
 		const listID = buttons.map(button => button.data.custom_id);
 		const buttonsArray = buttonWrapper(buttons);
 
-        const response = await message.channel.send({ embeds: [itemEmbed], components: buttonsArray });
+        const response = await message.channel.send({ embeds: [itemEmbed], components: buttonsArray, files });
 
 		const collector =  response.createMessageComponentCollector({
 			componentType: ComponentType.Button,
@@ -123,10 +123,10 @@ client.on("messageCreate", async (message) => {
 				const isInListID = listID.some(id => id === interactionCustomID)
 				if (isInListID){
 					const justTheID = interaction.customId.replace(buttonPrefix, "")
-					const [ itemEmbed ] = await getItem( justTheID, interaction ); 
+					const [ itemEmbed, , , itemFiles ] = await getItem( justTheID, interaction ); 
 					createLog(interaction);
 					createLogEmbed(interaction);
-					await interaction.reply({embeds: [itemEmbed]});
+					await interaction.reply({embeds: [itemEmbed], files: itemFiles});
 
 					let arrayOfActionRows = interaction.message.components;
 					const buttons = [];
@@ -191,7 +191,7 @@ client.on("messageCreate", async (message) => {
 	if (message.content.startsWith(`${prefix}spell`)) {
 		let spellName = message.content.slice(7).toLowerCase();
 		let spellCommandData = message;
-		const [spellEmbed, buttons, buttonPrefix ] = await getSpell( spellName, spellCommandData );
+		const [spellEmbed, buttons, buttonPrefix, files ] = await getSpell( spellName, spellCommandData );
 
 		//Logging
 		createLog(message);
@@ -200,7 +200,7 @@ client.on("messageCreate", async (message) => {
 		const listID = buttons.map(button => button.data.custom_id);
 		const buttonsArray = buttonWrapper(buttons);
 
-        const response = await message.channel.send({ embeds: [spellEmbed], components: buttonsArray });
+        const response = await message.channel.send({ embeds: [spellEmbed], components: buttonsArray, files });
 
 		const collector =  response.createMessageComponentCollector({
 			componentType: ComponentType.Button,
@@ -214,10 +214,10 @@ client.on("messageCreate", async (message) => {
 				const isInListID = listID.some(id => id === interactionCustomID)
 				if (isInListID){
 					const justTheID = interaction.customId.replace(buttonPrefix, "")
-					const [ spellEmbed ] = await getSpell( justTheID, interaction ); 
+					const [ spellEmbed, , , spellFiles ] = await getSpell( justTheID, interaction ); 
 					createLog(interaction);
 					createLogEmbed(interaction);
-					await interaction.reply({embeds: [spellEmbed]});
+					await interaction.reply({embeds: [spellEmbed], files: spellFiles});
 
 					let arrayOfActionRows = interaction.message.components;
 					const buttons = [];
@@ -283,12 +283,12 @@ client.on("messageCreate", async (message) => {
 		let mercName = message.content.slice(6).toLowerCase();
 		let mercCommandData = message;
 		try {
-			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton] = await getMerc(mercName, mercCommandData);
+			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton, files] = await getMerc(mercName, mercCommandData);
 			//Can try adding similarMatches - concat the buttonRow with buttonsArray and pass it as one? 
 			const buttonRow = new ActionRowBuilder().addComponents(mercLeaderButton, mercUnitButton);
 			createLog(message);
 			createLogEmbed(message);
-			const response = await message.channel.send({ embeds: [mercEmbed], components: [buttonRow] });
+			const response = await message.channel.send({ embeds: [mercEmbed], components: [buttonRow], files });
 	
 			const collector = response.createMessageComponentCollector({
 				componentType: ComponentType.Button,
@@ -302,7 +302,7 @@ client.on("messageCreate", async (message) => {
 						response.edit({
 							components: [buttonRow]
 						})
-						interaction.reply({ embeds: [mercLeaderEmbed]});
+						interaction.reply({ embeds: [mercLeaderEmbed], files });
 					}
 
 					if (interaction.customId === 'merc-unit'){
@@ -310,7 +310,7 @@ client.on("messageCreate", async (message) => {
 						response.edit({
 							components: [buttonRow]
 						})
-						interaction.reply({ embeds: [mercTroopEmbed]});
+						interaction.reply({ embeds: [mercTroopEmbed], files });
 					}
 				} else {
 					interaction.reply({ content: `These buttons aren't for you!`, ephemeral: true });
@@ -337,7 +337,7 @@ client.on("messageCreate", async (message) => {
 	if (message.content.startsWith(`${prefix}site`)) {
 		const siteName = message.content.slice(6).toLowerCase();
 		let siteCommandData = message;
-		const [siteEmbed, buttons, buttonPrefix ] = await getSite( siteName, siteCommandData );
+		const [siteEmbed, buttons, buttonPrefix, files ] = await getSite( siteName, siteCommandData );
 		
 		//Logging
 		createLog(message);
@@ -345,7 +345,7 @@ client.on("messageCreate", async (message) => {
 		const listID = buttons.map(button => button.data.custom_id);
 		const buttonsArray = buttonWrapper(buttons);
 
-        const response = await message.channel.send({ embeds: [siteEmbed], components: buttonsArray });
+        const response = await message.channel.send({ embeds: [siteEmbed], components: buttonsArray, files });
 
 		const collector =  response.createMessageComponentCollector({
 			componentType: ComponentType.Button,
@@ -359,10 +359,10 @@ client.on("messageCreate", async (message) => {
 				const isInListID = listID.some(id => id === interactionCustomID)
 				if (isInListID){
 					const justTheID = interaction.customId.replace(buttonPrefix, "")
-					const [ siteEmbed ] = await getSite( justTheID, interaction ); 
+					const [ siteEmbed, , , siteFiles ] = await getSite( justTheID, interaction ); 
 					createLog(interaction);
 					createLogEmbed(interaction);
-					await interaction.reply({embeds: [siteEmbed]});
+					await interaction.reply({embeds: [siteEmbed], files: siteFiles});
 
 					let arrayOfActionRows = interaction.message.components;
 					const buttons = [];
@@ -426,7 +426,7 @@ client.on("messageCreate", async (message) => {
 	if (message.content.startsWith(`${prefix}unit`)) {
 		let unitName = message.content.slice(6).toLowerCase();
 		let unitCommandData = message;
-		const [unitEmbed, buttons, buttonPrefix ] = await getUnit( unitName, unitCommandData );
+		const [unitEmbed, buttons, buttonPrefix, files ] = await getUnit( unitName, unitCommandData );
 		
 		//Logging
 		createLog(message);
@@ -435,7 +435,7 @@ client.on("messageCreate", async (message) => {
 		const listID = buttons.map(button => button.data.custom_id);
 		const buttonsArray = buttonWrapper(buttons);
 
-        const response = await message.channel.send({ embeds: [unitEmbed], components: buttonsArray });
+        const response = await message.channel.send({ embeds: [unitEmbed], components: buttonsArray, files });
 
 		const collector =  response.createMessageComponentCollector({
 			componentType: ComponentType.Button,
@@ -449,10 +449,10 @@ client.on("messageCreate", async (message) => {
 				const isInListID = listID.some(id => id === interactionCustomID)
 				if (isInListID){
 					const justTheID = interaction.customId.replace(buttonPrefix, "")
-					const [ unitEmbed ] = await getUnit( justTheID, interaction ); 
+					const [ unitEmbed, , , unitFiles ] = await getUnit( justTheID, interaction ); 
 					createLog(interaction);
 					createLogEmbed(interaction);
-					await interaction.reply({embeds: [unitEmbed]});
+					await interaction.reply({embeds: [unitEmbed], files: unitFiles});
 
 					let arrayOfActionRows = interaction.message.components;
 					const buttons = [];

@@ -15,12 +15,12 @@ module.exports = {
         let itemName = interactionOG.options.getString('item_name');
 		let itemCommandData = interactionOG;
 
-		const [itemEmbed, buttons, buttonPrefix ] = await getItem( itemName, itemCommandData );
+		const [itemEmbed, buttons, buttonPrefix, files ] = await getItem( itemName, itemCommandData );
 		let maxButtonsToClick = buttons.length;
 		const listID = buttons.map(button => button.data.custom_id);
 		const buttonsArray = buttonWrapper(buttons);
 
-        const response = await interactionOG.reply({ embeds: [itemEmbed], components: buttonsArray });
+        const response = await interactionOG.reply({ embeds: [itemEmbed], components: buttonsArray, files });
 		
 		const collector =  response.createMessageComponentCollector({
 			componentType: ComponentType.Button,
@@ -35,10 +35,10 @@ module.exports = {
 				const isInListID = listID.some(id => id === interactionCustomID)
 				if (isInListID){
 					const justTheID = interaction.customId.replace(buttonPrefix, "");
-					const [ itemEmbed ] = await getItem( justTheID, interaction );
+					const [ itemEmbed, , , itemFiles ] = await getItem( justTheID, interaction );
 					createLog(interaction);
 
-					await interaction.reply({embeds: [itemEmbed]});
+					await interaction.reply({embeds: [itemEmbed], files: itemFiles});
 					let arrayOfActionRows = interaction.message.components;
 					const buttons = [];
 					for (const actionRow of arrayOfActionRows){

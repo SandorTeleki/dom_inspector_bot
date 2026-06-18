@@ -15,10 +15,10 @@ module.exports = {
 		let mercName = interactionOG.options.getString('merc_name');
 		let mercCommandData = interactionOG;
 		try {
-			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton] = await getMerc(mercName, mercCommandData);
+			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton, files] = await getMerc(mercName, mercCommandData);
 			const buttonRow = new ActionRowBuilder().addComponents(mercLeaderButton, mercUnitButton);
 	
-			const response = await interactionOG.reply({ embeds: [mercEmbed], components: [buttonRow] });
+			const response = await interactionOG.reply({ embeds: [mercEmbed], components: [buttonRow], files });
 		
 			const collector = response.createMessageComponentCollector({
 				componentType: ComponentType.Button,
@@ -33,7 +33,7 @@ module.exports = {
 						response.edit({
 							components: [buttonRow]
 						})
-						interaction.reply({ embeds: [mercLeaderEmbed]});
+						interaction.reply({ embeds: [mercLeaderEmbed], files });
 						createLog(interaction);
 					}
 
@@ -42,7 +42,7 @@ module.exports = {
 						response.edit({
 							components: [buttonRow]
 						})
-						interaction.reply({ embeds: [mercTroopEmbed]});
+						interaction.reply({ embeds: [mercTroopEmbed], files });
 						createLog(interaction);
 					}
 				} else {

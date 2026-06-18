@@ -15,12 +15,12 @@ module.exports = {
         const siteName = interactionOG.options.getString('site_name');
 		let siteCommandData = interactionOG;
 
-		const [siteEmbed, buttons, buttonPrefix ] = await getSite( siteName, siteCommandData );
+		const [siteEmbed, buttons, buttonPrefix, files ] = await getSite( siteName, siteCommandData );
 		let maxButtonsToClick = buttons.length;
 		const listID = buttons.map(button => button.data.custom_id);
 		const buttonsArray = buttonWrapper(buttons);
 
-        const response = await interactionOG.reply({ embeds: [siteEmbed], components: buttonsArray });
+        const response = await interactionOG.reply({ embeds: [siteEmbed], components: buttonsArray, files });
 		
 		const collector =  response.createMessageComponentCollector({
 			componentType: ComponentType.Button,
@@ -35,10 +35,10 @@ module.exports = {
 				const isInListID = listID.some(id => id === interactionCustomID)
 				if (isInListID){
 					const justTheID = interaction.customId.replace(buttonPrefix, "");
-					const [ siteEmbed ] = await getSite( justTheID, interaction );
+					const [ siteEmbed, , , siteFiles ] = await getSite( justTheID, interaction );
 					createLog(interaction);
 
-					await interaction.reply({embeds: [siteEmbed]});
+					await interaction.reply({embeds: [siteEmbed], files: siteFiles});
 					let arrayOfActionRows = interaction.message.components;
 					const buttons = [];
 					for (const actionRow of arrayOfActionRows){
