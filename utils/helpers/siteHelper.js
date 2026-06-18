@@ -86,12 +86,8 @@ async function getSite( siteName, siteCommandData ){
 
     // Destructuring the note property from the row object
     const { note: mentorNote, written_by_user: noteAuthor } = row || {};
-
     //console.log("mentorNote: " + mentorNote);
 
-    if (similarMatchesString) {
-        siteEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
-    }
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild
     if (channelWhiteList.some((item)=>{ return item === channelId })) {
         siteEmbed.setTitle(`ID: ${site.id}`);
