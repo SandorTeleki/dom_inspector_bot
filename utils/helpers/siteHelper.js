@@ -10,7 +10,7 @@ const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
 
 async function getSite( siteName, siteCommandData ){
-    //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
+    //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
     // const channelId = (siteCommandData.type === 0 ? siteCommandData.channelId : siteCommandData.channel.id );
     // const serverId = (siteCommandData.type === 0 ? siteCommandData.guildId : siteCommandData.guild.id );
     

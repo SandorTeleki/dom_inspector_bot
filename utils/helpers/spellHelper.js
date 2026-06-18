@@ -10,7 +10,7 @@ const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
 
 async function getSpell( spellName, spellCommandData ){
-    //Messages and interactions use different synthax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
+    //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
     // const channelId = (spellCommandData.type === 0 ? spellCommandData.channelId : spellCommandData.channel.id );
     // const serverId = (spellCommandData.type === 0 ? spellCommandData.guildId : spellCommandData.guild.id );
     

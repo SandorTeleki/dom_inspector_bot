@@ -646,7 +646,7 @@ async function createLogEmbed(data) {
     }
 }
 
-//Messages and interactions use different synthax. Message (type = 0) and interaction (type = 2), button interaction (type = 3)
+//Messages and interactions use different syntax. Message (type = 0) and interaction (type = 2), button interaction (type = 3)
 async function logEmbedBuilder (data) {
 	let command
 	const channel = client.channels.cache.get('1165999070272303174');
