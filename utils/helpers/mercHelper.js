@@ -77,7 +77,7 @@ async function getMerc( mercName, mercCommandData ){
 
     if (similarMatchesString && similarMatchesString.length < 2048) {
         mercEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });
-    } else {
+    } else if (similarMatchesString && similarMatchesString.length >= 2048) {
         const errorEmbed = new EmbedBuilder()
             .setTitle("Too many matches to display. Try narrowing your search!")
         return [errorEmbed, [], "", []];
