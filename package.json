@@ -12,13 +12,13 @@
   "license": "ISC",
   "dependencies": {
     "discord-reply": "^0.1.2",
-    "discord.js": "^14.26.4",
-    "dotenv": "^17.4.2",
+    "discord.js": "^14.19.3",
+    "dotenv": "^16.5.0",
     "gitignore": "^0.7.0",
-    "sqlite3": "^6.0.1",
-    "undici": "^8.5.0"
+    "sqlite3": "^5.1.7",
+    "undici": "^6.21.3"
   },
   "devDependencies": {
-    "vitest": "^4.1.9"
+    "vitest": "^2.0.5"
   }
 }
