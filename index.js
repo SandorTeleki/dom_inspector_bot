@@ -283,12 +283,12 @@ client.on("messageCreate", async (message) => {
 		let mercName = message.content.slice(6).toLowerCase();
 		let mercCommandData = message;
 		try {
-			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton, files] = await getMerc(mercName, mercCommandData);
+			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton, mercFiles, leaderFiles, troopFiles] = await getMerc(mercName, mercCommandData);
 			//Can try adding similarMatches - concat the buttonRow with buttonsArray and pass it as one? 
 			const buttonRow = new ActionRowBuilder().addComponents(mercLeaderButton, mercUnitButton);
 			createLog(message);
 			createLogEmbed(message);
-			const response = await message.channel.send({ embeds: [mercEmbed], components: [buttonRow], files });
+			const response = await message.channel.send({ embeds: [mercEmbed], components: [buttonRow], files: mercFiles });
 	
 			const collector = response.createMessageComponentCollector({
 				componentType: ComponentType.Button,
@@ -302,7 +302,7 @@ client.on("messageCreate", async (message) => {
 						response.edit({
 							components: [buttonRow]
 						})
-						interaction.reply({ embeds: [mercLeaderEmbed], files });
+						interaction.reply({ embeds: [mercLeaderEmbed], files: leaderFiles });
 					}
 
 					if (interaction.customId === 'merc-unit'){
@@ -310,7 +310,7 @@ client.on("messageCreate", async (message) => {
 						response.edit({
 							components: [buttonRow]
 						})
-						interaction.reply({ embeds: [mercTroopEmbed], files });
+						interaction.reply({ embeds: [mercTroopEmbed], files: troopFiles });
 					}
 				} else {
 					interaction.reply({ content: `These buttons aren't for you!`, ephemeral: true });

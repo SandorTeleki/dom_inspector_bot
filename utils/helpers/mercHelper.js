@@ -97,37 +97,39 @@ async function getMerc( mercName, mercCommandData ){
     }
     //Buttons
     const mercLeaderButton = new ButtonBuilder()
-        .setLabel(`Merc leader: ${merc.bossname} (ID: ${merc.commander_id})`)
+        .setLabel(`Merc leader: ${merc.bossname} (ID: ${merc.com})`)
         .setStyle(ButtonStyle.Secondary)
         .setCustomId('merc-leader');
 
     const mercUnitButton = new ButtonBuilder()
-        .setLabel(`Merc units (ID: ${merc.unit_id})`)
+        .setLabel(`Merc units (ID: ${merc.unit})`)
         .setStyle(ButtonStyle.Secondary)
         .setCustomId('merc-unit');
 
     //Embeds
-    const leaderFilename = `merc_leader_${merc.commander_id}.png`;
-    const leaderAttachment = await fetchScreenshot(`/units/${merc.commander_id}/screenshot`, leaderFilename);
+    const leaderFilename = `merc_leader_${merc.com}.png`;
+    const leaderAttachment = await fetchScreenshot(`/units/${merc.com}/screenshot`, leaderFilename);
 
-    const troopFilename = `merc_troop_${merc.unit_id}.png`;
-    const troopAttachment = await fetchScreenshot(`/units/${merc.unit_id}/screenshot`, troopFilename);
+    const troopFilename = `merc_troop_${merc.unit}.png`;
+    const troopAttachment = await fetchScreenshot(`/units/${merc.unit}/screenshot`, troopFilename);
 
     const mercLeaderEmbed = new EmbedBuilder()
         .setImage(leaderAttachment ? `attachment://${leaderFilename}` : null)
         .addFields(
             {name: 'Name of mercenary group leader:', value: `${merc.bossname}`, inline: true},
-            {name: 'ID:', value: `${merc.commander_id}`, inline: true},
+            {name: 'ID:', value: `${merc.com}`, inline: true},
         );
     const mercTroopEmbed = new EmbedBuilder()
         .setImage(troopAttachment ? `attachment://${troopFilename}` : null)
         .addFields(
             {name:'Number of units:', value: `${merc.nrunits}`, inline: true},
-            {name: 'ID:', value: `${merc.unit_id}`, inline: true},
+            {name: 'ID:', value: `${merc.unit}`, inline: true},
         );
 
-    const files = [mercAttachment, leaderAttachment, troopAttachment].filter(Boolean);
-    return [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton, files];
+    const mercFiles = mercAttachment ? [mercAttachment] : [];
+    const leaderFiles = leaderAttachment ? [leaderAttachment] : [];
+    const troopFiles = troopAttachment ? [troopAttachment] : [];
+    return [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton, mercFiles, leaderFiles, troopFiles];
 }
 
 module.exports = { getMerc }
