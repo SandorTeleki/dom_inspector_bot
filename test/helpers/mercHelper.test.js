@@ -74,6 +74,13 @@ describe('merc helper', () => {
         expectErrorEmbed(result);
     });
 
+    it('returns an error embed when fuzzy search finds no matches', async () => {
+        mockFuzzyGet(table, {}, 404);
+
+        const result = await getMerc('nonexistent query', commandData);
+        expectErrorEmbed(result);
+    });
+
     it('returns the best fuzzy match with alternate matches in the footer', async () => {
         mockFuzzyGet(table, { [key]: [primaryMatch, secondaryMatch] });
 

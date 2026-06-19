@@ -8,6 +8,7 @@ const { similarMatchesStringify, similarMatchesArray } =require('../similarMatch
 // const { sqlGetMentorNote } = require('../sqlHelper');
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
+const { isNotFound, notFoundResult } = require('../notFoundResult');
 
 async function getItem( itemName, itemCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -37,23 +38,19 @@ async function getItem( itemName, itemCommandData ){
         const itemIdMatch = itemName.match(regExId);
         const itemId = itemIdMatch[1];
         const { statusCode, body } = await request(BASE_URL + ITEM_URL + '/' + encodeURIComponent(itemId));
-        //console.log('statusCode', statusCode); //Check status code, if needed for debugging
-        if (statusCode === 404){
-            const errorEmbed = new EmbedBuilder()
-                .setTitle("Nothing found. Better luck next time!")
-                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], "", []];
+        if (isNotFound(statusCode)) {
+            return notFoundResult();
         }
         item  = await body.json();
         if (item.items) item = item.items[0];
         if (!item) {
-            const errorEmbed = new EmbedBuilder()
-                .setTitle("Nothing found. Better luck next time!")
-                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], "", []];
+            return notFoundResult();
         }
     } else {
-        const { body } = await request(BASE_URL + ITEM_URL + FUZZY_MATCH_URL + encodeURIComponent(itemName));
+        const { statusCode, body } = await request(BASE_URL + ITEM_URL + FUZZY_MATCH_URL + encodeURIComponent(itemName));
+        if (isNotFound(statusCode)) {
+            return notFoundResult();
+        }
         let { items } = await body.json();
         item = items[0];
         similarMatchesString = similarMatchesStringify(items);

@@ -8,6 +8,7 @@ const { similarMatchesStringify, similarMatchesStringifyNoSlice, similarMatchesA
 // const { sqlGetMentorNote } = require('../sqlHelper');
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
+const { isNotFound, notFoundResult } = require('../notFoundResult');
 
 async function getUnit( unitName, unitCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -42,7 +43,10 @@ async function getUnit( unitName, unitCommandData ){
         let text = edgecase[1];
         let size2 = edgecase[2];
         if (text in unitAliases){ text = unitAliases[text] };
-        const { body } = await request(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(text));
+        const { statusCode, body } = await request(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(text));
+        if (isNotFound(statusCode)) {
+            return notFoundResult();
+        }
         let { units } = await body.json();
         let sizeMatch = units.filter(function(unit){
             let unitSize = unit.size;
@@ -70,25 +74,22 @@ async function getUnit( unitName, unitCommandData ){
         const unitIdMatch = unitName.match(regExId);
         const unitId = unitIdMatch[1];
         const { body, statusCode } = await request(BASE_URL + UNIT_URL + '/' + encodeURIComponent(unitId));
-        if (statusCode === 404){
-            const errorEmbed = new EmbedBuilder()
-                .setTitle("Nothing found. Better luck next time!")
-                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], "", []];
+        if (isNotFound(statusCode)) {
+            return notFoundResult();
         }
         unit  = await body.json();
         if (unit.units) unit = unit.units[0];
         if (!unit) {
-            const errorEmbed = new EmbedBuilder()
-                .setTitle("Nothing found. Better luck next time!")
-                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], "", []];
+            return notFoundResult();
         }
     //Running for everything else (w/ Fuzzy match)
     } else {
         const regExSizeMatch = unitName.match(regExSize);
         const size = (regExSizeMatch ? regExSizeMatch[1] : undefined);
-        const { body } = await request(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(unitName));
+        const { statusCode, body } = await request(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(unitName));
+        if (isNotFound(statusCode)) {
+            return notFoundResult();
+        }
         let { units } = await body.json();
         let sizeMatch = units.filter(function(unit){
             let unitSize = unit.size;

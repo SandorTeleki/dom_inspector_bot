@@ -8,6 +8,7 @@ const { mercAliases } =require('../aliases/mercAliases');
 const { similarMatchesStringify } =require('../similarMatches');
 // const { sqlGetMentorNote } = require('../sqlHelper');
 const { fetchScreenshot } = require('../fetchScreenshot');
+const { isNotFound, notFoundResult } = require('../notFoundResult');
 
 async function getMerc( mercName, mercCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -36,22 +37,19 @@ async function getMerc( mercName, mercCommandData ){
         const mercIdMatch = mercName.match(regExId);
         const mercId = mercIdMatch[1];
         const { body, statusCode } = await request(BASE_URL + MERC_URL + '/' + encodeURIComponent(mercId));
-        if (statusCode === 404){
-            const errorEmbed = new EmbedBuilder()
-                .setTitle("Nothing found. Better luck next time!")
-                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], "", []];
+        if (isNotFound(statusCode)) {
+            return notFoundResult();
         }
         merc  = await body.json();
         if (merc.mercs) merc = merc.mercs[0];
         if (!merc) {
-            const errorEmbed = new EmbedBuilder()
-                .setTitle("Nothing found. Better luck next time!")
-                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], "", []];
+            return notFoundResult();
         }
     } else {
-        const { body } = await request(BASE_URL + MERC_URL + FUZZY_MATCH_URL + encodeURIComponent(mercName));
+        const { statusCode, body } = await request(BASE_URL + MERC_URL + FUZZY_MATCH_URL + encodeURIComponent(mercName));
+        if (isNotFound(statusCode)) {
+            return notFoundResult();
+        }
         let { mercs } = await body.json();
         merc = mercs[0];
         similarMatchesString = similarMatchesStringify(mercs);

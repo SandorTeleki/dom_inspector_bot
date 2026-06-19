@@ -91,6 +91,10 @@ export function mockFuzzyGet(table, body, statusCode = 200) {
     mockJsonGet(new RegExp(`^/${table}\\?match=fuzzy&name=.+$`), body, statusCode);
 }
 
+export function mockFuzzyNotFound(table) {
+    mockFuzzyGet(table, {}, 404);
+}
+
 export function mockNotFound(pathPattern) {
     mockJsonGet(pathPattern, {}, 404);
 }

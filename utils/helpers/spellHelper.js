@@ -8,6 +8,7 @@ const { similarMatchesStringify, similarMatchesArray } = require('../similarMatc
 // const { sqlGetMentorNote } = require('../sqlHelper');
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
+const { isNotFound, notFoundResult } = require('../notFoundResult');
 
 async function getSpell( spellName, spellCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -37,22 +38,19 @@ async function getSpell( spellName, spellCommandData ){
         const spellIdMatch = spellName.match(regExId);
         const spellId = spellIdMatch[1];
         const { body, statusCode } = await request(BASE_URL + SPELL_URL + '/' + encodeURIComponent(spellId));
-        if (statusCode === 404){
-            const errorEmbed = new EmbedBuilder()
-                .setTitle("Nothing found. Better luck next time!")
-                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], "", []];
+        if (isNotFound(statusCode)) {
+            return notFoundResult();
         }
         spell  = await body.json();
         if (spell.spells) spell = spell.spells[0];
         if (!spell) {
-            const errorEmbed = new EmbedBuilder()
-                .setTitle("Nothing found. Better luck next time!")
-                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], "", []];
+            return notFoundResult();
         }
     } else {
-        const { body } = await request(BASE_URL + SPELL_URL + FUZZY_MATCH_URL + encodeURIComponent(spellName));
+        const { statusCode, body } = await request(BASE_URL + SPELL_URL + FUZZY_MATCH_URL + encodeURIComponent(spellName));
+        if (isNotFound(statusCode)) {
+            return notFoundResult();
+        }
         let { spells } = await body.json();
         spell = spells[0];
         similarMatchesString = similarMatchesStringify(spells);

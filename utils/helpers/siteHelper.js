@@ -8,6 +8,7 @@ const { similarMatchesStringify, similarMatchesArray } =require('../similarMatch
 // const { sqlGetMentorNote } = require('../sqlHelper');
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
+const { isNotFound, notFoundResult } = require('../notFoundResult');
 
 async function getSite( siteName, siteCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -37,22 +38,19 @@ async function getSite( siteName, siteCommandData ){
         const siteIdMatch = siteName.match(regExId);
         const siteId = siteIdMatch[1];
         const { body, statusCode } = await request(BASE_URL + SITE_URL + '/' + encodeURIComponent(siteId));
-        if (statusCode === 404){
-            const errorEmbed = new EmbedBuilder()
-                .setTitle("Nothing found. Better luck next time!")
-                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], "", []];
+        if (isNotFound(statusCode)) {
+            return notFoundResult();
         }
         site  = await body.json();
         if (site.sites) site = site.sites[0];
         if (!site) {
-            const errorEmbed = new EmbedBuilder()
-                .setTitle("Nothing found. Better luck next time!")
-                .setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            return [errorEmbed, [], "", []];
+            return notFoundResult();
         }
     } else {
-        const { body } = await request(BASE_URL + SITE_URL + FUZZY_MATCH_URL + encodeURIComponent(siteName));
+        const { statusCode, body } = await request(BASE_URL + SITE_URL + FUZZY_MATCH_URL + encodeURIComponent(siteName));
+        if (isNotFound(statusCode)) {
+            return notFoundResult();
+        }
         let { sites } = await body.json();
         site = sites[0];
         similarMatchesString = similarMatchesStringify(sites);
