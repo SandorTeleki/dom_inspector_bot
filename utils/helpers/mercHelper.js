@@ -1,6 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
 const { ButtonBuilder, ButtonStyle } = require('discord.js');
-const { request } = require('undici');
 
 const { FUZZY_MATCH_URL, MERC_URL, BASE_URL } = require('../utils');
 // const { mentorWhitelist, channelWhiteList } = require('../whitelist');
@@ -8,7 +7,18 @@ const { mercAliases } =require('../aliases/mercAliases');
 const { similarMatchesStringify } =require('../similarMatches');
 // const { sqlGetMentorNote } = require('../sqlHelper');
 const { fetchScreenshot } = require('../fetchScreenshot');
-const { isNotFound, notFoundResult } = require('../notFoundResult');
+const { fetchApiJson, getEntityList, getFirstEntity } = require('../apiRequest');
+const { notFoundEmbed, apiErrorEmbed } = require('../notFoundResult');
+
+function mercNotFoundResult() {
+	const embed = notFoundEmbed();
+	return [embed, null, null, null, null, [], [], []];
+}
+
+function mercApiErrorResult() {
+	const embed = apiErrorEmbed();
+	return [embed, null, null, null, null, [], [], []];
+}
 
 async function getMerc( mercName, mercCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -36,21 +46,29 @@ async function getMerc( mercName, mercCommandData ){
     if  (mercName.match(regExId)){
         const mercIdMatch = mercName.match(regExId);
         const mercId = mercIdMatch[1];
-        const { body, statusCode } = await request(BASE_URL + MERC_URL + '/' + encodeURIComponent(mercId));
-        if (isNotFound(statusCode)) {
-            return notFoundResult();
+        const result = await fetchApiJson(BASE_URL + MERC_URL + '/' + encodeURIComponent(mercId));
+        if (result.notFound) {
+            return mercNotFoundResult();
         }
-        merc  = await body.json();
-        if (merc.mercs) merc = merc.mercs[0];
+        if (!result.ok) {
+            return mercApiErrorResult();
+        }
+        merc = getFirstEntity(result.data, 'mercs');
         if (!merc) {
-            return notFoundResult();
+            return mercNotFoundResult();
         }
     } else {
-        const { statusCode, body } = await request(BASE_URL + MERC_URL + FUZZY_MATCH_URL + encodeURIComponent(mercName));
-        if (isNotFound(statusCode)) {
-            return notFoundResult();
+        const result = await fetchApiJson(BASE_URL + MERC_URL + FUZZY_MATCH_URL + encodeURIComponent(mercName));
+        if (result.notFound) {
+            return mercNotFoundResult();
         }
-        let { mercs } = await body.json();
+        if (!result.ok) {
+            return mercApiErrorResult();
+        }
+        const mercs = getEntityList(result.data, 'mercs');
+        if (!mercs.length) {
+            return mercNotFoundResult();
+        }
         merc = mercs[0];
         similarMatchesString = similarMatchesStringify(mercs);
     }; 
@@ -78,7 +96,7 @@ async function getMerc( mercName, mercCommandData ){
     } else if (similarMatchesString && similarMatchesString.length >= 2048) {
         const errorEmbed = new EmbedBuilder()
             .setTitle("Too many matches to display. Try narrowing your search!")
-        return [errorEmbed, [], "", []];
+        return [errorEmbed, null, null, null, null, [], [], []];
     }
 
     // For prod version, swap channelId for guildId, so mentor notes for one guild are only visible for that guild

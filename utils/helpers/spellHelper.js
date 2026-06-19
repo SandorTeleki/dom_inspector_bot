@@ -1,5 +1,4 @@
 const { EmbedBuilder } = require('discord.js');
-const { request } = require('undici');
 
 const { FUZZY_MATCH_URL, SPELL_URL, BASE_URL } = require('../utils');
 // const { mentorWhitelist, channelWhiteList } = require('../whitelist');
@@ -8,7 +7,8 @@ const { similarMatchesStringify, similarMatchesArray } = require('../similarMatc
 // const { sqlGetMentorNote } = require('../sqlHelper');
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
-const { isNotFound, notFoundResult } = require('../notFoundResult');
+const { fetchApiJson, getEntityList, getFirstEntity } = require('../apiRequest');
+const { notFoundResult, apiErrorResult } = require('../notFoundResult');
 
 async function getSpell( spellName, spellCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -37,21 +37,29 @@ async function getSpell( spellName, spellCommandData ){
     if  (spellName.match(regExId)){
         const spellIdMatch = spellName.match(regExId);
         const spellId = spellIdMatch[1];
-        const { body, statusCode } = await request(BASE_URL + SPELL_URL + '/' + encodeURIComponent(spellId));
-        if (isNotFound(statusCode)) {
+        const result = await fetchApiJson(BASE_URL + SPELL_URL + '/' + encodeURIComponent(spellId));
+        if (result.notFound) {
             return notFoundResult();
         }
-        spell  = await body.json();
-        if (spell.spells) spell = spell.spells[0];
+        if (!result.ok) {
+            return apiErrorResult();
+        }
+        spell = getFirstEntity(result.data, 'spells');
         if (!spell) {
             return notFoundResult();
         }
     } else {
-        const { statusCode, body } = await request(BASE_URL + SPELL_URL + FUZZY_MATCH_URL + encodeURIComponent(spellName));
-        if (isNotFound(statusCode)) {
+        const result = await fetchApiJson(BASE_URL + SPELL_URL + FUZZY_MATCH_URL + encodeURIComponent(spellName));
+        if (result.notFound) {
             return notFoundResult();
         }
-        let { spells } = await body.json();
+        if (!result.ok) {
+            return apiErrorResult();
+        }
+        const spells = getEntityList(result.data, 'spells');
+        if (!spells.length) {
+            return notFoundResult();
+        }
         spell = spells[0];
         similarMatchesString = similarMatchesStringify(spells);
         similarMatchesList = similarMatchesArray(spells);

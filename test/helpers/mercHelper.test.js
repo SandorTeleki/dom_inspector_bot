@@ -11,6 +11,8 @@ import {
     makeEntity,
     embedFooter,
     expectErrorEmbed,
+    expectMercNotFoundResult,
+    expectMercTooManyMatchesResult,
     expectTooManyMatchesEmbed,
     createManyMatches,
 } from './testUtils.js';
@@ -71,14 +73,14 @@ describe('merc helper', () => {
         mockNotFound(`/${table}/99999`);
 
         const result = await getMerc('99999', commandData);
-        expectErrorEmbed(result);
+        expectMercNotFoundResult(result);
     });
 
     it('returns an error embed when fuzzy search finds no matches', async () => {
         mockFuzzyGet(table, {}, 404);
 
         const result = await getMerc('nonexistent query', commandData);
-        expectErrorEmbed(result);
+        expectMercNotFoundResult(result);
     });
 
     it('returns the best fuzzy match with alternate matches in the footer', async () => {
@@ -127,7 +129,7 @@ describe('merc helper', () => {
         mockFuzzyGet(table, { [key]: manyMatches });
 
         const result = await getMerc('broad search term', commandData);
-        expectTooManyMatchesEmbed(result);
+        expectMercTooManyMatchesResult(result);
     });
 
     it('resolves an alias before searching', async () => {

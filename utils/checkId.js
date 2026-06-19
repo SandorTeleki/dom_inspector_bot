@@ -1,9 +1,8 @@
-const { request } = require('undici');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { BASE_URL } = require('./utils');
-const { isNotFound } = require('./notFoundResult');
+const { fetchApiJson, getFirstEntity } = require('./apiRequest');
 const { sqlSelectNote, sqlGetMentorNote, sqlInsertNote, sqlInsertLog, sqlInsertMentorLog, sqlUpdateNote } = require('./sqlHelper');
 
 const DB_PATH = path.join(__dirname, '..', 'logs.db');
@@ -18,13 +17,20 @@ let commandResult;
 // check length, check ID, check match, check slot etc.
 
 async function checkId(message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp) {
-    const { statusCode, body } = await request(BASE_URL + '/' + commandUsed + 's/' + idUsed);
-    if (isNotFound(statusCode)) {
+    const result = await fetchApiJson(BASE_URL + '/' + commandUsed + 's/' + idUsed);
+    if (result.notFound) {
         message.reply(`For the "${commandUsed}" command nothing was found matching ID: ${idUsed}. Please double check the ID and try again...`);
         return;
     }
-    commandResult = await body.json();
-    //Runs if we don't hit a 404 above
+    if (!result.ok) {
+        message.reply(`Could not verify the ID for "${commandUsed}". Please try again later.`);
+        return;
+    }
+    commandResult = getFirstEntity(result.data, commandUsed + 's');
+    if (!commandResult) {
+        message.reply(`For the "${commandUsed}" command nothing was found matching ID: ${idUsed}. Please double check the ID and try again...`);
+        return;
+    }
     commandName = commandResult.name;
 
     function checkNoteMatch(message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp) {

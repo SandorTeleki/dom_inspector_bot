@@ -16,6 +16,12 @@ module.exports = {
 		let mercCommandData = interactionOG;
 		try {
 			let [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton, mercFiles, leaderFiles, troopFiles] = await getMerc(mercName, mercCommandData);
+
+			if (!mercLeaderButton || !mercUnitButton) {
+				await interactionOG.reply({ embeds: [mercEmbed], files: mercFiles });
+				return;
+			}
+
 			const buttonRow = new ActionRowBuilder().addComponents(mercLeaderButton, mercUnitButton);
 	
 			const response = await interactionOG.reply({ embeds: [mercEmbed], components: [buttonRow], files: mercFiles });

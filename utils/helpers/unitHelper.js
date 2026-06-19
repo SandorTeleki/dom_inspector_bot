@@ -1,5 +1,4 @@
 const { EmbedBuilder } = require('discord.js');
-const { request } = require('undici');
 
 const { FUZZY_MATCH_URL, UNIT_URL, BASE_URL } = require('../utils');
 // const { mentorWhitelist, channelWhiteList } = require('../whitelist');
@@ -8,7 +7,35 @@ const { similarMatchesStringify, similarMatchesStringifyNoSlice, similarMatchesA
 // const { sqlGetMentorNote } = require('../sqlHelper');
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
-const { isNotFound, notFoundResult } = require('../notFoundResult');
+const { fetchApiJson, getEntityList, getFirstEntity } = require('../apiRequest');
+const { notFoundResult, apiErrorResult } = require('../notFoundResult');
+
+function applyUnitMatches(units, size) {
+    let similarMatchesString;
+    let similarMatchesList;
+    let selectedUnit;
+
+    const sizeMatch = units.filter(function(unit) {
+        return +unit.size === +size;
+    });
+    const correctSize = sizeMatch[0];
+
+    if (correctSize) {
+        selectedUnit = correctSize;
+        const index = units.indexOf(correctSize);
+        if (index > -1) {
+            units.splice(index, 1);
+        }
+        similarMatchesString = similarMatchesStringifyNoSlice(units);
+        similarMatchesList = units;
+    } else {
+        selectedUnit = units[0];
+        similarMatchesString = similarMatchesStringify(units);
+        similarMatchesList = similarMatchesArray(units);
+    }
+
+    return { unit: selectedUnit, similarMatchesString, similarMatchesList };
+}
 
 async function getUnit( unitName, unitCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -43,42 +70,31 @@ async function getUnit( unitName, unitCommandData ){
         let text = edgecase[1];
         let size2 = edgecase[2];
         if (text in unitAliases){ text = unitAliases[text] };
-        const { statusCode, body } = await request(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(text));
-        if (isNotFound(statusCode)) {
+        const result = await fetchApiJson(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(text));
+        if (result.notFound) {
             return notFoundResult();
         }
-        let { units } = await body.json();
-        let sizeMatch = units.filter(function(unit){
-            let unitSize = unit.size;
-            return +unitSize === +size2;
-        })
-        const correctSize = sizeMatch[0];
-        //If there is a correct size, remove correct size from array
-        if (correctSize) {
-            unit = correctSize;
-            const index = units.indexOf(correctSize);
-            if (index > -1){
-                units.splice(index, 1);
-            }
-            similarMatchesString = similarMatchesStringifyNoSlice(units);
-            similarMatchesList = units;
-        //If there is no correct size, then just remove first value from array
-        } else {
-            unit = units[0];
-            similarMatchesString = similarMatchesStringify(units);
-            similarMatchesList = similarMatchesArray(units);
+        if (!result.ok) {
+            return apiErrorResult();
         }
+        const units = getEntityList(result.data, 'units');
+        if (!units.length) {
+            return notFoundResult();
+        }
+        ({ unit, similarMatchesString, similarMatchesList } = applyUnitMatches(units, size2));
 
     //Running it for ID
     } else if (unitName.match(regExId)){
         const unitIdMatch = unitName.match(regExId);
         const unitId = unitIdMatch[1];
-        const { body, statusCode } = await request(BASE_URL + UNIT_URL + '/' + encodeURIComponent(unitId));
-        if (isNotFound(statusCode)) {
+        const result = await fetchApiJson(BASE_URL + UNIT_URL + '/' + encodeURIComponent(unitId));
+        if (result.notFound) {
             return notFoundResult();
         }
-        unit  = await body.json();
-        if (unit.units) unit = unit.units[0];
+        if (!result.ok) {
+            return apiErrorResult();
+        }
+        unit = getFirstEntity(result.data, 'units');
         if (!unit) {
             return notFoundResult();
         }
@@ -86,31 +102,18 @@ async function getUnit( unitName, unitCommandData ){
     } else {
         const regExSizeMatch = unitName.match(regExSize);
         const size = (regExSizeMatch ? regExSizeMatch[1] : undefined);
-        const { statusCode, body } = await request(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(unitName));
-        if (isNotFound(statusCode)) {
+        const result = await fetchApiJson(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(unitName));
+        if (result.notFound) {
             return notFoundResult();
         }
-        let { units } = await body.json();
-        let sizeMatch = units.filter(function(unit){
-            let unitSize = unit.size;
-            return +unitSize === +size;
-        })
-        const correctSize = sizeMatch[0];
-        //If there is a correct size, remove correct size from array
-        if (correctSize) {
-            unit = correctSize;
-            const index = units.indexOf(correctSize);
-            if (index > -1){
-                units.splice(index, 1);
-            }
-            similarMatchesString = similarMatchesStringifyNoSlice(units);
-            similarMatchesList = units;
-        //If there is no correct size, then just remove first value from array
-        } else {
-            unit = units[0];
-            similarMatchesString = similarMatchesStringify(units);
-            similarMatchesList = similarMatchesArray(units);
+        if (!result.ok) {
+            return apiErrorResult();
         }
+        const units = getEntityList(result.data, 'units');
+        if (!units.length) {
+            return notFoundResult();
+        }
+        ({ unit, similarMatchesString, similarMatchesList } = applyUnitMatches(units, size));
     };
 
     // Building buttons from similarMatchesList

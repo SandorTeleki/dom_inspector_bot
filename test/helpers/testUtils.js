@@ -43,3 +43,27 @@ export function expectTooManyMatchesEmbed(result) {
     expect(buttonPrefix).toBe('');
     expect(files).toEqual([]);
 }
+
+export function expectMercNotFoundResult(result) {
+    const [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton, mercFiles, leaderFiles, troopFiles] = result;
+    expect(embedTitle(mercEmbed)).toBe('Nothing found. Better luck next time!');
+    expect(mercLeaderEmbed).toBeNull();
+    expect(mercTroopEmbed).toBeNull();
+    expect(mercLeaderButton).toBeNull();
+    expect(mercUnitButton).toBeNull();
+    expect(mercFiles).toEqual([]);
+    expect(leaderFiles).toEqual([]);
+    expect(troopFiles).toEqual([]);
+}
+
+export function expectMercTooManyMatchesResult(result) {
+    const [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton, mercFiles, leaderFiles, troopFiles] = result;
+    expect(embedTitle(mercEmbed)).toBe('Too many matches to display. Try narrowing your search!');
+    expect(mercLeaderEmbed).toBeNull();
+    expect(mercTroopEmbed).toBeNull();
+    expect(mercLeaderButton).toBeNull();
+    expect(mercUnitButton).toBeNull();
+    expect(mercFiles).toEqual([]);
+    expect(leaderFiles).toEqual([]);
+    expect(troopFiles).toEqual([]);
+}

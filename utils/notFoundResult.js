@@ -12,8 +12,18 @@ function notFoundResult() {
 	return [notFoundEmbed(), [], '', []];
 }
 
+function apiErrorEmbed() {
+	return new EmbedBuilder()
+		.setTitle('Something went wrong. Try again later!')
+		.setImage(NOT_FOUND_IMAGE);
+}
+
+function apiErrorResult() {
+	return [apiErrorEmbed(), [], '', []];
+}
+
 function isNotFound(statusCode) {
 	return statusCode === 404;
 }
 
-module.exports = { notFoundEmbed, notFoundResult, isNotFound };
+module.exports = { notFoundEmbed, notFoundResult, apiErrorEmbed, apiErrorResult, isNotFound };

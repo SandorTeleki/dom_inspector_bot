@@ -1,5 +1,4 @@
 const { EmbedBuilder } = require('discord.js');
-const { request } = require('undici');
 
 const { FUZZY_MATCH_URL, SITE_URL, BASE_URL } = require('../utils');
 // const { mentorWhitelist, channelWhiteList } = require('../whitelist');
@@ -8,7 +7,8 @@ const { similarMatchesStringify, similarMatchesArray } =require('../similarMatch
 // const { sqlGetMentorNote } = require('../sqlHelper');
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
-const { isNotFound, notFoundResult } = require('../notFoundResult');
+const { fetchApiJson, getEntityList, getFirstEntity } = require('../apiRequest');
+const { notFoundResult, apiErrorResult } = require('../notFoundResult');
 
 async function getSite( siteName, siteCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -37,21 +37,29 @@ async function getSite( siteName, siteCommandData ){
     if  (siteName.match(regExId)){
         const siteIdMatch = siteName.match(regExId);
         const siteId = siteIdMatch[1];
-        const { body, statusCode } = await request(BASE_URL + SITE_URL + '/' + encodeURIComponent(siteId));
-        if (isNotFound(statusCode)) {
+        const result = await fetchApiJson(BASE_URL + SITE_URL + '/' + encodeURIComponent(siteId));
+        if (result.notFound) {
             return notFoundResult();
         }
-        site  = await body.json();
-        if (site.sites) site = site.sites[0];
+        if (!result.ok) {
+            return apiErrorResult();
+        }
+        site = getFirstEntity(result.data, 'sites');
         if (!site) {
             return notFoundResult();
         }
     } else {
-        const { statusCode, body } = await request(BASE_URL + SITE_URL + FUZZY_MATCH_URL + encodeURIComponent(siteName));
-        if (isNotFound(statusCode)) {
+        const result = await fetchApiJson(BASE_URL + SITE_URL + FUZZY_MATCH_URL + encodeURIComponent(siteName));
+        if (result.notFound) {
             return notFoundResult();
         }
-        let { sites } = await body.json();
+        if (!result.ok) {
+            return apiErrorResult();
+        }
+        const sites = getEntityList(result.data, 'sites');
+        if (!sites.length) {
+            return notFoundResult();
+        }
         site = sites[0];
         similarMatchesString = similarMatchesStringify(sites);
         similarMatchesList = similarMatchesArray(sites);
