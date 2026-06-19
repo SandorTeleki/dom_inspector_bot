@@ -1,6 +1,6 @@
 # Discord Dom Inspector Bot, the Abomination of Interspection
 
-A Discord interface to [Larzm's Mod Inspector](https://larzm42.github.io/dom5inspector/) via [dom6api](https://github.com/Calioses/dom6api), previously via [dom5api](https://github.com/gtim/dom5api). Currently available on several Dominions related Discord servers like: Immersion, Dominions Game Hub, Ruby, Nexus etc.
+A Discord interface to [Larzm's Mod Inspector](https://larzm42.github.io/dom5inspector/) via [dom6api](https://github.com/Calioses/dom6api), (previously via [dom5api](https://github.com/gtim/dom5api)). Currently available on several Dominions related Discord servers like: Immersion, Dominions Game Hub, Ruby, Nexus etc.
 
 -----
 
@@ -9,6 +9,7 @@ The idea for the bot arose from wanting a quick and easy way to query Larzm's Mo
 
 ## Plans:
 - Get feedback on Dominions6 support and implement features/changes based on that
+- Support for events (already supported by dom6api)
 
 ## Currently working on:
 - Finishing Dominions 6 implementation
