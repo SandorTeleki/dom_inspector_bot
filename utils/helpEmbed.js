@@ -3,7 +3,7 @@ const { EmbedBuilder } = require('discord.js');
 function getHelpEmbed() {
 	return new EmbedBuilder()
 		.setTitle('Dom_Inspector_Bot help')
-		.setDescription('The Dom_Inspector_Bot provides you info on items, spells, units, sites and mercenaries.')
+		.setDescription('The Dom_Inspector_Bot provides you info on items, spells, units, sites and mercenaries for Dominions 6.')
 		.addFields(
 			{ name: '```/item {item_name} ```', value: 'Search for item by name (or id).' },
 			{ name: '```/spell {spell_name}```', value: 'Search for spell by name (or id).' },
