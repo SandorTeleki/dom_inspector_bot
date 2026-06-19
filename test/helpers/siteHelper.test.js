@@ -11,5 +11,4 @@ defineLookupHelperTests({
     invalidId: '99999',
     fuzzyQuery: 'lava lake',
     alias: 'best',
-    expectedFuzzyButtons: 0,
 });

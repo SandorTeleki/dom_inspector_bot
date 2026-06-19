@@ -62,6 +62,9 @@ async function getSite( siteName, siteCommandData ){
     // Building buttons from similarMatchesList
     let buttons = [];
     const buttonPrefix = "site-";
+    if (similarMatchesList) {
+        buttons = buttonCreator(similarMatchesList, buttonPrefix);
+    }
 
     // Fetch the screenshot as a file attachment so Discord can display it in the embed
     const screenshotFilename = `site_${site.id}.png`;
