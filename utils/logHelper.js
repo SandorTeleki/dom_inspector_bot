@@ -1,21 +1,45 @@
+const { EmbedBuilder } = require('discord.js');
 const { sqlInsertLog } = require('./sqlHelper');
 
-// Creates log for SQL
-function createLog(data){
-	let text
-	//Read more: https://old.discordjs.dev/#/docs/discord.js/main/search?query=message
-	// and: https://old.discordjs.dev/#/docs/discord.js/main/class/Message
-	const server = data.guild.name;
-	const serverId = (data.type === 0 ? data.guildId : data.guild.id );
-	const channelName = data.channel.name;
-	const channelId = (data.type === 0 ? data.channelId : data.channel.id );
-	const user = (data.type === 0 ? data.author.tag : data.user.tag );
-	const userId = (data.type === 0 ? data.author.id : data.user.id );
-	if (data.type === 0){ text = data.content } else if (data.type === 2){ text = data.toString() } else { text = data.customId };
-	const unixTimestamp = data.createdTimestamp;
+const LOG_CHANNEL_ID = '1165999070272303174';
 
-	sqlInsertLog(server,serverId,channelName,channelId,user,userId,text,unixTimestamp);
+function getInteractionLogText(interaction) {
+	if (interaction.isChatInputCommand()) {
+		return interaction.toString();
+	}
+	return interaction.customId;
 }
 
+function createLog(interaction) {
+	sqlInsertLog(
+		interaction.guild.name,
+		interaction.guild.id,
+		interaction.channel.name,
+		interaction.channel.id,
+		interaction.user.tag,
+		interaction.user.id,
+		getInteractionLogText(interaction),
+		interaction.createdTimestamp,
+	);
+}
 
-module.exports = { createLog }
+async function createLogEmbed(interaction) {
+	const channel = interaction.client.channels.cache.get(LOG_CHANNEL_ID);
+	if (!channel) return;
+
+	const logEmbed = new EmbedBuilder()
+		.setTitle('Slash command used')
+		.addFields({ name: 'Server Name', value: `${interaction.guild.name}` })
+		.addFields({ name: 'Server ID', value: `${interaction.guild.id}` })
+		.addFields({ name: 'Channel Name', value: `${interaction.channel.name}` })
+		.addFields({ name: 'Channel ID', value: `${interaction.channel.id}` })
+		.addFields({ name: 'User Name', value: `${interaction.user.tag}` })
+		.addFields({ name: 'User ID', value: `${interaction.user.id}` })
+		.addFields({ name: 'Command', value: `${getInteractionLogText(interaction)}` })
+		.addFields({ name: 'Created At', value: `${interaction.createdAt}` })
+		.addFields({ name: 'Unix Timestamp', value: `${interaction.createdTimestamp}` });
+
+	await channel.send({ embeds: [logEmbed] });
+}
+
+module.exports = { createLog, createLogEmbed };

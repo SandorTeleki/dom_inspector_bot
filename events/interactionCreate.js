@@ -1,6 +1,6 @@
 const { Events } = require('discord.js');
 
-const { sqlInsertLog } = require('../utils/sqlHelper');
+const { createLog, createLogEmbed } = require('../utils/logHelper');
 
 module.exports = {
 	name: Events.InteractionCreate,
@@ -16,17 +16,8 @@ module.exports = {
 
 		try {
 			await command.execute(interaction);
-			const server = interaction.guild.name;
-			const serverId = interaction.guild.id;
-			const channelName = interaction.channel.name;
-			const channelId = interaction.channel.id;
-			const user = interaction.user.tag;
-			const userId = interaction.user.id;
-			const text = interaction.toString();
-			const unixTimestamp = interaction.createdTimestamp;
-			
-			sqlInsertLog(server,serverId,channelName,channelId,user,userId,text,unixTimestamp);
-
+			createLog(interaction);
+			await createLogEmbed(interaction);
 		} catch (error) {
 			console.error(`Error executing ${interaction.commandName}`);
 			console.error(error);

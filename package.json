@@ -1,7 +1,7 @@
 {
   "name": "dom_inspector_bot",
   "version": "1.0.0",
-  "description": "A Discord interface to Larzm's Mod Inspector via the dom5api",
+  "description": "A Discord interface to Larzm's Mod Inspector via the dom6api",
   "main": "index.js",
   "scripts": {
     "test": "vitest",
@@ -11,7 +11,6 @@
   "author": "Sandor Teleki",
   "license": "ISC",
   "dependencies": {
-    "discord-reply": "^0.1.2",
     "discord.js": "^14.19.3",
     "dotenv": "^16.5.0",
     "gitignore": "^0.7.0",

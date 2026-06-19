@@ -34,52 +34,55 @@ The idea for the bot arose from wanting a quick and easy way to query Larzm's Mo
 - If you plan to publish your version of the bot to github, remember to include your token containing file in the .gitignore list.
 - Run `npm install` to install dependencies.
 - Push your slash commands with `node deploy-commands.js` to the servers.
+- In the [Discord Developer Portal](https://discord.com/developers/applications), enable only the **Guilds** intent under Bot settings. Message Content is not required.
 - Spin up the bot instance with `node index.js`.
 
 -----
 
 ## Usage (sample commands and bot responses):
 
+All commands are slash commands (e.g. `/unit`, `/spell`). Type `/` in Discord to see available commands.
+
 ### Unit:
 
-| Base Command | User Input | Response | Note |
+| Command | User Input | Response | Note |
 | ------- | ------- | ------------------------- | ------------------------------ |
-| ?unit | 145 | Embed with Hirdman | The bot can search for units based on their ID. No similar matches are shown in this case as the search is specific. |
-| ?unit | water elemental | Embed with size 6 water elemental | Since there are other units with similar names, the bot will shown them in the embed footer and provide clickable buttons to search for the similar matches with a single click. |
-| ?unit | wele | Embed with size 6 water elemental | The bot has a list of commonly used aliases. Aliases also can return similar matches, like in this case. |
-| ?unit | wele 4 | Embed with size 4 water elemental | The bot has basic size filtering. Provide unit name and then the size. If a unit with such a size exists, that will be provided in the embed. Bot will also provide similar matches (usually units with similar/same name but different size) in the embed footer and clickable buttons. |
+| /unit | 145 | Embed with Hirdman | The bot can search for units based on their ID. No similar matches are shown in this case as the search is specific. |
+| /unit | water elemental | Embed with size 6 water elemental | Since there are other units with similar names, the bot will shown them in the embed footer and provide clickable buttons to search for the similar matches with a single click. |
+| /unit | wele | Embed with size 6 water elemental | The bot has a list of commonly used aliases. Aliases also can return similar matches, like in this case. |
+| /unit | wele 4 | Embed with size 4 water elemental | The bot has basic size filtering. Provide unit name and then the size. If a unit with such a size exists, that will be provided in the embed. Bot will also provide similar matches (usually units with similar/same name but different size) in the embed footer and clickable buttons. |
 
 ### Spell:
 
-| Base Command | User Input | Response | Note |
+| Command | User Input | Response | Note |
 | ------- | ------- | ------------------------- | ------------------------------ |
-| ?spell | 151 | Embed with Banishment spell | The bot can search for units based on their ID. No similar matches are shown in this case as the search is specific. |
-| ?spell | fire | Embed with Heavenly Fire | Since there are other spells with similar names, the bot will shown them in the embed footer and provide clickable buttons to search for the similar matches with a single click. |
-| ?spell | l4l | Embed with Life for Life | The bot has a list of commonly used aliases. Aliases also can return similar matches (not in this case). |
+| /spell | 151 | Embed with Banishment spell | The bot can search for spells based on their ID. No similar matches are shown in this case as the search is specific. |
+| /spell | fire | Embed with Heavenly Fire | Since there are other spells with similar names, the bot will shown them in the embed footer and provide clickable buttons to search for the similar matches with a single click. |
+| /spell | l4l | Embed with Life for Life | The bot has a list of commonly used aliases. Aliases also can return similar matches (not in this case). |
 
 ### Site:
 
-| Base Command | User Input | Response | Note |
+| Command | User Input | Response | Note |
 | ------- | ------- | ------------------------- | ------------------------------ |
-| ?site | 151 | Embed with The Swamps of Ur | The bot can search for units based on their ID. No similar matches are shown in this case as the search is specific. |
-| ?site | fire | Embed with Fountain of Fire | Since there are other units with similar names, the bot will shown them in the embed footer and provide clickable buttons to search for the similar matches with a single click. |
-| ?site | best | Embed with Lava Lake | The bot has a list of commonly used aliases. Aliases also can return similar matches (not in this case). Since sites are rarely searched, this is the only alias and it was added as a joke. |
+| /site | 151 | Embed with The Swamps of Ur | The bot can search for sites based on their ID. No similar matches are shown in this case as the search is specific. |
+| /site | fire | Embed with Fountain of Fire | Since there are other sites with similar names, the bot will shown them in the embed footer and provide clickable buttons to search for the similar matches with a single click. |
+| /site | best | Embed with Lava Lake | The bot has a list of commonly used aliases. Aliases also can return similar matches (not in this case). Since sites are rarely searched, this is the only alias and it was added as a joke. |
 
 ### Item:
 
-| Base Command | User Input | Response | Note |
+| Command | User Input | Response | Note |
 | ------- | ------- | ------------------------- | ------------------------------ |
-| ?item | 151 | Embed with Lead Shield | The bot can search for items based on their ID. No similar matches are shown in this case as the search is specific.|
-| ?item | fire | Embed with Fire Sword | Since there are other items with similar names, the bot will shown them in the embed footer and provide clickable buttons to search for the similar matches with a single click. |
-| ?item | zyzz | Embed with The Copper Arm | The bot has a list of commonly used aliases. Aliases also can return similar matches (not in this case). |
+| /item | 151 | Embed with Lead Shield | The bot can search for items based on their ID. No similar matches are shown in this case as the search is specific.|
+| /item | fire | Embed with Fire Sword | Since there are other items with similar names, the bot will shown them in the embed footer and provide clickable buttons to search for the similar matches with a single click. |
+| /item | zyzz | Embed with The Copper Arm | The bot has a list of commonly used aliases. Aliases also can return similar matches (not in this case). |
 
 ### Merc (mercenary):
 
-| Base Command | User Input | Response | Note |
+| Command | User Input | Response | Note |
 | ------- | ------- | ------------------------- | ------------------------------ |
-| ?merc | 1 | Embed with Dante's Stingers | The bot can search for units based on their ID. No similar matches are shown in this case as the search is specific. The bot will return two buttons (one for merc commander and one for merc units) that can be clicked to show further information tied to the specific mercenary |
-| ?merc | a | Embed with Quickspears | Since there are other items with similar names, the bot will shown them in the embed footer, due to merc embed coming with two buttons, there are no separate buttons for similar matches. If it ever becomes a requested feature, it will be added |
-| ?merc | hannibal | Embed with Elephant Corps | The bot has a list of commonly used aliases. Aliases also can return similar matches (not in this case). |
+| /merc | 1 | Embed with Dante's Stingers | The bot can search for mercenaries based on their ID. No similar matches are shown in this case as the search is specific. The bot will return two buttons (one for merc commander and one for merc units) that can be clicked to show further information tied to the specific mercenary |
+| /merc | a | Embed with Quickspears | Since there are other mercenaries with similar names, the bot will shown them in the embed footer. Due to merc embed coming with two buttons, there are no separate buttons for similar matches. If it ever becomes a requested feature, it will be added |
+| /merc | hannibal | Embed with Elephant Corps | The bot has a list of commonly used aliases. Aliases also can return similar matches (not in this case). |
 
 ## Contributing:
 - Raising issues and opening PRs are more than welcome! Feel free to head to the bots main development Discord server to ask questions about how you can contribute: [Discord Server](https://discord.gg/GXgFXjXAaC).
