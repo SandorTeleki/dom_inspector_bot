@@ -79,6 +79,7 @@ const unitAliases = {
     'shitty vampire':'405',
     'blood rite vampire':'405',
     'shedim':'2073',
+    'dark servant':'434',
 }
 
 module.exports = { unitAliases }
