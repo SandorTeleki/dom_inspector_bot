@@ -8,8 +8,8 @@ const { notFoundResult } = require('../../utils/notFoundResult');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('merc')
-		.setDescription('Replies with information about a mercenary')
-        .addStringOption(option => option.setName('merc_name').setDescription('Enter the name of the mercenary').setRequired(true)),
+		.setDescription('Replies with information about a mercenary group.')
+        .addStringOption(option => option.setName('merc_name').setDescription('Enter the name (or id) of the mercenary group.').setRequired(true)),
 
 	async execute(interactionOG) {
 		let mercName = interactionOG.options.getString('merc_name');

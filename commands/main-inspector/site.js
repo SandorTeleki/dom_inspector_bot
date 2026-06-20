@@ -8,8 +8,8 @@ const { createLog } = require('../../utils/logHelper');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('site')
-		.setDescription('Replies with information about a site')
-        .addStringOption(option => option.setName('site_name').setDescription('Enter the name of the site').setRequired(true)),
+		.setDescription('Replies with information about a site.')
+        .addStringOption(option => option.setName('site_name').setDescription('Enter the name (or id) of the site.').setRequired(true)),
 
 	async execute(interactionOG) {
         const siteName = interactionOG.options.getString('site_name');
