@@ -1,8 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { EmbedBuilder, ActionRowBuilder, ComponentType, MessageFlags } = require('discord.js');
+const { ActionRowBuilder, ComponentType, MessageFlags } = require('discord.js');
 
 const { getMerc } = require('../../utils/helpers/mercHelper');
 const { createLog } = require('../../utils/logHelper');
+const { notFoundResult } = require('../../utils/notFoundResult');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -64,10 +65,8 @@ module.exports = {
 				})
 			})
 		} catch {
-			const errorEmbed = new EmbedBuilder()
-            	.setTitle("Nothing found. Better luck next time!")
-            	.setImage('https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg');
-            await interactionOG.reply({ embeds: [errorEmbed]});
+			const [errorEmbed, , , files] = notFoundResult();
+            await interactionOG.reply({ embeds: [errorEmbed], files });
 		}
 	},
 };

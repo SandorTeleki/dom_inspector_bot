@@ -1,23 +1,45 @@
-const { EmbedBuilder } = require('discord.js');
+const fs = require('node:fs');
+const path = require('node:path');
+const { AttachmentBuilder, EmbedBuilder } = require('discord.js');
 const { getRandomBooliAttachment } = require('./booliImage');
 
-const NOT_FOUND_IMAGE = 'https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg';
+const NOT_FOUND_IMAGE_PATH = path.join(__dirname, '..', 'src', 'images', '404.jpg');
+const NOT_FOUND_IMAGE_NAME = '404.jpg';
 const API_CONNECTION_ERROR_TITLE = "Can't connect to the dom6api. Bug Toldi to check/fix it.";
 
-function notFoundEmbed() {
-	return new EmbedBuilder()
-		.setTitle('Nothing found. Better luck next time!')
-		.setImage(NOT_FOUND_IMAGE);
+function getNotFoundAttachment() {
+	try {
+		if (!fs.existsSync(NOT_FOUND_IMAGE_PATH)) {
+			return null;
+		}
+	} catch {
+		return null;
+	}
+
+	return new AttachmentBuilder(NOT_FOUND_IMAGE_PATH, { name: NOT_FOUND_IMAGE_NAME });
+}
+
+function notFoundEmbed(attachment) {
+	const embed = new EmbedBuilder()
+		.setTitle('Nothing found. Better luck next time!');
+
+	if (attachment) {
+		embed.setImage(`attachment://${attachment.name}`);
+	}
+
+	return embed;
 }
 
 function notFoundResult() {
-	return [notFoundEmbed(), [], '', []];
+	const attachment = getNotFoundAttachment();
+	const files = attachment ? [attachment] : [];
+
+	return [notFoundEmbed(attachment), [], '', files];
 }
 
 function apiErrorEmbed() {
 	return new EmbedBuilder()
-		.setTitle('Something went wrong. Try again later!')
-		.setImage(NOT_FOUND_IMAGE);
+		.setTitle('Something went wrong. Try again later!');
 }
 
 function apiErrorResult() {
@@ -42,7 +64,10 @@ function apiConnectionErrorResult() {
 }
 
 function mercNotFoundResult() {
-	return [notFoundEmbed(), null, null, null, null, [], [], []];
+	const attachment = getNotFoundAttachment();
+	const files = attachment ? [attachment] : [];
+
+	return [notFoundEmbed(attachment), null, null, null, null, files, [], []];
 }
 
 function mercApiErrorResult() {

@@ -33,7 +33,9 @@ export function expectErrorEmbed(result) {
     expect(embedTitle(embed)).toBe('Nothing found. Better luck next time!');
     expect(buttons).toEqual([]);
     expect(buttonPrefix).toBe('');
-    expect(files).toEqual([]);
+    expect(Array.isArray(files)).toBe(true);
+    expect(files).toHaveLength(1);
+    expect(embed.toJSON().image?.url).toBe('attachment://404.jpg');
 }
 
 export function expectConnectionErrorEmbed(result) {
@@ -71,7 +73,9 @@ export function expectMercNotFoundResult(result) {
     expect(mercTroopEmbed).toBeNull();
     expect(mercLeaderButton).toBeNull();
     expect(mercUnitButton).toBeNull();
-    expect(mercFiles).toEqual([]);
+    expect(Array.isArray(mercFiles)).toBe(true);
+    expect(mercFiles).toHaveLength(1);
+    expect(mercEmbed.toJSON().image?.url).toBe('attachment://404.jpg');
     expect(leaderFiles).toEqual([]);
     expect(troopFiles).toEqual([]);
 }
