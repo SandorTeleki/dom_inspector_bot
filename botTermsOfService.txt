@@ -1,6 +1,6 @@
 TERMS OF SERVICE AGREEMENT
 
-This Terms of Service Agreement (the "Agreement") is entered into between [Sandor Teleki] ("Bot Owner") and the user ("User") of the [Dom Inspector Bot] Discord bot (the "Bot").
+This Terms of Service Agreement (the "Agreement") is entered into between [Sandor Teleki] ("Bot Owner") and the user ("User") of the [Dom Inspector] Discord bot (the "Bot").
 
 By using the Bot, the User agrees to be bound by the terms of this Agreement. If the User does not agree to the terms of this Agreement, they should immediately discontinue use of the Bot.
 
