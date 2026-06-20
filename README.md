@@ -35,7 +35,7 @@ The idea for the bot arose from wanting a quick and easy way to query Larzm's Mo
 - Run `npm install` to install dependencies.
 - Push your slash commands with `node deploy-commands.js` to the servers.
 - In the [Discord Developer Portal](https://discord.com/developers/applications), enable only the **Guilds** intent under Bot settings. Message Content is not required.
-- Spin up the bot instance with `node index.js`.
+- Spin up the bot instance with `npm run start`.
 
 -----
 
