@@ -3,6 +3,7 @@ const sqlite3 = require('sqlite3').verbose();
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { BASE_URL } = require('./utils');
 const { fetchApiJson, getFirstEntity } = require('./apiRequest');
+const { API_CONNECTION_ERROR_TITLE } = require('./notFoundResult');
 const { sqlSelectNote, sqlGetMentorNote, sqlInsertNote, sqlInsertLog, sqlInsertMentorLog, sqlUpdateNote } = require('./sqlHelper');
 
 const DB_PATH = path.join(__dirname, '..', 'logs.db');
@@ -18,6 +19,10 @@ let commandResult;
 
 async function checkId(message, noteWritten, commandUsed, idUsed, serverId, server, channelName, channelId, user, userId, text, unixTimestamp) {
     const result = await fetchApiJson(BASE_URL + '/' + commandUsed + 's/' + idUsed);
+    if (result.connectionError) {
+        message.reply(API_CONNECTION_ERROR_TITLE);
+        return;
+    }
     if (result.notFound) {
         message.reply(`For the "${commandUsed}" command nothing was found matching ID: ${idUsed}. Please double check the ID and try again...`);
         return;

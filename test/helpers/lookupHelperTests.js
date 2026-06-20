@@ -5,12 +5,14 @@ import {
     mockJsonGet,
     mockFuzzyGet,
     mockNotFound,
+    mockConnectionError,
 } from './httpTestEnvironment.js';
 import {
     commandData,
     makeEntity,
     embedFooter,
     expectErrorEmbed,
+    expectConnectionErrorEmbed,
     expectTooManyMatchesEmbed,
     createManyMatches,
 } from './testUtils.js';
@@ -70,6 +72,13 @@ export function defineLookupHelperTests({
 
             const result = await getHelper(invalidId, commandData);
             expectErrorEmbed(result);
+        });
+
+        it('returns a connection error embed when the API is unreachable', async () => {
+            mockConnectionError(`/${table}/${validId}`);
+
+            const result = await getHelper(validId, commandData);
+            expectConnectionErrorEmbed(result);
         });
 
         it('returns an error embed when fuzzy search finds no matches', async () => {

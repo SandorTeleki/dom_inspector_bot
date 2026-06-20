@@ -98,3 +98,13 @@ export function mockFuzzyNotFound(table) {
 export function mockNotFound(pathPattern) {
     mockJsonGet(pathPattern, {}, 404);
 }
+
+export function mockConnectionError(pathPattern) {
+	getMockAgent()
+		.get(API_ORIGIN)
+		.intercept({
+			path: pathPattern,
+			method: 'GET',
+		})
+		.replyWithError(new Error('connect ECONNREFUSED'));
+}

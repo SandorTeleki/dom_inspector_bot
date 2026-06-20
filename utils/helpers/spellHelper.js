@@ -8,7 +8,7 @@ const { similarMatchesStringify, similarMatchesArray } = require('../similarMatc
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
 const { fetchApiJson, getEntityList, getFirstEntity } = require('../apiRequest');
-const { notFoundResult, apiErrorResult } = require('../notFoundResult');
+const { resolveLookupFailure, notFoundResult } = require('../notFoundResult');
 
 async function getSpell( spellName, spellCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -38,11 +38,9 @@ async function getSpell( spellName, spellCommandData ){
         const spellIdMatch = spellName.match(regExId);
         const spellId = spellIdMatch[1];
         const result = await fetchApiJson(BASE_URL + SPELL_URL + '/' + encodeURIComponent(spellId));
-        if (result.notFound) {
-            return notFoundResult();
-        }
-        if (!result.ok) {
-            return apiErrorResult();
+        const failure = resolveLookupFailure(result);
+        if (failure) {
+            return failure;
         }
         spell = getFirstEntity(result.data, 'spells');
         if (!spell) {
@@ -50,11 +48,9 @@ async function getSpell( spellName, spellCommandData ){
         }
     } else {
         const result = await fetchApiJson(BASE_URL + SPELL_URL + FUZZY_MATCH_URL + encodeURIComponent(spellName));
-        if (result.notFound) {
-            return notFoundResult();
-        }
-        if (!result.ok) {
-            return apiErrorResult();
+        const failure = resolveLookupFailure(result);
+        if (failure) {
+            return failure;
         }
         const spells = getEntityList(result.data, 'spells');
         if (!spells.length) {

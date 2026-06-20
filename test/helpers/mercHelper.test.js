@@ -5,13 +5,14 @@ import {
     mockJsonGet,
     mockFuzzyGet,
     mockNotFound,
+    mockConnectionError,
 } from './httpTestEnvironment.js';
 import {
     commandData,
     makeEntity,
     embedFooter,
-    expectErrorEmbed,
     expectMercNotFoundResult,
+    expectMercConnectionErrorResult,
     expectMercTooManyMatchesResult,
     expectTooManyMatchesEmbed,
     createManyMatches,
@@ -74,6 +75,13 @@ describe('merc helper', () => {
 
         const result = await getMerc('99999', commandData);
         expectMercNotFoundResult(result);
+    });
+
+    it('returns a connection error embed when the API is unreachable', async () => {
+        mockConnectionError(`/${table}/${validId}`);
+
+        const result = await getMerc(validId, commandData);
+        expectMercConnectionErrorResult(result);
     });
 
     it('returns an error embed when fuzzy search finds no matches', async () => {

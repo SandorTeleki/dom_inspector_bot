@@ -8,7 +8,7 @@ const { similarMatchesStringify, similarMatchesArray } =require('../similarMatch
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
 const { fetchApiJson, getEntityList, getFirstEntity } = require('../apiRequest');
-const { notFoundResult, apiErrorResult } = require('../notFoundResult');
+const { resolveLookupFailure, notFoundResult } = require('../notFoundResult');
 
 async function getSite( siteName, siteCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -38,11 +38,9 @@ async function getSite( siteName, siteCommandData ){
         const siteIdMatch = siteName.match(regExId);
         const siteId = siteIdMatch[1];
         const result = await fetchApiJson(BASE_URL + SITE_URL + '/' + encodeURIComponent(siteId));
-        if (result.notFound) {
-            return notFoundResult();
-        }
-        if (!result.ok) {
-            return apiErrorResult();
+        const failure = resolveLookupFailure(result);
+        if (failure) {
+            return failure;
         }
         site = getFirstEntity(result.data, 'sites');
         if (!site) {
@@ -50,11 +48,9 @@ async function getSite( siteName, siteCommandData ){
         }
     } else {
         const result = await fetchApiJson(BASE_URL + SITE_URL + FUZZY_MATCH_URL + encodeURIComponent(siteName));
-        if (result.notFound) {
-            return notFoundResult();
-        }
-        if (!result.ok) {
-            return apiErrorResult();
+        const failure = resolveLookupFailure(result);
+        if (failure) {
+            return failure;
         }
         const sites = getEntityList(result.data, 'sites');
         if (!sites.length) {

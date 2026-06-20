@@ -36,6 +36,26 @@ export function expectErrorEmbed(result) {
     expect(files).toEqual([]);
 }
 
+export function expectConnectionErrorEmbed(result) {
+    const [embed, buttons, buttonPrefix, files] = result;
+    expect(embedTitle(embed)).toBe("Can't connect to the dom6api. Bug Toldi to check/fix it.");
+    expect(buttons).toEqual([]);
+    expect(buttonPrefix).toBe('');
+    expect(Array.isArray(files)).toBe(true);
+}
+
+export function expectMercConnectionErrorResult(result) {
+    const [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton, mercFiles, leaderFiles, troopFiles] = result;
+    expect(embedTitle(mercEmbed)).toBe("Can't connect to the dom6api. Bug Toldi to check/fix it.");
+    expect(mercLeaderEmbed).toBeNull();
+    expect(mercTroopEmbed).toBeNull();
+    expect(mercLeaderButton).toBeNull();
+    expect(mercUnitButton).toBeNull();
+    expect(Array.isArray(mercFiles)).toBe(true);
+    expect(leaderFiles).toEqual([]);
+    expect(troopFiles).toEqual([]);
+}
+
 export function expectTooManyMatchesEmbed(result) {
     const [embed, buttons, buttonPrefix, files] = result;
     expect(embedTitle(embed)).toBe('Too many matches to display. Try narrowing your search!');

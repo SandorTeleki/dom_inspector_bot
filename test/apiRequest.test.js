@@ -3,6 +3,7 @@ import {
 	initHelperTestEnvironment,
 	teardownHelperTestEnvironment,
 	mockJsonGet,
+	mockConnectionError,
 } from './helpers/httpTestEnvironment.js';
 
 let fetchApiJson;
@@ -59,5 +60,13 @@ describe('apiRequest', () => {
 		expect(result.ok).toBe(true);
 		expect(getFirstEntity(result.data, 'items')).toEqual({ id: '1', name: 'Test Item' });
 		expect(getEntityList(result.data, 'items')).toHaveLength(1);
+	});
+
+	it('returns connectionError when the API cannot be reached', async () => {
+		mockConnectionError('/items/1');
+
+		const result = await fetchApiJson('http://localhost:8002/items/1');
+
+		expect(result).toEqual({ ok: false, connectionError: true });
 	});
 });

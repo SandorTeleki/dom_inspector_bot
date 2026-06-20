@@ -8,7 +8,7 @@ const { similarMatchesStringify, similarMatchesStringifyNoSlice, similarMatchesA
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
 const { fetchApiJson, getEntityList, getFirstEntity } = require('../apiRequest');
-const { notFoundResult, apiErrorResult } = require('../notFoundResult');
+const { resolveLookupFailure, notFoundResult } = require('../notFoundResult');
 
 function applyUnitMatches(units, size) {
     let similarMatchesString;
@@ -71,11 +71,9 @@ async function getUnit( unitName, unitCommandData ){
         let size2 = edgecase[2];
         if (text in unitAliases){ text = unitAliases[text] };
         const result = await fetchApiJson(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(text));
-        if (result.notFound) {
-            return notFoundResult();
-        }
-        if (!result.ok) {
-            return apiErrorResult();
+        const failure = resolveLookupFailure(result);
+        if (failure) {
+            return failure;
         }
         const units = getEntityList(result.data, 'units');
         if (!units.length) {
@@ -88,11 +86,9 @@ async function getUnit( unitName, unitCommandData ){
         const unitIdMatch = unitName.match(regExId);
         const unitId = unitIdMatch[1];
         const result = await fetchApiJson(BASE_URL + UNIT_URL + '/' + encodeURIComponent(unitId));
-        if (result.notFound) {
-            return notFoundResult();
-        }
-        if (!result.ok) {
-            return apiErrorResult();
+        const failure = resolveLookupFailure(result);
+        if (failure) {
+            return failure;
         }
         unit = getFirstEntity(result.data, 'units');
         if (!unit) {
@@ -103,11 +99,9 @@ async function getUnit( unitName, unitCommandData ){
         const regExSizeMatch = unitName.match(regExSize);
         const size = (regExSizeMatch ? regExSizeMatch[1] : undefined);
         const result = await fetchApiJson(BASE_URL + UNIT_URL + FUZZY_MATCH_URL + encodeURIComponent(unitName));
-        if (result.notFound) {
-            return notFoundResult();
-        }
-        if (!result.ok) {
-            return apiErrorResult();
+        const failure = resolveLookupFailure(result);
+        if (failure) {
+            return failure;
         }
         const units = getEntityList(result.data, 'units');
         if (!units.length) {

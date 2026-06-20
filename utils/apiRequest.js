@@ -11,19 +11,23 @@ async function readJsonBody(body) {
 }
 
 async function fetchApiJson(url) {
-	const { statusCode, body } = await request(url);
+	try {
+		const { statusCode, body } = await request(url);
 
-	switch (statusCode) {
-		case 404:
-			return { ok: false, notFound: true };
-		case 200: {
-			const data = await readJsonBody(body);
-			return data === null
-				? { ok: false, parseError: true }
-				: { ok: true, data };
+		switch (statusCode) {
+			case 404:
+				return { ok: false, notFound: true };
+			case 200: {
+				const data = await readJsonBody(body);
+				return data === null
+					? { ok: false, parseError: true }
+					: { ok: true, data };
+			}
+			default:
+				return { ok: false, statusCode };
 		}
-		default:
-			return { ok: false, statusCode };
+	} catch {
+		return { ok: false, connectionError: true };
 	}
 }
 

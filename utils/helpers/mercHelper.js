@@ -8,17 +8,7 @@ const { similarMatchesStringify } =require('../similarMatches');
 // const { sqlGetMentorNote } = require('../sqlHelper');
 const { fetchScreenshot } = require('../fetchScreenshot');
 const { fetchApiJson, getEntityList, getFirstEntity } = require('../apiRequest');
-const { notFoundEmbed, apiErrorEmbed } = require('../notFoundResult');
-
-function mercNotFoundResult() {
-	const embed = notFoundEmbed();
-	return [embed, null, null, null, null, [], [], []];
-}
-
-function mercApiErrorResult() {
-	const embed = apiErrorEmbed();
-	return [embed, null, null, null, null, [], [], []];
-}
+const { resolveLookupFailure, mercNotFoundResult } = require('../notFoundResult');
 
 async function getMerc( mercName, mercCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -47,11 +37,9 @@ async function getMerc( mercName, mercCommandData ){
         const mercIdMatch = mercName.match(regExId);
         const mercId = mercIdMatch[1];
         const result = await fetchApiJson(BASE_URL + MERC_URL + '/' + encodeURIComponent(mercId));
-        if (result.notFound) {
-            return mercNotFoundResult();
-        }
-        if (!result.ok) {
-            return mercApiErrorResult();
+        const failure = resolveLookupFailure(result, { merc: true });
+        if (failure) {
+            return failure;
         }
         merc = getFirstEntity(result.data, 'mercs');
         if (!merc) {
@@ -59,11 +47,9 @@ async function getMerc( mercName, mercCommandData ){
         }
     } else {
         const result = await fetchApiJson(BASE_URL + MERC_URL + FUZZY_MATCH_URL + encodeURIComponent(mercName));
-        if (result.notFound) {
-            return mercNotFoundResult();
-        }
-        if (!result.ok) {
-            return mercApiErrorResult();
+        const failure = resolveLookupFailure(result, { merc: true });
+        if (failure) {
+            return failure;
         }
         const mercs = getEntityList(result.data, 'mercs');
         if (!mercs.length) {
