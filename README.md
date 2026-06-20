@@ -12,7 +12,7 @@ The idea for the bot arose from wanting a quick and easy way to query Larzm's Mo
 - Support for events (already supported by dom6api)
 
 ## Currently working on:
-- Finishing Dominions 6 implementation
+- Squshing bugs from dom6api implementation
 
 ## Small ideas / bugs to fix:
 - Currently none identified.
