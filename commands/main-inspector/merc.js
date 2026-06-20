@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { EmbedBuilder } = require('discord.js');
-const { ActionRowBuilder, ComponentType } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ComponentType, MessageFlags } = require('discord.js');
 
 const { getMerc } = require('../../utils/helpers/mercHelper');
 const { createLog } = require('../../utils/logHelper');
@@ -52,7 +51,7 @@ module.exports = {
 						createLog(interaction);
 					}
 				} else {
-					interaction.reply({ content: `These buttons aren't for you!`, ephemeral: true });
+					interaction.reply({ content: `These buttons aren't for you!`, flags: MessageFlags.Ephemeral });
 				}
 			});
 	

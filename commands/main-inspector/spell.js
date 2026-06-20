@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js'); //for buttons
+const { ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js'); //for buttons
 
 const { getSpell } = require('../../utils/helpers/spellHelper');
 const { buttonWrapper } = require('../../utils/buttonWrapper');
@@ -69,7 +69,7 @@ module.exports = {
 					})
 				}
 			} else {
-				interaction.reply({ content: `These buttons aren't for you!`, ephemeral: true });
+				interaction.reply({ content: `These buttons aren't for you!`, flags: MessageFlags.Ephemeral });
 			}
 		});
 
