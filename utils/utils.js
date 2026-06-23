@@ -10,6 +10,7 @@ module.exports = {
     MERC_URL: '/mercs',
     SITE_URL: '/sites',
     UNIT_URL: '/units',
+    EVENT_URL: '/events',
     FUZZY_MATCH_URL: '?match=fuzzy&name=',
 };
 
