@@ -85,5 +85,13 @@ All commands are slash commands (e.g. `/unit`, `/spell`). Type `/` in Discord to
 | /merc | a | Embed with Quickspears | Since there are other mercenaries with similar names, the bot will shown them in the embed footer. Due to merc embed coming with two buttons, there are no separate buttons for similar matches. If it ever becomes a requested feature, it will be added |
 | /merc | hannibal | Embed with Elephant Corps | The bot has a list of commonly used aliases. Aliases also can return similar matches (not in this case). |
 
+### Event:
+
+| Command | User Input | Response | Note |
+| ------- | ------- | ------------------------- | ------------------------------ |
+| /event | 1 | Embed with event about a magnificent statue being raised. | The bot can search for events based on their ID. No similar matches are shown in this case as the search is specific. |
+| /event | bad | Embed with bad harvest | Since there are other events that contain 'bad' in them, the bot will shown them both in its footer and in buttons below the embed.  |
+| /event | best | Embed with shadow seer joining your service | The bot has a list of commonly used aliases (this alias is only for demonstration purposes). Aliases also can return similar matches (not in this case). |
+
 ## Contributing:
 - Raising issues and opening PRs are more than welcome! Feel free to head to the bots main development Discord server to ask questions about how you can contribute: [Discord Server](https://discord.gg/GXgFXjXAaC).
