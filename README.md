@@ -82,7 +82,7 @@ All commands are slash commands (e.g. `/unit`, `/spell`). Type `/` in Discord to
 | Command | User Input | Response | Note |
 | ------- | ------- | ------------------------- | ------------------------------ |
 | /merc | 1 | Embed with Dante's Stingers | The bot can search for mercenaries based on their ID. No similar matches are shown in this case as the search is specific. The bot will return two buttons (one for merc commander and one for merc units) that can be clicked to show further information tied to the specific mercenary |
-| /merc | a | Embed with Quickspears | Since there are other mercenaries with similar names, the bot will shown them in the embed footer. Due to merc embed coming with two buttons, there are no separate buttons for similar matches. If it ever becomes a requested feature, it will be added |
+| /merc | a | Embed with Quickspears | Since there are other mercenaries with similar names, the bot will shown them in the embed footer. Due to merc embed coming with two buttons, there are no separate buttons for similar matches. If it ever becomes a requested feature, it will be added. |
 | /merc | hannibal | Embed with Elephant Corps | The bot has a list of commonly used aliases. Aliases also can return similar matches (not in this case). |
 
 ### Event:
