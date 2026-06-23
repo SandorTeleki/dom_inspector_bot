@@ -36,6 +36,8 @@ The idea for the bot arose from wanting a quick and easy way to query Larzm's Mo
 - In the [Discord Developer Portal](https://discord.com/developers/applications), enable only the **Guilds** intent under Bot settings. Message Content is not required.
 - Spin up the bot instance with `npm run start`.
 
+NB: the `botPrivacyPolicy.txt` and `botTermsOfService.txt` files were added to allow the bot to be verified by Discord.
+
 -----
 
 ## Usage (sample commands and bot responses):
