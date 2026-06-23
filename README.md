@@ -25,7 +25,7 @@ The idea for the bot arose from wanting a quick and easy way to query Larzm's Mo
 - Moving away from inspector screenshots to information in the embed itself
 
 ## Quick Start (or, I want to host my own version of the bot):
-- Create a discord bot through the [Discord Developer Portal](https://discord.com/developers/docs/intro)
+- Create a discord bot through the [Discord Developer Portal](https://discord.com/developers/docs/intro).
 - Remember to grab the bot token.
 - Clone the github repoistory of the Dom_Inspector_Bot and save it locally.
 - Create an config.json file to hold the "clientID", "guildID" and "token" for the bot if you plan to host it on a single server. 
