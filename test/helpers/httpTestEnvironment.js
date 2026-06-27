@@ -21,7 +21,10 @@ function stubFetchScreenshot() {
         filename: fetchScreenshotPath,
         loaded: true,
         exports: {
-            fetchScreenshot: async () => null,
+            fetchScreenshot: async (_path, filename = 'screenshot.png') => ({
+                name: filename,
+                attachment: Buffer.from('fake'),
+            }),
         },
     };
 }

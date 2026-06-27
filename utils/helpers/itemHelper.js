@@ -8,7 +8,7 @@ const { similarMatchesStringify, similarMatchesArray } =require('../similarMatch
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
 const { fetchApiJson, getEntityList, getFirstEntity } = require('../apiRequest');
-const { resolveLookupFailure, notFoundResult } = require('../notFoundResult');
+const { resolveLookupFailure, notFoundResult, screenshotMissingResult } = require('../notFoundResult');
 
 async function getItem( itemName, itemCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -82,9 +82,13 @@ async function getItem( itemName, itemCommandData ){
     const screenshotFilename = `item_${item.id}.png`;
     const attachment = await fetchScreenshot(item.image, screenshotFilename);
 
+    if (!attachment) {
+        return screenshotMissingResult();
+    }
+
     // Construct the itemEmbed after obtaining the mentorNote value
     const itemEmbed = new EmbedBuilder()
-        .setImage(attachment ? `attachment://${screenshotFilename}` : null);
+        .setImage(`attachment://${screenshotFilename}`);
 
 
     if (similarMatchesString && similarMatchesString.length < 2048) {

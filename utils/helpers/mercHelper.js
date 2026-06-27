@@ -8,7 +8,7 @@ const { similarMatchesStringify } =require('../similarMatches');
 // const { sqlGetMentorNote } = require('../sqlHelper');
 const { fetchScreenshot } = require('../fetchScreenshot');
 const { fetchApiJson, getEntityList, getFirstEntity } = require('../apiRequest');
-const { resolveLookupFailure, mercNotFoundResult } = require('../notFoundResult');
+const { resolveLookupFailure, mercNotFoundResult, mercScreenshotMissingResult } = require('../notFoundResult');
 
 async function getMerc( mercName, mercCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -74,8 +74,12 @@ async function getMerc( mercName, mercCommandData ){
     const mercFilename = `merc_${merc.id}.png`;
     const mercAttachment = await fetchScreenshot(merc.image, mercFilename);
 
+    if (!mercAttachment) {
+        return mercScreenshotMissingResult();
+    }
+
     const mercEmbed = new EmbedBuilder()
-        .setImage(mercAttachment ? `attachment://${mercFilename}` : null);
+        .setImage(`attachment://${mercFilename}`);
 
     if (similarMatchesString && similarMatchesString.length < 2048) {
         mercEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });

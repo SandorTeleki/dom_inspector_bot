@@ -8,7 +8,7 @@ const { similarMatchesStringify, similarMatchesStringifyNoSlice, similarMatchesA
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
 const { fetchApiJson, getEntityList, getFirstEntity } = require('../apiRequest');
-const { resolveLookupFailure, notFoundResult } = require('../notFoundResult');
+const { resolveLookupFailure, notFoundResult, screenshotMissingResult } = require('../notFoundResult');
 
 function applyUnitMatches(units, size) {
     let similarMatchesString;
@@ -131,9 +131,13 @@ async function getUnit( unitName, unitCommandData ){
     const screenshotFilename = `unit_${unit.id}.png`;
     const attachment = await fetchScreenshot(unit.image, screenshotFilename);
 
+    if (!attachment) {
+        return screenshotMissingResult();
+    }
+
     // Construct the unitEmbed after obtaining the mentorNote value
     const unitEmbed = new EmbedBuilder()
-        .setImage(attachment ? `attachment://${screenshotFilename}` : null);
+        .setImage(`attachment://${screenshotFilename}`);
 
     if (unit.randompaths !== undefined){
         for ( const randompath of unit.randompaths ) {

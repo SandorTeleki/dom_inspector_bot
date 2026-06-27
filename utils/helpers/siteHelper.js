@@ -8,7 +8,7 @@ const { similarMatchesStringify, similarMatchesArray } =require('../similarMatch
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
 const { fetchApiJson, getEntityList, getFirstEntity } = require('../apiRequest');
-const { resolveLookupFailure, notFoundResult } = require('../notFoundResult');
+const { resolveLookupFailure, notFoundResult, screenshotMissingResult } = require('../notFoundResult');
 
 async function getSite( siteName, siteCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -72,9 +72,13 @@ async function getSite( siteName, siteCommandData ){
     const screenshotFilename = `site_${site.id}.png`;
     const attachment = await fetchScreenshot(site.image, screenshotFilename);
 
+    if (!attachment) {
+        return screenshotMissingResult();
+    }
+
     // Construct the siteEmbed after obtaining the mentorNote value
     const siteEmbed = new EmbedBuilder()
-        .setImage(attachment ? `attachment://${screenshotFilename}` : null);
+        .setImage(`attachment://${screenshotFilename}`);
 
     if (similarMatchesString && similarMatchesString.length < 2048) {
         siteEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });

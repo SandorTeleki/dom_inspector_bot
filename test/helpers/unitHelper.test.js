@@ -38,10 +38,10 @@ describe('unit helper', () => {
 
         const [embed, buttons, prefix, files] = await getUnit(validId, commandData);
 
-        expect(embed.toJSON().title).toBeUndefined();
+        expect(embed.toJSON().image).toBeDefined();
         expect(buttons).toEqual([]);
         expect(prefix).toBe('unit-');
-        expect(files).toEqual([]);
+        expect(files).toHaveLength(1);
     });
 
     it('looks up the leading ID when extra text follows the number', async () => {
@@ -49,7 +49,7 @@ describe('unit helper', () => {
 
         const [embed, buttons] = await getUnit(`${validId} extra words`, commandData);
 
-        expect(embed.toJSON().title).toBeUndefined();
+        expect(embed.toJSON().image).toBeDefined();
         expect(buttons).toEqual([]);
     });
 

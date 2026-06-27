@@ -52,10 +52,10 @@ export function defineLookupHelperTests({
 
             const [embed, buttons, prefix, files] = await getHelper(validId, commandData);
 
-            expect(embed.toJSON().title).toBeUndefined();
+            expect(embed.toJSON().image).toBeDefined();
             expect(buttons).toEqual([]);
             expect(prefix).toBe(buttonPrefix);
-            expect(files).toEqual([]);
+            expect(files).toHaveLength(1);
         });
 
         it('looks up the leading ID when extra text follows the number', async () => {
@@ -63,7 +63,7 @@ export function defineLookupHelperTests({
 
             const [embed, buttons] = await getHelper(`${validId} extra words`, commandData);
 
-            expect(embed.toJSON().title).toBeUndefined();
+            expect(embed.toJSON().image).toBeDefined();
             expect(buttons).toEqual([]);
         });
 

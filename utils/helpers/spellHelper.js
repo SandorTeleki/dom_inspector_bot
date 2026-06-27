@@ -8,7 +8,7 @@ const { similarMatchesStringify, similarMatchesArray } = require('../similarMatc
 const { buttonCreator } = require('../buttonCreator');
 const { fetchScreenshot } = require('../fetchScreenshot');
 const { fetchApiJson, getEntityList, getFirstEntity } = require('../apiRequest');
-const { resolveLookupFailure, notFoundResult } = require('../notFoundResult');
+const { resolveLookupFailure, notFoundResult, screenshotMissingResult } = require('../notFoundResult');
 
 async function getSpell( spellName, spellCommandData ){
     //Messages and interactions use different syntax. Using ternary operator to check if we got info from a message (type = 0) or interaction (type = 2)
@@ -82,9 +82,13 @@ async function getSpell( spellName, spellCommandData ){
     const screenshotFilename = `spell_${spell.id}.png`;
     const attachment = await fetchScreenshot(spell.image, screenshotFilename);
 
+    if (!attachment) {
+        return screenshotMissingResult();
+    }
+
     // Construct the spellEmbed after obtaining the mentorNote value
     const spellEmbed = new EmbedBuilder()
-        .setImage(attachment ? `attachment://${screenshotFilename}` : null);
+        .setImage(`attachment://${screenshotFilename}`);
 
     if (similarMatchesString && similarMatchesString.length < 2048) {
         spellEmbed.setFooter({ text: `Other matches [ID#]:\n${similarMatchesString}` });

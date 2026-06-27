@@ -94,6 +94,19 @@ function resolveLookupFailure(result, { merc = false } = {}) {
 	return null;
 }
 
+function screenshotMissingEmbed() {
+	return new EmbedBuilder()
+		.setTitle("Screenshot missing from API. Ping Toldi please.");
+}
+
+function screenshotMissingResult() {
+	return [screenshotMissingEmbed(), [], '', []];
+}
+
+function mercScreenshotMissingResult() {
+	return [screenshotMissingEmbed(), null, null, null, null, [], [], []];
+}
+
 function isNotFound(statusCode) {
 	return statusCode === 404;
 }
@@ -109,6 +122,8 @@ module.exports = {
 	mercApiErrorResult,
 	mercConnectionErrorResult,
 	resolveLookupFailure,
+	screenshotMissingResult,
+	mercScreenshotMissingResult,
 	isNotFound,
 	API_CONNECTION_ERROR_TITLE,
 };

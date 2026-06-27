@@ -54,11 +54,12 @@ describe('merc helper', () => {
         const result = await getMerc(validId, commandData);
         const [mercEmbed, mercLeaderEmbed, mercTroopEmbed, mercLeaderButton, mercUnitButton, mercFiles] = result;
 
+        expect(mercEmbed.toJSON().image).toBeDefined();
         expect(mercLeaderEmbed.toJSON().fields?.[0]?.value).toBe('Hannibal');
         expect(mercTroopEmbed.toJSON().fields?.[0]?.value).toBe('12');
         expect(mercLeaderButton.data.custom_id).toBe('merc-leader');
         expect(mercUnitButton.data.custom_id).toBe('merc-unit');
-        expect(mercFiles).toEqual([]);
+        expect(mercFiles).toHaveLength(1);
     });
 
     it('looks up the leading ID when extra text follows the number', async () => {
